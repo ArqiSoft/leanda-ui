@@ -74,3 +74,7 @@ Use Leanda docker-compose
 ```terminal
 docker-compose -f docker-compose.leanda.services.local.yml up
 ```
+
+## Deployment
+
+Contact maintainers.
