@@ -268,7 +268,7 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
       });
     }
 
-    this.categoriesApi.getNode(file_id).then(res => (this.categories = res)).catch(error => console.error(error));
+    this.categoriesApi.getTree(file_id).then(res => (this.categories = res)).catch(error => console.error(error));
   }
 
   subscribeToSignalr() {

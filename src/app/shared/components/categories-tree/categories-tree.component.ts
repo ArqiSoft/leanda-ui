@@ -80,7 +80,7 @@ export class CategoriesTreeComponent implements OnInit {
     this.entitiyFilter = this.entityCounterService.getCounter(EEntityFilter.ALL);
     this.currentFilter = this.entityCounterService.activeFilter;
     this.service.category = this.selectedNode;
-    this.getTree();
+    this.getTree(0);
   }
 
   hasChild = (_: number, node: CategoryNode) => !!node.children && node.children.length > 0;
@@ -131,9 +131,9 @@ export class CategoriesTreeComponent implements OnInit {
     });
   }
 
-  private getTree(): void {
+  private getTree(id: number): void {
     this.api
-      .getNode()
+      .getTree(id)
       .then(tree => (this.dataSource.data = tree))
       .catch(err => (this.dataSource.data = TREE_DATA));
   }
