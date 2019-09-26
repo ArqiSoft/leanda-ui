@@ -35,18 +35,18 @@ export class CategoriesTreeManagmentComponent implements OnInit {
 
   @ViewChild('newCategoryName', { static: false }) newCategoryName: ElementRef;
 
-  constructor(private service: CategoriesService, private api: CategoriesApiService) {}
+  constructor(private categoriesService: CategoriesService, private api: CategoriesApiService) {}
 
   public get activeTree(): CategoryNode[] {
-    return this.service.activeTree;
+    return this.categoriesService.activeTree;
   }
 
   public get categories(): Category[] {
-    return this.service.categories;
+    return this.categoriesService.categories;
   }
 
   public set activeTree(value: CategoryNode[]) {
-    this.service.activeTree = value;
+    this.categoriesService.activeTree = value;
   }
 
   public set treeNode(value: CategoryNode) {
