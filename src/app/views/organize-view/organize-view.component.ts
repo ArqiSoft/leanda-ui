@@ -344,7 +344,7 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
           this.dataService.breadcrumbs = [
             { text: 'DRAFTS', width: null, link: '/organize/drafts' },
             {
-              text: `CATEGORY: ${this.categoryService.category.title}`,
+              text: `CATEGORY: ${this.categoryService.selectedCategory.title}`,
               width: null,
               link: '/organize/drafts',
             },

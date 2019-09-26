@@ -1,17 +1,38 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-import { CategoryNode } from './CategoryNode';
+import { Category } from './models/category';
+import { CategoryNode } from './models/category-node';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoriesService {
-  private _category: BehaviorSubject<CategoryNode> = new BehaviorSubject({ guid: '', title: 'Not Selected' });
-  public get category(): CategoryNode {
-    return this._category.value;
+  private _selectedCategory: BehaviorSubject<CategoryNode> = new BehaviorSubject({ id: '', title: 'NONE' });
+  private _activeTree: BehaviorSubject<CategoryNode[]> = new BehaviorSubject([]);
+  private _categories: BehaviorSubject<Category[]> = new BehaviorSubject([]);
+
+  public get categories(): Category[] {
+    return this._categories.value;
   }
-  public set category(value: CategoryNode) {
-    this._category.next(value);
+  public set categories(value: Category[]) {
+    this._categories.next(value);
+  }
+
+  public get activeTree(): CategoryNode[] {
+    return this._activeTree.value;
+  }
+  public set activeTree(value: CategoryNode[]) {
+    this._activeTree.next(value);
+  }
+
+  public get selectedCategory(): CategoryNode {
+    return this._selectedCategory.value;
+  }
+  public get selectedCategoryAsync(): Observable<CategoryNode> {
+    return this._selectedCategory.asObservable();
+  }
+  public set selectedCategory(value: CategoryNode) {
+    this._selectedCategory.next(value);
   }
 }

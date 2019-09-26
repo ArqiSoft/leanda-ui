@@ -3,7 +3,7 @@
   matTooltipPosition="right"
   matTooltip="{{ entitiyFilter?.title }}"
   class="filter-box justify-content-between"
-  [class.selected]="currentFilter === 'all' && selectedNode?.guid === ''"
+  [class.selected]="currentFilter === 'all' && selectedNode?.id === ''"
   [matTooltipDisabled]="!sidebarContent.sidebarCollapsed"
   (click)="displayAllFiles()"
 >
@@ -47,7 +47,7 @@
         class="mat-tree-node c-pointer pr-2"
         matTreeNodeToggle
         matRipple
-        [ngClass]="{ selected: selectedNode?.guid === node.guid }"
+        [ngClass]="{ selected: selectedNode?.id === node.id }"
         (click)="selectCategory(node)"
       >
         <button mat-icon-button disabled></button>
@@ -61,7 +61,7 @@
           class="mat-tree-node c-pointer pr-2"
           matTreeNodeToggle
           matRipple
-          [ngClass]="{ selected: selectedNode?.guid === node.guid }"
+          [ngClass]="{ selected: selectedNode?.id === node.id }"
           (click)="selectCategory(node)"
         >
           <button mat-icon-button [attr.aria-label]="'toggle ' + node.title">

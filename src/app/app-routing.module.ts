@@ -5,6 +5,7 @@ import { AuthProfileGuard } from 'app/core/services/auth/auth-profile-guard.guar
 import { environment } from 'environments/environment';
 
 import { CapabilitiesGuard } from './core/services/guards/capabilities.guard';
+import { CategoriesTreeManagmentComponent } from './views/categories-tree-managment/categories-tree-managment.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -13,6 +14,13 @@ const routes: Routes = [
   {
     path: 'organize/:id',
     loadChildren: () => import('./views/organize-view/organize-view.module').then(m => m.OrganizeViewModule),
+    canActivate: [AuthGuardService, AuthProfileGuard, CapabilitiesGuard],
+    data: { active: environment.capabilities.login },
+  },
+  {
+    path: 'tree-managment',
+    loadChildren: () =>
+      import('./views/categories-tree-managment/categories-tree-managment.module').then(m => m.CategoriesTreeManagmentModule),
     canActivate: [AuthGuardService, AuthProfileGuard, CapabilitiesGuard],
     data: { active: environment.capabilities.login },
   },

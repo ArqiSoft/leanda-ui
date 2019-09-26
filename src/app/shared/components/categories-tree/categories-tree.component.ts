@@ -9,41 +9,48 @@ import { EntityCountsService } from '../entity-counts/entity-counts.service';
 import { SidebarContentService } from '../sidebar-content/sidebar-content.service';
 
 import { CategoriesService } from './categories.service';
-import { CategoryNode } from './CategoryNode';
-
-function guid(): string {
-  return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
-}
-
-function s4(): string {
-  return Math.floor((1 + Math.random()) * 0x10000)
-    .toString(16)
-    .substring(1);
-}
+import { Category } from './models/category';
+import { CategoryNode } from './models/category-node';
 
 const TREE_DATA: CategoryNode[] = [
   {
-    guid: guid(),
     title: 'Category 1',
     children: [
-      { guid: guid(), title: 'Sub-category 1' },
-      { guid: guid(), title: 'Sub-category 2' },
-      { guid: guid(), title: 'Sub-category 3' },
+      {
+        title: 'Sub-category 1',
+      },
+      {
+        title: 'Sub-category 2',
+      },
+      {
+        title: 'Sub-category 3',
+      },
     ],
   },
   {
-    guid: guid(),
     title: 'Category 2',
     children: [
       {
-        guid: guid(),
         title: 'Sub-category 1',
-        children: [{ guid: guid(), title: 'Sub/Sub-category 1' }, { guid: guid(), title: 'Sub/Sub-category 2' }],
+        children: [
+          {
+            title: 'Sub/Sub-category 1',
+          },
+          {
+            title: 'Sub/Sub-category 2',
+          },
+        ],
       },
       {
-        guid: guid(),
         title: 'Sub-category 2',
-        children: [{ guid: guid(), title: 'Sub/Sub-category 1' }, { guid: guid(), title: 'Sub/Sub-category 2' }],
+        children: [
+          {
+            title: 'Sub/Sub-category 1',
+          },
+          {
+            title: 'Sub/Sub-category 2',
+          },
+        ],
       },
     ],
   },
@@ -61,6 +68,9 @@ export class CategoriesTreeComponent implements OnInit {
   lastShownPopoverName: string;
   lastShownPopoverTimeoutId: any;
 
+  selectedNode: CategoryNode = { title: 'None' };
+  currentFilter: EEntityFilter = undefined;
+
   constructor(
     public sidebarContent: SidebarContentService,
     private router: Router,
@@ -70,29 +80,35 @@ export class CategoriesTreeComponent implements OnInit {
     private entityCounterService: EntityCountsService,
   ) {}
 
-  selectedNode: CategoryNode = { guid: '', title: 'None' };
-  currentFilter: EEntityFilter = undefined;
+  private get categories(): Category[] {
+    return this.service.categories;
+  }
 
   ngOnInit() {
+    this.service.selectedCategoryAsync.subscribe(node => (this.selectedNode = node));
     // Show Tree Mock before tree is loaded
-    this.dataSource.data = TREE_DATA;
+    this.dataSource.data = this.service.activeTree = TREE_DATA;
     this.entityCounterService.updateCounters();
     this.entitiyFilter = this.entityCounterService.getCounter(EEntityFilter.ALL);
     this.currentFilter = this.entityCounterService.activeFilter;
-    this.service.category = this.selectedNode;
-    this.getTree(0);
+
+    this.getCategories();
+    this.categories.forEach(category => this.getTree(category.id));
+
+    console.log(this.service.activeTree);
+    console.log(this.service.categories);
   }
 
   hasChild = (_: number, node: CategoryNode) => !!node.children && node.children.length > 0;
 
   selectCategory(node: CategoryNode): void {
-    this.selectedNode = node;
+    this.service.selectedCategory = node;
     this.filterByCategory();
   }
 
   displayAllFiles(): void {
     this.entityCounterService.activeFilter = this.currentFilter = EEntityFilter.ALL;
-    this.selectedNode = { guid: '', title: 'None' };
+    this.selectedNode = { title: 'None' };
     this.router.navigate(['./'], {
       relativeTo: this.activatedRoute,
     });
@@ -121,20 +137,27 @@ export class CategoriesTreeComponent implements OnInit {
   }
 
   private filterByCategory(): Promise<boolean> {
-    this.service.category = this.selectedNode;
+    this.service.selectedCategory = this.selectedNode;
     return this.router.navigate(['./'], {
       // Filter parameter has to be set once API is ready
       queryParams: {
-        $category: `categoryId eq ${this.selectedNode.guid}`,
+        $category: `categoryId eq ${this.selectedNode.id}`,
       },
       relativeTo: this.activatedRoute,
     });
   }
 
-  private getTree(id: number): void {
+  private getCategories(): void {
+    this.api
+      .getCategories()
+      .then((categoryList: Category[]) => (this.service.categories = categoryList))
+      .catch((err: any) => (this.service.categories = []));
+  }
+
+  private getTree(id: string): void {
     this.api
       .getTree(id)
-      .then(tree => (this.dataSource.data = tree))
-      .catch(err => (this.dataSource.data = TREE_DATA));
+      .then((tree: CategoryNode[]) => (this.dataSource.data = this.service.activeTree = tree))
+      .catch((err: any) => (this.dataSource.data = TREE_DATA));
   }
 }
