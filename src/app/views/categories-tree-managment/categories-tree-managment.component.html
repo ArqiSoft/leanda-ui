@@ -3,7 +3,7 @@
     <div class="col-6">
       <div class="card">
         <h4>Data Input</h4>
-        <span [ngSwitch]="isCreated">
+        <span [ngSwitch]="hasData()">
           <ng-container *ngSwitchCase="true">
             <ng-container *ngTemplateOutlet="editCategory"></ng-container>
           </ng-container>
@@ -32,25 +32,36 @@
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
       <button mat-icon-button disabled></button>
-      <div>{{ node.item }}</div>
+      <div>{{ node.title }}</div>
     </mat-tree-node>
 
     <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
       <button mat-icon-button disabled></button>
       <mat-form-field>
-        <input matInput #itemValue placeholder="New item..." />
+        <input matInput type="text" #newNodeTitle placeholder="New item..." [(ngModel)]="newNodeTitle.value" />
+        <button
+          mat-button
+          [disabled]="newNodeTitle.value === ''"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="newNodeTitle.value = ''"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
       </mat-form-field>
-      <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
+      <button mat-button (click)="saveNode(node, newNodeTitle.value)">Save</button>
     </mat-tree-node>
 
     <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename">
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.title">
         <mat-icon class="mat-icon-rtl-mirror">
           {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
       </button>
-      <div>{{ node.item }}</div>
-      <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
+      <div>{{ node.title }}</div>
+      <button mat-icon-button (click)="addNewItem(node, true)"><mat-icon>add</mat-icon></button>
+      <button mat-icon-button (click)="removeItem(node)"><mat-icon>remove</mat-icon></button>
     </mat-tree-node>
   </mat-tree>
 </ng-template>

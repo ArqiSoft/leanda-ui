@@ -1,11 +1,10 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeNestedDataSource } from '@angular/material';
-import { CategoriesApiService } from 'app/core/services/api/categories-api.service';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 
-import { CategoriesService } from '../../shared/components/categories-tree/categories.service';
-import { Category } from '../../shared/components/categories-tree/models/category';
 import { CategoryFlatNode, CategoryNode } from '../../shared/components/categories-tree/models/category-node';
+
+import { CategoriesTreeManagmentService } from './categories-tree-managment.service';
 
 @Component({
   selector: 'dr-categories-tree-managment',
@@ -31,31 +30,19 @@ export class CategoriesTreeManagmentComponent implements OnInit {
 
   dataSource: MatTreeFlatDataSource<CategoryNode, CategoryFlatNode>;
 
-  isCreated: boolean = false;
-
   @ViewChild('newCategoryName', { static: false }) newCategoryName: ElementRef;
 
-  constructor(private categoriesService: CategoriesService, private api: CategoriesApiService) {}
+  constructor(private service: CategoriesTreeManagmentService) {
+    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
+    this.treeControl = new FlatTreeControl<CategoryFlatNode>(this.getLevel, this.isExpandable);
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-  public get activeTree(): CategoryNode[] {
-    return this.categoriesService.activeTree;
+    this.service.dataChange.subscribe((data: CategoryNode[]) => (this.dataSource.data = data));
   }
 
-  public get categories(): Category[] {
-    return this.categoriesService.categories;
-  }
+  ngOnInit() {}
 
-  public set activeTree(value: CategoryNode[]) {
-    this.categoriesService.activeTree = value;
-  }
-
-  public set treeNode(value: CategoryNode) {
-    // this.service.activeTree.
-  }
-
-  ngOnInit() {
-    console.log(this.dataSource);
-  }
+  hasData = () => this.dataSource.data !== null && this.dataSource.data.length > 0;
 
   getLevel = (node: CategoryFlatNode) => node.level;
 
@@ -81,6 +68,9 @@ export class CategoriesTreeManagmentComponent implements OnInit {
     return flatNode;
   }
 
+  /** Creates new Category if non exists */
+  createCategory() {}
+
   /* Get the parent node of a node */
   getParentNode(node: CategoryFlatNode): CategoryFlatNode | null {
     const currentLevel = this.getLevel(node);
@@ -101,22 +91,27 @@ export class CategoriesTreeManagmentComponent implements OnInit {
     return null;
   }
 
-  createCategory() {
-    // const newTree: CategoryNode = new CategoryNode();
-    // newTree.title = this.newCategoryName.nativeElement.value as string;
-    // this.api.createTree([]);
+  /** Select the category so we can insert the new item. */
+  addNewItem(node: CategoryFlatNode, hasChildren: boolean) {
+    const parentNode = this.flatNodeMap.get(node);
+    this.service.insertItem(parentNode, '', hasChildren);
+    this.treeControl.expand(node);
   }
 
-  /** Select the category so we can insert the new item. */
-  addNewItem(node: CategoryFlatNode) {
-    const parentNode = this.flatNodeMap.get(node);
-    // this._database.insertItem(parentNode!, '');
-    this.treeControl.expand(node);
+  removeItem(node: CategoryFlatNode) {
+    const parentNode = this.flatNodeMap.get(this.getParentNode(node));
+    const nestedNode = this.flatNodeMap.get(node);
+
+    if (!parentNode) {
+      this.service.removeCategory(nestedNode);
+    }
+
+    this.service.removeSubcategory(parentNode, nestedNode);
   }
 
   /** Save the node to database */
   saveNode(node: CategoryFlatNode, itemValue: string) {
     const nestedNode = this.flatNodeMap.get(node);
-    // this._database.updateItem(nestedNode!, itemValue);
+    this.service.updateItem(nestedNode, itemValue);
   }
 }

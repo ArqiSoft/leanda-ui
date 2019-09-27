@@ -65,48 +65,48 @@ export class CategoriesTreeManagmentService {
   initialize() {
     // Build the tree nodes from Json object. The result is a list of `CategoryNode` with nested
     //     file node as children.
-    const data = this.buildFileTree(TREE_DATA, 0);
+    const data = TREE_DATA;
 
     // Notify the change.
     this.dataChange.next(data);
   }
 
   /**
-   * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
-   * The return value is the list of `CategoryNode`.
-   */
-  buildFileTree(obj: { [key: string]: any }, level: number): CategoryNode[] {
-    return Object.keys(obj).reduce<CategoryNode[]>((accumulator, key) => {
-      const value = obj[key];
-      const node = new CategoryNode();
-      node.title = key;
-
-      if (value != null) {
-        if (typeof value === 'object') {
-          node.children = this.buildFileTree(value, level + 1);
-        } else {
-          node.title = value;
-        }
-      }
-
-      return accumulator.concat(node);
-    }, []);
-  }
-
-  /**
    * Add an item to to-do list
    * @param parent Parent CategoryNode
    * @param name Title of the category to be pushed as child
+   * @param hasChildren If True - adds 'children' property
    */
-  insertItem(parent: CategoryNode, name: string) {
+  insertItem(parent: CategoryNode, name: string, hasChildren: boolean) {
     if (parent.children) {
-      parent.children.push({ title: name } as CategoryNode);
+      parent.children.push({ title: name, ...() => (hasChildren ? { children: [] } : null) } as CategoryNode);
       this.dataChange.next(this.data);
     }
   }
 
-  updateItem(node: CategoryNode, name: string) {
-    node.title = name;
+  /**
+   * Add an item to to-do list
+   * @param node Current CategoryNode
+   * @param title Title of the category to be pushed as child
+   */
+  updateItem(node: CategoryNode, title: string) {
+    node.title = title;
     this.dataChange.next(this.data);
+  }
+
+  removeCategory(deletedNode: CategoryNode) {
+    this.dataChange.next(this.data.filter(node => node !== deletedNode));
+  }
+
+  removeSubcategory(parent: CategoryNode, deletedNode: CategoryNode) {
+    if (parent.children) {
+      if (deletedNode.title === '') {
+        parent.children = parent.children.filter(childNode => childNode === parent.children.find(node => node === deletedNode));
+      } else {
+        parent.children = parent.children.filter(node => node !== deletedNode);
+      }
+
+      this.dataChange.next(this.data);
+    }
   }
 }
