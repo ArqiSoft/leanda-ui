@@ -10,7 +10,7 @@ import { SidebarContentService } from '../sidebar-content/sidebar-content.servic
 
 import { CategoriesService } from './categories.service';
 import { Category } from './models/category';
-import { CategoryNode } from './models/category-node';
+import { CategoryNode, CategoryTree } from './models/category-node';
 
 const TREE_DATA: CategoryNode[] = [
   {
@@ -157,7 +157,7 @@ export class CategoriesTreeComponent implements OnInit {
   private getTree(id: string): void {
     this.api
       .getTree(id)
-      .then((tree: CategoryNode[]) => (this.dataSource.data = this.service.activeTree = tree))
+      .then((tree: CategoryTree) => (this.dataSource.data = this.service.activeTree = tree.nodes))
       .catch((err: any) => (this.dataSource.data = TREE_DATA));
   }
 }

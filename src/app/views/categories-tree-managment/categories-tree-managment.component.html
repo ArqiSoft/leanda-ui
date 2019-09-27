@@ -1,28 +1,57 @@
 <div class="container-fluid">
+  <h3>Categories Tree Managment</h3>
   <div class="row">
-    <div class="col-6">
+    <div class="col-8">
       <div class="card">
-        <h4>Data Input</h4>
-        <span [ngSwitch]="hasData()">
-          <ng-container *ngSwitchCase="true">
-            <ng-container *ngTemplateOutlet="editCategory"></ng-container>
-          </ng-container>
-          <ng-container *ngSwitchCase="false">
-            <ng-container *ngTemplateOutlet="createCategory"></ng-container>
-          </ng-container>
-          <ng-container *ngSwitchDefault></ng-container>
-        </span>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="card">
-        <h4>Preview</h4>
-        <ng-container *ngIf="!dataSource; else matTree">
-          <small class="text-danger">Tree has no items</small>
-          <!-- remove below row after debugging -->
-          <ng-template #matTree> </ng-template>
+        <h4>Tree:</h4>
+        <ng-container *ngIf="!hasData(); else matTree">
+          <small class="text-danger">
+            <p>
+              There are no categories assign to the user.
+            </p>
+            <p>
+              Please enter first node name.
+            </p>
+          </small>
+          <mat-checkbox #initNodeChildren class="mr-2" [checked]="false">With Children?</mat-checkbox>
+          <mat-form-field>
+            <input matInput type="text" #initNodeTitle placeholder="Title..." [(ngModel)]="initNodeTitle.value" />
+            <button
+              mat-button
+              [disabled]="initNodeTitle.value === ''"
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="initNodeTitle.value = ''"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <button mat-button (click)="createCategory(initNodeTitle.value, initNodeChildren.checked)">Save</button>
         </ng-container>
         <ng-template #matTree> </ng-template>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card h-50">
+        <h4>Available Categories:</h4>
+        <ul>
+          <li>Created by: {{ categories[0]?.createdBy }}</li>
+          <li>Created date: {{ categories[0]?.createdDateTime | date: 'short' }}</li>
+          <li>Updated by: {{ categories[0]?.updatedBy }}</li>
+          <li>Updated date: {{ categories[0]?.updatedDateTime | date: 'short' }}</li>
+        </ul>
+      </div>
+      <div class="card h-50">
+        <h4>Hints & Rules:</h4>
+        <ul>
+          <li>Tree can consisnt of multiple <strong>Nodes</strong></li>
+          <li>Tree node can be flat or nested</li>
+          <li>Flat node has only one property - <strong>Title</strong></li>
+          <li>Nested node may have two properties - <strong>Title</strong> and <strong>Children</strong></li>
+          <li>Children have same structure as parent nodes</li>
+          <li>Node title may not exceed <strong>30</strong> symbols</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -37,8 +66,9 @@
 
     <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
       <button mat-icon-button disabled></button>
+      <mat-checkbox #addChildren class="mr-2" [checked]="false">With Children?</mat-checkbox>
       <mat-form-field>
-        <input matInput type="text" #newNodeTitle placeholder="New item..." [(ngModel)]="newNodeTitle.value" />
+        <input matInput type="text" #newNodeTitle placeholder="Title..." [(ngModel)]="newNodeTitle.value" />
         <button
           mat-button
           [disabled]="newNodeTitle.value === ''"
@@ -50,7 +80,7 @@
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
-      <button mat-button (click)="saveNode(node, newNodeTitle.value)">Save</button>
+      <button mat-button (click)="saveNode(node, newNodeTitle.value, addChildren.checked)">Save</button>
     </mat-tree-node>
 
     <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
@@ -60,17 +90,8 @@
         </mat-icon>
       </button>
       <div>{{ node.title }}</div>
-      <button mat-icon-button (click)="addNewItem(node, true)"><mat-icon>add</mat-icon></button>
-      <button mat-icon-button (click)="removeItem(node)"><mat-icon>remove</mat-icon></button>
+      <button mat-icon-button (click)="addNewNode(node)"><mat-icon>add</mat-icon></button>
+      <button mat-icon-button (click)="removeNode(node)"><mat-icon>remove</mat-icon></button>
     </mat-tree-node>
   </mat-tree>
-</ng-template>
-
-<ng-template #editCategory> </ng-template>
-
-<ng-template #createCategory>
-  <mat-form-field>
-    <input #newCategoryName matInput placeholder="Category Name" />
-  </mat-form-field>
-  <button class="btn btn-primary">Add Category</button>
 </ng-template>

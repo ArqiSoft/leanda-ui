@@ -1,6 +1,7 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
+import { Category } from 'app/shared/components/categories-tree/models/category';
 
 import { CategoryFlatNode, CategoryNode } from '../../shared/components/categories-tree/models/category-node';
 
@@ -30,14 +31,17 @@ export class CategoriesTreeManagmentComponent implements OnInit {
 
   dataSource: MatTreeFlatDataSource<CategoryNode, CategoryFlatNode>;
 
-  @ViewChild('newCategoryName', { static: false }) newCategoryName: ElementRef;
+  categories: Category[] = [];
 
   constructor(private service: CategoriesTreeManagmentService) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<CategoryFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-    this.service.dataChange.subscribe((data: CategoryNode[]) => (this.dataSource.data = data));
+    this.service.dataChange.subscribe((data: CategoryNode[]) => {
+      this.dataSource.data = data;
+      this.categories = this.service.categories;
+    });
   }
 
   ngOnInit() {}
@@ -69,7 +73,23 @@ export class CategoriesTreeManagmentComponent implements OnInit {
   }
 
   /** Creates new Category if non exists */
-  createCategory() {}
+  createCategory(title: string, children: boolean) {
+    /**
+     * As we are working with only one category atm
+     * when we remove all items from category we have to
+     * update current category tree with empty values
+     */
+    const node = new CategoryNode();
+
+    if (!this.hasData()) {
+      if (children) {
+        node.children = [];
+      }
+      node.title = title;
+
+      this.service.createCategory([node]);
+    }
+  }
 
   /* Get the parent node of a node */
   getParentNode(node: CategoryFlatNode): CategoryFlatNode | null {
@@ -92,26 +112,26 @@ export class CategoriesTreeManagmentComponent implements OnInit {
   }
 
   /** Select the category so we can insert the new item. */
-  addNewItem(node: CategoryFlatNode, hasChildren: boolean) {
+  addNewNode(node: CategoryFlatNode): void {
     const parentNode = this.flatNodeMap.get(node);
-    this.service.insertItem(parentNode, '', hasChildren);
+    this.service.insertItem(parentNode, '');
     this.treeControl.expand(node);
   }
 
-  removeItem(node: CategoryFlatNode) {
+  removeNode(node: CategoryFlatNode): void {
     const parentNode = this.flatNodeMap.get(this.getParentNode(node));
     const nestedNode = this.flatNodeMap.get(node);
 
     if (!parentNode) {
-      this.service.removeCategory(nestedNode);
+      this.service.removeNode(nestedNode);
+    } else {
+      this.service.removeNestedNode(parentNode, nestedNode);
     }
-
-    this.service.removeSubcategory(parentNode, nestedNode);
   }
 
   /** Save the node to database */
-  saveNode(node: CategoryFlatNode, itemValue: string) {
+  saveNode(node: CategoryFlatNode, itemValue: string, children: boolean): void {
     const nestedNode = this.flatNodeMap.get(node);
-    this.service.updateItem(nestedNode, itemValue);
+    this.service.updateItem(nestedNode, itemValue, children);
   }
 }

@@ -1,6 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatFormFieldModule, MatIconModule, MatInputModule, MatRippleModule, MatTooltipModule, MatTreeModule } from '@angular/material';
+import {
+  MatCheckboxModule,
+  MatFormFieldModule,
+  MatIconModule,
+  MatInputModule,
+  MatRippleModule,
+  MatTooltipModule,
+  MatTreeModule,
+} from '@angular/material';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from 'app/shared/shared.module';
 
@@ -8,7 +16,7 @@ import { CategoriesTreeManagmentComponent } from './categories-tree-managment.co
 
 const routes: Routes = [{ path: '', component: CategoriesTreeManagmentComponent }];
 
-const MatModules = [MatTreeModule, MatIconModule, MatRippleModule, MatTooltipModule, MatFormFieldModule, MatInputModule];
+const MatModules = [MatTreeModule, MatIconModule, MatRippleModule, MatTooltipModule, MatFormFieldModule, MatInputModule, MatCheckboxModule];
 
 @NgModule({
   declarations: [CategoriesTreeManagmentComponent],
