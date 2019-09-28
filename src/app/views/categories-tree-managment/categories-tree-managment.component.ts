@@ -1,5 +1,5 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 import { Category } from 'app/shared/components/categories-tree/models/category';
 
@@ -21,9 +21,6 @@ export class CategoriesTreeManagmentComponent implements OnInit {
 
   /** A selected parent node to be inserted */
   selectedParent: CategoryFlatNode | null = null;
-
-  /** The new item's name */
-  newItemName = '';
 
   treeControl: FlatTreeControl<CategoryFlatNode>;
 
@@ -62,21 +59,6 @@ export class CategoriesTreeManagmentComponent implements OnInit {
 
   hasOnlyItem = () => this.dataSource.data.length === 1;
 
-  /**
-   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
-   */
-  transformer = (node: CategoryNode, level: number) => {
-    const existingNode = this.nestedNodeMap.get(node);
-    const flatNode = existingNode && existingNode.title === node.title ? existingNode : new CategoryFlatNode();
-    flatNode.title = node.title;
-    flatNode.level = level;
-    flatNode.expandable = !!node.children;
-    flatNode.editable = false;
-    this.flatNodeMap.set(flatNode, node);
-    this.nestedNodeMap.set(node, flatNode);
-    return flatNode;
-  }
-
   /** Creates new Category if non exists */
   createCategory(title: string, children: boolean) {
     /**
@@ -96,8 +78,51 @@ export class CategoriesTreeManagmentComponent implements OnInit {
     }
   }
 
+  /** Select the category so we can insert the new item. */
+  addNewNode(node: CategoryFlatNode): void {
+    const parentNode = this.flatNodeMap.get(node);
+    this.service.insertItem(parentNode, '');
+    this.treeControl.expand(node);
+  }
+
+  /** Remove node from database */
+  removeNode(node: CategoryFlatNode): void {
+    const parentNode = this.flatNodeMap.get(this.getParentNode(node));
+    const nestedNode = this.flatNodeMap.get(node);
+
+    if (!parentNode) {
+      this.service.removeNode(nestedNode);
+    } else {
+      this.service.removeNestedNode(parentNode, nestedNode);
+    }
+  }
+
+  /** Save the node to database */
+  saveNode(node: CategoryFlatNode, itemValue: string, children: boolean): void {
+    const nestedNode = this.flatNodeMap.get(node);
+    this.service.updateItem(nestedNode, itemValue, children);
+  }
+
+  /**
+   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
+   */
+  private transformer = (node: CategoryNode, level: number) => {
+    const existingNode = this.nestedNodeMap.get(node);
+    const flatNode = existingNode && existingNode.title === node.title ? existingNode : new CategoryFlatNode();
+
+    flatNode.title = node.title;
+    flatNode.level = level;
+    flatNode.expandable = !!node.children;
+    flatNode.editable = false;
+
+    this.flatNodeMap.set(flatNode, node);
+    this.nestedNodeMap.set(node, flatNode);
+
+    return flatNode;
+  }
+
   /* Get the parent node of a node */
-  getParentNode(node: CategoryFlatNode): CategoryFlatNode | null {
+  private getParentNode(node: CategoryFlatNode): CategoryFlatNode | null {
     const currentLevel = this.getLevel(node);
 
     if (currentLevel < 1) {
@@ -114,29 +139,5 @@ export class CategoriesTreeManagmentComponent implements OnInit {
       }
     }
     return null;
-  }
-
-  /** Select the category so we can insert the new item. */
-  addNewNode(node: CategoryFlatNode): void {
-    const parentNode = this.flatNodeMap.get(node);
-    this.service.insertItem(parentNode, '');
-    this.treeControl.expand(node);
-  }
-
-  removeNode(node: CategoryFlatNode): void {
-    const parentNode = this.flatNodeMap.get(this.getParentNode(node));
-    const nestedNode = this.flatNodeMap.get(node);
-
-    if (!parentNode) {
-      this.service.removeNode(nestedNode);
-    } else {
-      this.service.removeNestedNode(parentNode, nestedNode);
-    }
-  }
-
-  /** Save the node to database */
-  saveNode(node: CategoryFlatNode, itemValue: string, children: boolean): void {
-    const nestedNode = this.flatNodeMap.get(node);
-    this.service.updateItem(nestedNode, itemValue, children);
   }
 }

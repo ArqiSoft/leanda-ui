@@ -4,52 +4,6 @@ import { Category } from 'app/shared/components/categories-tree/models/category'
 import { CategoryNode } from 'app/shared/components/categories-tree/models/category-node';
 import { BehaviorSubject } from 'rxjs';
 
-/**
- * The Mock array of category treesdi.
- */
-const TREE_DATA: CategoryNode[] = [
-  {
-    title: 'Node 1',
-    children: [
-      {
-        title: 'Level 1: Node 1',
-      },
-      {
-        title: 'Level 1: Node 2',
-      },
-      {
-        title: 'Level 1: Node 3',
-      },
-    ],
-  },
-  {
-    title: 'Node 2',
-    children: [
-      {
-        title: 'Level 1: Node 1',
-        children: [
-          {
-            title: 'Level 2: Node 1',
-          },
-          {
-            title: 'Level 2: Node 2',
-          },
-        ],
-      },
-      {
-        title: 'Level 1: Node 2',
-        children: [
-          {
-            title: 'Level 2: Node 1',
-          },
-          {
-            title: 'Level 2: Node 2',
-          },
-        ],
-      },
-    ],
-  },
-];
 @Injectable({
   providedIn: 'root',
 })
@@ -70,9 +24,16 @@ export class CategoriesTreeManagmentService {
     this.initialize();
   }
 
+  /**
+   * Initializing categories
+   */
   initialize() {
-    this.getCategories().then(categories => {
+    // retriving list of avalible categories
+    this.getCategories().then((categories: Category[]) => {
+      // notyfing `categories` subject
       this._cateogories.next(categories);
+      // if categories list is not empty - retrieving first category
+      // TBD: change when `Leanda` will support multiple categories functionality
       if (categories.length > 0) {
         this.getCategoryTree(this.categories[0].id);
       }
@@ -93,7 +54,7 @@ export class CategoriesTreeManagmentService {
   }
 
   /**
-   * Add an item to to-do list
+   * Add an item to CategoryNode list
    * @param node Current CategoryNode
    * @param title Title of the category to be pushed as child
    */
@@ -113,6 +74,10 @@ export class CategoriesTreeManagmentService {
     this.dataChange.next(this.data.filter(node => node !== deletedNode));
   }
 
+  /**
+   * This method removes selected node by deep searching into elements of CategoryNode[]
+   * @param deletedNode the node that has to be deleted
+   */
   removeNestedNode(parent: CategoryNode, deletedNode: CategoryNode) {
     if (parent.children) {
       if (deletedNode.title === '') {
