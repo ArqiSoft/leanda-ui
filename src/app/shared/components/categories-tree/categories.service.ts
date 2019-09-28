@@ -22,6 +22,9 @@ export class CategoriesService {
   public get activeTree(): CategoryNode[] {
     return this._activeTree.value;
   }
+  public get activeTreeAsync(): Observable<CategoryNode[]> {
+    return this._activeTree.asObservable();
+  }
   public set activeTree(value: CategoryNode[]) {
     this._activeTree.next(value);
   }

@@ -86,14 +86,13 @@ export class CategoriesTreeComponent implements OnInit {
 
   ngOnInit() {
     this.service.selectedCategoryAsync.subscribe(node => (this.selectedNode = node));
-    // Show Tree Mock before tree is loaded
-    this.dataSource.data = this.service.activeTree = TREE_DATA;
+    this.service.activeTreeAsync.subscribe(tree => (this.dataSource.data = tree));
+
     this.entityCounterService.updateCounters();
     this.entitiyFilter = this.entityCounterService.getCounter(EEntityFilter.ALL);
     this.currentFilter = this.entityCounterService.activeFilter;
 
     this.getCategories();
-    this.categories.forEach(category => this.getTree(category.id));
 
     console.log(this.service.activeTree);
     console.log(this.service.categories);
@@ -151,6 +150,7 @@ export class CategoriesTreeComponent implements OnInit {
     this.api
       .getCategories()
       .then((categoryList: Category[]) => (this.service.categories = categoryList))
+      .then(() => this.getTree(this.categories[0].id))
       .catch((err: any) => (this.service.categories = []));
   }
 
