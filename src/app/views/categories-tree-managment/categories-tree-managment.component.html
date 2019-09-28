@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-8">
       <div class="card">
-        <h4>Tree:</h4>
+        <h4>Tree:</h4>        
         <ng-container *ngIf="!hasData(); else matTree">
           <small class="text-danger">
             <p>
@@ -27,7 +27,7 @@
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
-          <button mat-button (click)="createCategory(initNodeTitle.value, initNodeChildren.checked)">Save</button>
+          <button mat-button class="btn btn-primary text-white" (click)="createCategory(initNodeTitle.value, initNodeChildren.checked)">Save</button>
         </ng-container>
         <ng-template #matTree> </ng-template>
       </div>
@@ -107,7 +107,7 @@
     <ng-container *ngSwitchCase="false">
       <div>{{ node.title }}</div>
       <button mat-icon-button (click)="addNewNode(node)"><mat-icon>add</mat-icon></button>
-      <button mat-icon-button (click)="removeNode(node)"><mat-icon>remove</mat-icon></button>
+      <button mat-icon-button (click)="removeNode(node)" [disabled]="hasOnlyItem() && node.level === 0"><mat-icon>remove</mat-icon></button>
     </ng-container>
   </ng-container>
   <!-- Switch between Title and Edit Title -->

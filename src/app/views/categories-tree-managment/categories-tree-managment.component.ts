@@ -58,6 +58,10 @@ export class CategoriesTreeManagmentComponent implements OnInit {
 
   hasNoContent = (_: number, _nodeData: CategoryFlatNode) => _nodeData.title === '';
 
+  moreThanOneCategory = () => this.categories.length > 0;
+
+  hasOnlyItem = () => this.dataSource.data.length === 1;
+
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
    */
