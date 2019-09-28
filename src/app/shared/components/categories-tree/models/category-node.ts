@@ -23,4 +23,5 @@ export class CategoryFlatNode {
   title: string;
   level: number;
   expandable: boolean;
+  editable: boolean;
 }

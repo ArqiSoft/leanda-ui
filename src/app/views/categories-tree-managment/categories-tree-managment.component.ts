@@ -67,6 +67,7 @@ export class CategoriesTreeManagmentComponent implements OnInit {
     flatNode.title = node.title;
     flatNode.level = level;
     flatNode.expandable = !!node.children;
+    flatNode.editable = false;
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;

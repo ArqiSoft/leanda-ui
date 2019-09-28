@@ -60,8 +60,10 @@
 <ng-template #matTree>
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+      <!-- Collapse button -->
       <button mat-icon-button disabled></button>
-      <div>{{ node.title }}</div>
+      <!-- Node Title and Action buttons -->
+      <ng-container *ngTemplateOutlet="nodeTemp; context: { node: node }"></ng-container>
     </mat-tree-node>
 
     <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
@@ -84,14 +86,41 @@
     </mat-tree-node>
 
     <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+      <!-- Collapse button -->
       <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.title">
         <mat-icon class="mat-icon-rtl-mirror">
           {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
       </button>
+      <!-- Node Title and Action buttons -->
+      <ng-container *ngTemplateOutlet="nodeTemp; context: { node: node }"></ng-container>
+    </mat-tree-node>
+  </mat-tree>
+</ng-template>
+
+<ng-template #nodeTemp let-node="node">
+  <!-- Show/Hide Title/Edit Title-->
+  <ng-container [ngSwitch]="node.editable">
+    <ng-container *ngSwitchCase="true">
+      <ng-container *ngTemplateOutlet="editNodeTemp; context: { node: node }"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="false">
       <div>{{ node.title }}</div>
       <button mat-icon-button (click)="addNewNode(node)"><mat-icon>add</mat-icon></button>
       <button mat-icon-button (click)="removeNode(node)"><mat-icon>remove</mat-icon></button>
-    </mat-tree-node>
-  </mat-tree>
+    </ng-container>
+  </ng-container>
+  <!-- Switch between Title and Edit Title -->
+  <button mat-icon-button (click)="node.editable = !node.editable">
+    <mat-icon [color]="node.editable ? 'primary' : 'black'">edit</mat-icon>
+  </button>
+</ng-template>
+
+<!-- Edit Title template -->
+<ng-template #editNodeTemp let-node="node">
+  <!-- <mat-checkbox #addChildren class="mr-2" [checked]="false">Remove All Children?</mat-checkbox> -->
+  <mat-form-field>
+    <input matInput #newTitle placeholder="New Title" type="text" />
+  </mat-form-field>
+  <button mat-button (click)="saveNode(node, newTitle.value, false)">Save</button>
 </ng-template>
