@@ -26,7 +26,7 @@ export class EntityCountsComponent implements OnInit, OnDestroy {
   filterName: any = EEntityFilter;
 
   constructor(
-    private dataService: BrowserDataBaseService,
+    public dataService: BrowserDataBaseService,
     private signalr: SignalrService,
     private ngZone: NgZone,
     private service: EntityCountsService,
