@@ -57,7 +57,7 @@ export class CategoriesTreeManagmentComponent implements OnInit {
 
   moreThanOneCategory = () => this.categories.length > 0;
 
-  hasOnlyItem = () => this.dataSource.data.length === 1;
+  treeHasOneMainNode = () => this.dataSource.data.length === 1;
 
   /** Creates new Category if non exists */
   createCategory(title: string, children: boolean) {
