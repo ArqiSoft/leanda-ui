@@ -27,7 +27,11 @@
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
-          <button mat-button class="btn btn-primary text-white" (click)="createCategory(initNodeTitle.value, initNodeChildren.checked)">
+          <button
+            mat-stroked-button
+            class="btn btn-primary text-white"
+            (click)="createCategory(initNodeTitle.value, initNodeChildren.checked)"
+          >
             Save
           </button>
         </ng-container>
@@ -59,6 +63,11 @@
 </div>
 
 <ng-template #matTree>
+  <button mat-icon-button (click)="addNewMainNode()">
+    <mat-icon>
+      add
+    </mat-icon>
+  </button>
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
       <!-- Collapse button -->
@@ -86,8 +95,8 @@
       <button mat-icon-button (click)="removeNode(node)" [hidden]="treeHasOneMainNode() && getLevel(node) === 0">
         <mat-icon>remove</mat-icon>
       </button>
-      <button mat-button (click)="saveNode(node, newNodeTitle.value, addChildren.checked)">
-        <mat-icon>save</mat-icon>
+      <button mat-stroked-button (click)="saveNode(node, newNodeTitle.value, addChildren.checked)">
+        Save
       </button>
     </mat-tree-node>
 
@@ -103,7 +112,7 @@
     </mat-tree-node>
   </mat-tree>
   <div class="align-items-end align-self-end d-flex save-tree">
-    <button mat-button class="btn btn-primary text-white">Save</button>
+    <button mat-stroked-button class="btn btn-primary text-white">Save</button>
   </div>
 </ng-template>
 
@@ -131,7 +140,10 @@
 <ng-template #editNodeTemp let-node="node">
   <mat-checkbox #enableChildren class="mr-2" [checked]="false" [hidden]="hasChild(null, node)">Enable Children ?</mat-checkbox>
   <mat-form-field>
-    <input matInput #newTitle placeholder="New Title" type="text" />
+    <input matInput type="text" #newTitle placeholder="Title..." [(ngModel)]="newTitle.value" />
+    <button mat-button [disabled]="newTitle.value === ''" matSuffix mat-icon-button aria-label="Clear" (click)="newTitle.value = ''">
+      <mat-icon>close</mat-icon>
+    </button>
   </mat-form-field>
-  <button mat-button (click)="saveNode(node, newTitle.value, enableChildren.checked)">Save</button>
+  <button mat-stroked-button class="flex-last" (click)="saveNode(node, newTitle.value, enableChildren.checked)">Save</button>
 </ng-template>

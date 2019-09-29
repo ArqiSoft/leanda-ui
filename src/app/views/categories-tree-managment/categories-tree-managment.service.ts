@@ -53,6 +53,11 @@ export class CategoriesTreeManagmentService {
     }
   }
 
+  insertMainItem() {
+    this.data.push({ title: '' } as CategoryNode);
+    this.dataChange.next(this.data);
+  }
+
   /**
    * Add an item to CategoryNode list
    * @param node Current CategoryNode

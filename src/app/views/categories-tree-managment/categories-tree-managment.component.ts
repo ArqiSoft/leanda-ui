@@ -85,6 +85,12 @@ export class CategoriesTreeManagmentComponent implements OnInit {
     this.treeControl.expand(node);
   }
 
+  /** Select the category so we can insert the new item. */
+  addNewMainNode(node: CategoryFlatNode): void {
+    this.service.insertMainItem();
+    this.treeControl.expand(node);
+  }
+
   /** Remove node from database */
   removeNode(node: CategoryFlatNode): void {
     const parentNode = this.flatNodeMap.get(this.getParentNode(node));
