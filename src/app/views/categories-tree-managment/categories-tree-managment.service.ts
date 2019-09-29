@@ -95,6 +95,10 @@ export class CategoriesTreeManagmentService {
     }
   }
 
+  updateTree() {
+    this.api.updateTree(this.categories[0].id, this.data);
+  }
+
   createCategory(tree: CategoryNode[]): void {
     this.api.createTree(tree).then(id => this.getCategoryTree(id));
   }

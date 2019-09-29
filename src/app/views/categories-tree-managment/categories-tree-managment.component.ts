@@ -78,14 +78,14 @@ export class CategoriesTreeManagmentComponent implements OnInit {
     }
   }
 
-  /** Select the category so we can insert the new item. */
+  /** Select the category so we can insert the new node. */
   addNewNode(node: CategoryFlatNode): void {
     const parentNode = this.flatNodeMap.get(node);
     this.service.insertItem(parentNode, '');
     this.treeControl.expand(node);
   }
 
-  /** Select the category so we can insert the new item. */
+  /** Select the category so we can insert the new main node. */
   addNewMainNode(node: CategoryFlatNode): void {
     this.service.insertMainItem();
     this.treeControl.expand(node);
@@ -107,6 +107,10 @@ export class CategoriesTreeManagmentComponent implements OnInit {
   saveNode(node: CategoryFlatNode, itemValue: string, children: boolean): void {
     const nestedNode = this.flatNodeMap.get(node);
     this.service.updateItem(nestedNode, itemValue, children);
+  }
+
+  updateTree(): void {
+    this.service.updateTree();
   }
 
   /**
