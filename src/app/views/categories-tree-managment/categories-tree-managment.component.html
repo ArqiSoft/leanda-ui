@@ -69,6 +69,9 @@
     </mat-icon>
   </button>
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <!-- 
+      * Single node with title and without children
+     -->
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
       <!-- Collapse button -->
       <button mat-icon-button disabled></button>
@@ -76,6 +79,9 @@
       <ng-container *ngTemplateOutlet="nodeTemp; context: { node: node }"></ng-container>
     </mat-tree-node>
 
+    <!-- 
+      * New node without title and without children
+     -->
     <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
       <button mat-icon-button disabled></button>
       <mat-checkbox #addChildren class="mr-2" [checked]="false">Enable Children ?</mat-checkbox>
@@ -100,6 +106,9 @@
       </button>
     </mat-tree-node>
 
+    <!-- 
+       * Node that with title and with children
+     -->
     <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
       <!-- Collapse button -->
       <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.title" [hidden]="!hasChild(null, node)">
@@ -111,6 +120,8 @@
       <ng-container *ngTemplateOutlet="nodeTemp; context: { node: node }"></ng-container>
     </mat-tree-node>
   </mat-tree>
+
+    <!-- Update Entire Tree at a Time -->
   <div class="align-items-end align-self-end d-flex save-tree">
     <button mat-stroked-button class="btn btn-primary text-white" (click)="updateTree()">Save</button>
   </div>

@@ -27,7 +27,7 @@ export class CategoriesApiService {
     return this.http.put<boolean>(`${environment.apiUrl}/categories/tree/${id}`, node).toPromise();
   }
 
-  updateTreeNode(id: string, nodeId: string, node: CategoryNode[]): Promise<boolean> {
-    return this.http.put<boolean>(`${environment.apiUrl}/categories/tree/${id}/${nodeId}`, node).toPromise();
+  updateTreeNode(id: string, node: CategoryNode): Promise<boolean> {
+    return this.http.put<boolean>(`${environment.apiUrl}/categories/tree/${id}/${node.id}`, node).toPromise();
   }
 }

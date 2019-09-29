@@ -113,6 +113,10 @@ export class CategoriesTreeManagmentComponent implements OnInit {
     this.service.updateTree();
   }
 
+  updateTreeNode(node: CategoryNode): void {
+    this.service.updateTreeNode(node);
+  }
+
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
    */

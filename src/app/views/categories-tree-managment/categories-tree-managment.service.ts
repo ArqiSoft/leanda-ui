@@ -99,6 +99,16 @@ export class CategoriesTreeManagmentService {
     this.api.updateTree(this.categories[0].id, this.data);
   }
 
+  /**
+   *
+   * @param id category id
+   * @param node category tree node id
+   * @param nodes category tree new nodes
+   */
+  updateTreeNode(node: CategoryNode) {
+    this.api.updateTreeNode(this.categories[0].id, node);
+  }
+
   createCategory(tree: CategoryNode[]): void {
     this.api.createTree(tree).then(id => this.getCategoryTree(id));
   }
@@ -109,13 +119,5 @@ export class CategoriesTreeManagmentService {
 
   private getCategoryTree(id: string): void {
     this.api.getTree(id).then(tree => this.dataChange.next(tree.nodes));
-  }
-
-  private updateCategoryTree(id: string, nodes: CategoryNode[]) {
-    this.api.updateTree(id, nodes);
-  }
-
-  private updateCategoryTreeNode(id: string, node: CategoryNode, nodes: CategoryNode[]) {
-    this.api.updateTreeNode(id, node.id, nodes);
   }
 }
