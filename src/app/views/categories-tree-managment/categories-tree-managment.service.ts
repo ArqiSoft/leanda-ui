@@ -86,7 +86,7 @@ export class CategoriesTreeManagmentService {
   removeNestedNode(parent: CategoryNode, deletedNode: CategoryNode) {
     if (parent.children) {
       if (deletedNode.title === '') {
-        parent.children = parent.children.filter(childNode => childNode === parent.children.find(node => node === deletedNode));
+        parent.children = parent.children.filter(childNode => childNode !== parent.children.find(node => node === deletedNode));
       } else {
         parent.children = parent.children.filter(node => node !== deletedNode);
       }
