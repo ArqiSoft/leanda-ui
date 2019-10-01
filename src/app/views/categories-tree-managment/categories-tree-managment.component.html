@@ -13,7 +13,6 @@
               Please enter first node name.
             </p>
           </small>
-          <mat-checkbox #initNodeChildren class="mr-2" [checked]="false">Enable Children ?</mat-checkbox>
           <mat-form-field>
             <input matInput type="text" #initNodeTitle placeholder="Title..." [(ngModel)]="initNodeTitle.value" />
             <button
@@ -27,11 +26,7 @@
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
-          <button
-            mat-stroked-button
-            class="btn btn-primary text-white"
-            (click)="createCategory(initNodeTitle.value, initNodeChildren.checked)"
-          >
+          <button mat-stroked-button class="btn btn-primary text-white" (click)="createCategory(initNodeTitle.value)">
             Save
           </button>
         </ng-container>
@@ -70,11 +65,16 @@
   </button>
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
     <!-- 
-      * Single node with title and without children
+      * Single node with title and with/without children
      -->
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
       <!-- Collapse button -->
-      <button mat-icon-button disabled></button>
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.title" [disabled]="!hasChild(null, node)">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+        </mat-icon>
+      </button>
       <!-- Node Title and Action buttons -->
       <ng-container *ngTemplateOutlet="nodeTemp; context: { node: node }"></ng-container>
     </mat-tree-node>
@@ -84,7 +84,6 @@
      -->
     <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
       <button mat-icon-button disabled></button>
-      <mat-checkbox #addChildren class="mr-2" [checked]="false">Enable Children ?</mat-checkbox>
       <mat-form-field>
         <input matInput type="text" #newNodeTitle placeholder="Title..." [(ngModel)]="newNodeTitle.value" />
         <button
@@ -101,60 +100,49 @@
       <button mat-icon-button (click)="removeNode(node)" [hidden]="treeHasOneMainNode() && getLevel(node) === 0">
         <mat-icon>remove</mat-icon>
       </button>
-      <button mat-stroked-button (click)="saveNode(node, newNodeTitle.value, addChildren.checked)">
+      <button mat-stroked-button (click)="saveNode(node, newNodeTitle.value)">
         Save
       </button>
     </mat-tree-node>
-
-    <!-- 
-       * Node that with title and with children
-     -->
-    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-      <!-- Collapse button -->
-      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.title" [hidden]="!hasChild(null, node)">
-        <mat-icon class="mat-icon-rtl-mirror">
-          {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
-        </mat-icon>
-      </button>
-      <!-- Node Title and Action buttons -->
-      <ng-container *ngTemplateOutlet="nodeTemp; context: { node: node }"></ng-container>
-    </mat-tree-node>
   </mat-tree>
 
-    <!-- Update Entire Tree at a Time -->
+  <!-- Update Entire Tree at a Time -->
   <div class="align-items-end align-self-end d-flex save-tree">
     <button mat-stroked-button class="btn btn-primary text-white" (click)="updateTree()">Save</button>
   </div>
 </ng-template>
 
 <ng-template #nodeTemp let-node="node">
-  <!-- Show/Hide Title/Edit Title-->
+  <!-- Switch between templates of "edit" and "display" mode-->
   <ng-container [ngSwitch]="node.editable">
+    <!-- If Node name "edit" mode toggled "ON" -->
     <ng-container *ngSwitchCase="true">
       <ng-container *ngTemplateOutlet="editNodeTemp; context: { node: node }"></ng-container>
     </ng-container>
+
+    <!-- If Node name "edit" mode toggled "OFF" -->
     <ng-container *ngSwitchCase="false">
-      <div>{{ node.title }}</div>
-      <button mat-icon-button (click)="addNewNode(node)" [hidden]="!hasChild(null, node)"><mat-icon>add</mat-icon></button>
-      <button mat-icon-button (click)="removeNode(node)" [disabled]="treeHasOneMainNode() && node.level === 0">
+      <div class="pr-3">{{ node.title }}</div>
+      <button mat-stroked-button class="node-icon-button" [color]="'primary'" (click)="addNewNode(node)"><mat-icon>add</mat-icon></button>
+      <button mat-stroked-button class="node-icon-button" [color]="'primary'" (click)="removeNode(node)" [disabled]="treeHasOneMainNode() && node.level === 0">
         <mat-icon>remove</mat-icon>
       </button>
     </ng-container>
   </ng-container>
+
   <!-- Switch between Title and Edit Title -->
-  <button mat-icon-button (click)="node.editable = !node.editable">
-    <mat-icon [color]="node.editable ? 'primary' : 'black'">edit</mat-icon>
+  <button mat-stroked-button class="node-icon-button" (click)="node.editable = !node.editable">
+    <mat-icon class="icon-large align-bottom" [color]="'primary'">edit</mat-icon>
   </button>
 </ng-template>
 
 <!-- Edit Title template -->
 <ng-template #editNodeTemp let-node="node">
-  <mat-checkbox #enableChildren class="mr-2" [checked]="false" [hidden]="hasChild(null, node)">Enable Children ?</mat-checkbox>
   <mat-form-field>
     <input matInput type="text" #newTitle placeholder="Title..." [(ngModel)]="newTitle.value" />
-    <button mat-button [disabled]="newTitle.value === ''" matSuffix mat-icon-button aria-label="Clear" (click)="newTitle.value = ''">
+    <button matSuffix mat-icon-button aria-label="Clear" [disabled]="newTitle.value === ''" (click)="newTitle.value = ''">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
-  <button mat-stroked-button class="flex-last" (click)="saveNode(node, newTitle.value, enableChildren.checked)">Save</button>
+  <button mat-stroked-button class="flex-last mx-1" (click)="saveNode(node, newTitle.value)">Save</button>
 </ng-template>

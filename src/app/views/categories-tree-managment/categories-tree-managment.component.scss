@@ -1,6 +1,15 @@
 @import 'vars';
 
 :host {
+  .node-icon-button {
+    padding-right: 0;
+    padding-left: 0;
+    margin-left: 0.1rem;
+    margin-right: 0.1rem;
+    min-width: 2rem;
+    // border: 0;
+  }
+
   .container-fluid {
     top: 60px;
     height: calc(100% - 60px);
@@ -25,6 +34,10 @@
 
   [class*='col-'] {
     padding: 1rem;
+  }
+
+  .icon-large {
+    font-size: medium;
   }
 
   .save-tree {

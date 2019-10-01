@@ -16,7 +16,16 @@ import { CategoriesTreeManagmentComponent } from './categories-tree-managment.co
 
 const routes: Routes = [{ path: '', component: CategoriesTreeManagmentComponent }];
 
-const MatModules = [MatTreeModule, MatIconModule, MatRippleModule, MatTooltipModule, MatFormFieldModule, MatInputModule, MatCheckboxModule];
+const MatModules = [
+  MatTreeModule,
+  MatIconModule,
+  MatRippleModule,
+  MatTooltipModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatCheckboxModule,
+  MatTreeModule,
+];
 
 @NgModule({
   declarations: [CategoriesTreeManagmentComponent],

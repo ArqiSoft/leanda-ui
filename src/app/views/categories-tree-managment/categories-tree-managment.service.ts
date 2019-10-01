@@ -50,6 +50,11 @@ export class CategoriesTreeManagmentService {
     if (parent.children) {
       parent.children.push({ title: name } as CategoryNode);
       this.dataChange.next(this.data);
+    } else {
+      parent.children = [];
+      parent.children.push({ title: name, children: [] } as CategoryNode);
+      console.log('parent has no children', parent);
+      this.dataChange.next(this.data);
     }
   }
 
@@ -63,10 +68,7 @@ export class CategoriesTreeManagmentService {
    * @param node Current CategoryNode
    * @param title Title of the category to be pushed as child
    */
-  updateItem(node: CategoryNode, title: string, children: boolean) {
-    if (children) {
-      node.children = [];
-    }
+  updateItem(node: CategoryNode, title: string) {
     node.title = title;
     this.dataChange.next(this.data);
   }

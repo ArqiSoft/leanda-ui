@@ -60,7 +60,7 @@ export class CategoriesTreeManagmentComponent implements OnInit {
   treeHasOneMainNode = () => this.dataSource.data.length === 1;
 
   /** Creates new Category if non exists */
-  createCategory(title: string, children: boolean) {
+  createCategory(title: string) {
     /**
      * As we are working with only one category atm
      * when we remove all items from category we have to
@@ -69,9 +69,6 @@ export class CategoriesTreeManagmentComponent implements OnInit {
     const node = new CategoryNode();
 
     if (!this.hasData()) {
-      if (children) {
-        node.children = [];
-      }
       node.title = title;
 
       this.service.createCategory([node]);
@@ -104,9 +101,9 @@ export class CategoriesTreeManagmentComponent implements OnInit {
   }
 
   /** Save the node to database */
-  saveNode(node: CategoryFlatNode, itemValue: string, children: boolean): void {
+  saveNode(node: CategoryFlatNode, itemValue: string): void {
     const nestedNode = this.flatNodeMap.get(node);
-    this.service.updateItem(nestedNode, itemValue, children);
+    this.service.updateItem(nestedNode, itemValue);
   }
 
   updateTree(): void {
