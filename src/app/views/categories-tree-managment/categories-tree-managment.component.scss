@@ -1,0 +1,52 @@
+@import 'vars';
+
+:host {
+  .node-icon-button {
+    padding-right: 0;
+    padding-left: 0;
+    min-width: 2rem;
+  }
+
+  .mx-0-1 {
+    margin-left: 0.1rem;
+    margin-right: 0.1rem;
+  }
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-top: 0.7em;
+  }
+
+  .container-fluid {
+    top: 60px;
+    height: calc(100% - 60px);
+    background: #fff;
+    padding: 3rem;
+
+    > .row {
+      height: 100%;
+    }
+  }
+
+  .card {
+    padding: 1rem;
+    height: -webkit-fill-available;
+    overflow-y: auto;
+
+    h4 {
+      border-bottom: 0.1rem solid rgba(0, 139, 139, 0.5);
+      padding: 1rem 0rem 0.5rem 0rem;
+    }
+  }
+
+  [class*='col-'] {
+    padding: 1rem;
+  }
+
+  .icon-large {
+    font-size: medium;
+  }
+
+  .save-tree {
+    flex-grow: 1;
+  }
+}

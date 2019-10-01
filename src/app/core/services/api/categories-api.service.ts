@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Category } from 'app/shared/components/categories-tree/models/category';
 import { environment } from 'environments/environment';
 
-import { CategoryNode } from '../../../shared/components/categories-tree/CategoryNode';
+import { CategoryNode, CategoryTree } from '../../../shared/components/categories-tree/models/category-node';
 
 @Injectable({
   providedIn: 'root',
@@ -10,31 +11,23 @@ import { CategoryNode } from '../../../shared/components/categories-tree/Categor
 export class CategoriesApiService {
   constructor(private http: HttpClient) {}
 
-  createNode(node: CategoryNode[]): Promise<boolean> {
-    return this.http.post<boolean>(`${environment.apiUrl}/categories`, node).toPromise();
+  getCategories(): Promise<Category[]> {
+    return this.http.get<Category[]>(`${environment.apiUrl}/categories/tree`).toPromise();
   }
 
-  getCategoryNode(id?: string): Promise<CategoryNode[]> {
-    return this.http.get<CategoryNode[]>(`${environment.apiUrl}/categories${id ? `/${id}/tree` : ''}`).toPromise();
+  createTree(node: CategoryNode[]): Promise<string> {
+    return this.http.post<string>(`${environment.apiUrl}/categories/tree`, node).toPromise();
   }
 
-  updateCategoryNode(id: string, node: CategoryNode[]): Promise<boolean> {
-    return this.http.put<boolean>(`${environment.apiUrl}/categories/${id}/tree`, node).toPromise();
+  getTree(id: string): Promise<CategoryTree> {
+    return this.http.get<CategoryTree>(`${environment.apiUrl}/categories/tree/${id}`).toPromise();
   }
 
-  getNode(id?: string): Promise<CategoryNode[]> {
-    return this.http.get<CategoryNode[]>(`${environment.apiUrl}/tree${id ? `/${id}` : ''}`).toPromise();
+  updateTree(id: string, node: CategoryNode[]): Promise<boolean> {
+    return this.http.put<boolean>(`${environment.apiUrl}/categories/tree/${id}`, node).toPromise();
   }
 
-  addNode(id: string, nodeList: CategoryNode[]): Promise<boolean> {
-    return this.http.post<boolean>(`${environment.apiUrl}/tree/${id}`, nodeList).toPromise();
-  }
-
-  updateNode(id: string, nodeList: CategoryNode[]): Promise<boolean> {
-    return this.http.put<boolean>(`${environment.apiUrl}/tree/${id}`, nodeList).toPromise();
-  }
-
-  deleteNode(id: string): Promise<boolean> {
-    return this.http.delete<boolean>(`${environment.apiUrl}/tree/${id}`).toPromise();
+  updateTreeNode(id: string, node: CategoryNode): Promise<boolean> {
+    return this.http.put<boolean>(`${environment.apiUrl}/categories/tree/${id}/${node.id}`, node).toPromise();
   }
 }

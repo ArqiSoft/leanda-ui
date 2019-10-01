@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { CategoriesApiService } from 'app/core/services/api/categories-api.service';
 import { CategoriesService } from 'app/shared/components/categories-tree/categories.service';
-import { CategoryNode } from 'app/shared/components/categories-tree/CategoryNode';
+import { CategoryNode } from 'app/shared/components/categories-tree/models/category-node';
 import { environment } from 'environments/environment';
 import { Subscription } from 'rxjs';
 
@@ -75,10 +75,10 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
 
   fileActions: { title: string; active: boolean; viewType: FileViewType }[] = [];
   categories: CategoryNode[] = [
-    { guid: null, title: `Lorem ` },
-    { guid: null, title: `Consequuntur` },
-    { guid: null, title: `praesentium!` },
-    { guid: null, title: `Consequuntur praesentium!` },
+    { title: `Lorem ` },
+    { title: `Consequuntur` },
+    { title: `praesentium!` },
+    { title: `Consequuntur praesentium!` },
   ];
   currentFileViewComponent = null;
 
@@ -268,7 +268,10 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
       });
     }
 
-    this.categoriesApi.getNode(file_id).then(res => (this.categories = res)).catch(error => console.error(error));
+    this.categoriesApi
+      .getTree(file_id)
+      .then(tree => (this.categories = tree.nodes))
+      .catch(error => console.error(error));
   }
 
   subscribeToSignalr() {
