@@ -4,10 +4,16 @@
   .node-icon-button {
     padding-right: 0;
     padding-left: 0;
+    min-width: 2rem;
+  }
+
+  .mx-0-1 {
     margin-left: 0.1rem;
     margin-right: 0.1rem;
-    min-width: 2rem;
-    // border: 0;
+  }
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-top: 0.7em;
   }
 
   .container-fluid {

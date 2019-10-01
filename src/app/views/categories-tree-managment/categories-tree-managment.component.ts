@@ -6,6 +6,7 @@ import { Category } from 'app/shared/components/categories-tree/models/category'
 import { CategoryFlatNode, CategoryNode } from '../../shared/components/categories-tree/models/category-node';
 
 import { CategoriesTreeManagmentService } from './categories-tree-managment.service';
+import { CategoryTreeInfo } from './CategoryTreeInfo';
 
 @Component({
   selector: 'dr-categories-tree-managment',
@@ -19,9 +20,6 @@ export class CategoriesTreeManagmentComponent implements OnInit {
   /** Map from nested node to flattened node. This helps us to keep the same object for selection */
   nestedNodeMap = new Map<CategoryNode, CategoryFlatNode>();
 
-  /** A selected parent node to be inserted */
-  selectedParent: CategoryFlatNode | null = null;
-
   treeControl: FlatTreeControl<CategoryFlatNode>;
 
   treeFlattener: MatTreeFlattener<CategoryNode, CategoryFlatNode>;
@@ -30,20 +28,27 @@ export class CategoriesTreeManagmentComponent implements OnInit {
 
   categories: Category[] = [];
 
+  treeInfo: CategoryTreeInfo;
+
   constructor(private service: CategoriesTreeManagmentService) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<CategoryFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  }
 
+  ngOnInit() {
     this.service.dataChange.subscribe((data: CategoryNode[]) => {
       this.dataSource.data = data;
       this.categories = this.service.categories;
+      if (this.categories.length > 0) {
+        this.service.treeInfo(this.categories[0].createdBy, this.categories[0].updatedBy).subscribe(res => (this.treeInfo = res));
+      }
     });
   }
 
-  ngOnInit() {}
+  hasData = () => !!this.dataSource.data;
 
-  hasData = () => this.dataSource.data !== null && this.dataSource.data.length > 0;
+  isTreeEmpty = () => !(this.dataSource.data !== null && this.dataSource.data.length > 0);
 
   getLevel = (node: CategoryFlatNode) => node.level;
 
@@ -68,7 +73,7 @@ export class CategoriesTreeManagmentComponent implements OnInit {
      */
     const node = new CategoryNode();
 
-    if (!this.hasData()) {
+    if (!this.isTreeEmpty()) {
       node.title = title;
 
       this.service.createCategory([node]);

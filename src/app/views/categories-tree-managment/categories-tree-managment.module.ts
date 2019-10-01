@@ -5,6 +5,7 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatProgressSpinnerModule,
   MatRippleModule,
   MatTooltipModule,
   MatTreeModule,
@@ -25,6 +26,7 @@ const MatModules = [
   MatInputModule,
   MatCheckboxModule,
   MatTreeModule,
+  MatProgressSpinnerModule,
 ];
 
 @NgModule({

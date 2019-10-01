@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { CategoriesApiService } from 'app/core/services/api/categories-api.service';
+import { UsersApiService } from 'app/core/services/api/users-api.service';
 import { Category } from 'app/shared/components/categories-tree/models/category';
 import { CategoryNode } from 'app/shared/components/categories-tree/models/category-node';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { CategoryTreeInfo } from './CategoryTreeInfo';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +24,7 @@ export class CategoriesTreeManagmentService {
     return this._cateogories.value;
   }
 
-  constructor(private api: CategoriesApiService) {
+  constructor(private api: CategoriesApiService, private userApi: UsersApiService) {
     this.initialize();
   }
 
@@ -53,7 +57,6 @@ export class CategoriesTreeManagmentService {
     } else {
       parent.children = [];
       parent.children.push({ title: name, children: [] } as CategoryNode);
-      console.log('parent has no children', parent);
       this.dataChange.next(this.data);
     }
   }
@@ -113,6 +116,21 @@ export class CategoriesTreeManagmentService {
 
   createCategory(tree: CategoryNode[]): void {
     this.api.createTree(tree).then(id => this.getCategoryTree(id));
+  }
+
+  treeInfo(createdBy: string, updatedBy: string): Observable<CategoryTreeInfo> {
+    return combineLatest([this.userApi.getUserInfo(createdBy), this.userApi.getUserInfo(updatedBy)]).pipe(
+      map(([_createdBy, _updatedBy]) => {
+        const treeInfo: CategoryTreeInfo = {
+          createdBy: `${_createdBy.firstName} ${_createdBy.lastName}`,
+          updatedBy: `${_updatedBy.firstName} ${_updatedBy.lastName}`,
+          createdDateTime: this.categories[0].createdDateTime,
+          updatedDateTime: this.categories[0].updatedDateTime,
+        };
+
+        return treeInfo;
+      }),
+    );
   }
 
   private getCategories(): Promise<Category[]> {

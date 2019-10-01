@@ -4,31 +4,16 @@
     <div class="col-8">
       <div class="card">
         <h4>Tree:</h4>
-        <ng-container *ngIf="!hasData(); else matTree">
-          <small class="text-danger">
-            <p>
-              There are no categories assign to the user.
-            </p>
-            <p>
-              Please enter first node name.
-            </p>
-          </small>
-          <mat-form-field>
-            <input matInput type="text" #initNodeTitle placeholder="Title..." [(ngModel)]="initNodeTitle.value" />
-            <button
-              mat-button
-              [disabled]="initNodeTitle.value === ''"
-              matSuffix
-              mat-icon-button
-              aria-label="Clear"
-              (click)="initNodeTitle.value = ''"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-          <button mat-stroked-button class="btn btn-primary text-white" (click)="createCategory(initNodeTitle.value)">
-            Save
-          </button>
+        <ng-container [ngSwitch]="isTreeEmpty()">
+          <ng-container *ngSwitchCase="true">
+            <ng-container *ngTemplateOutlet="emptyTree"></ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="false">
+            <ng-container *ngTemplateOutlet="matTree"></ng-container>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <mat-spinner></mat-spinner>
+          </ng-container>
         </ng-container>
       </div>
     </div>
@@ -36,10 +21,10 @@
       <div class="card h-50">
         <h4>Available Categories:</h4>
         <ul>
-          <li>Created by: {{ categories[0]?.createdBy }}</li>
-          <li>Created date: {{ categories[0]?.createdDateTime | date: 'short' }}</li>
-          <li>Updated by: {{ categories[0]?.updatedBy }}</li>
-          <li>Updated date: {{ categories[0]?.updatedDateTime | date: 'short' }}</li>
+          <li>Created by: {{ treeInfo?.createdBy }}</li>
+          <li>Created date: {{ treeInfo?.createdDateTime | date: 'short' }}</li>
+          <li>Updated by: {{ treeInfo?.updatedBy }}</li>
+          <li>Updated date: {{ treeInfo?.updatedDateTime | date: 'short' }}</li>
         </ul>
       </div>
       <div class="card h-50">
@@ -56,6 +41,26 @@
     </div>
   </div>
 </div>
+
+<ng-template #emptyTree>
+  <small class="text-info font-weight-bold">
+    <p>
+      There are no categories assign to the user.
+    </p>
+    <p>
+      Please enter first node name.
+    </p>
+  </small>
+  <mat-form-field>
+    <input matInput type="text" #initNodeTitle placeholder="Title..." [(ngModel)]="initNodeTitle.value" />
+    <button matSuffix mat-icon-button aria-label="Clear" [disabled]="initNodeTitle.value === ''" (click)="initNodeTitle.value = ''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <button mat-stroked-button class="btn btn-primary text-white" (click)="createCategory(initNodeTitle.value)">
+    Save
+  </button>
+</ng-template>
 
 <ng-template #matTree>
   <button mat-icon-button (click)="addNewMainNode()">
@@ -97,10 +102,15 @@
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
-      <button mat-icon-button (click)="removeNode(node)" [hidden]="treeHasOneMainNode() && getLevel(node) === 0">
+      <button
+        mat-stroked-button
+        class="node-icon-button mx-0-1"
+        [hidden]="treeHasOneMainNode() && getLevel(node) === 0"
+        (click)="removeNode(node)"
+      >
         <mat-icon>remove</mat-icon>
       </button>
-      <button mat-stroked-button (click)="saveNode(node, newNodeTitle.value)">
+      <button mat-stroked-button class="mx-0-1" (click)="saveNode(node, newNodeTitle.value)">
         Save
       </button>
     </mat-tree-node>
@@ -123,15 +133,23 @@
     <!-- If Node name "edit" mode toggled "OFF" -->
     <ng-container *ngSwitchCase="false">
       <div class="pr-3">{{ node.title }}</div>
-      <button mat-stroked-button class="node-icon-button" [color]="'primary'" (click)="addNewNode(node)"><mat-icon>add</mat-icon></button>
-      <button mat-stroked-button class="node-icon-button" [color]="'primary'" (click)="removeNode(node)" [disabled]="treeHasOneMainNode() && node.level === 0">
+      <button mat-stroked-button class="node-icon-button mx-0-1" [color]="'primary'" (click)="addNewNode(node)">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button
+        mat-stroked-button
+        class="node-icon-button mx-0-1"
+        [color]="'primary'"
+        (click)="removeNode(node)"
+        [disabled]="treeHasOneMainNode() && node.level === 0"
+      >
         <mat-icon>remove</mat-icon>
       </button>
     </ng-container>
   </ng-container>
 
   <!-- Switch between Title and Edit Title -->
-  <button mat-stroked-button class="node-icon-button" (click)="node.editable = !node.editable">
+  <button mat-stroked-button class="node-icon-button mx-0-1" (click)="node.editable = !node.editable">
     <mat-icon class="icon-large align-bottom" [color]="'primary'">edit</mat-icon>
   </button>
 </ng-template>
@@ -139,7 +157,7 @@
 <!-- Edit Title template -->
 <ng-template #editNodeTemp let-node="node">
   <mat-form-field>
-    <input matInput type="text" #newTitle placeholder="Title..." [(ngModel)]="newTitle.value" />
+    <input #newTitle matInput type="text" placeholder="Title..." [(ngModel)]="newTitle.value" />
     <button matSuffix mat-icon-button aria-label="Clear" [disabled]="newTitle.value === ''" (click)="newTitle.value = ''">
       <mat-icon>close</mat-icon>
     </button>
