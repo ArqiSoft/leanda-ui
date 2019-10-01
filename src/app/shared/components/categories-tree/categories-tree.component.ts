@@ -12,50 +12,6 @@ import { CategoriesService } from './categories.service';
 import { Category } from './models/category';
 import { CategoryNode, CategoryTree } from './models/category-node';
 
-const TREE_DATA: CategoryNode[] = [
-  {
-    title: 'Category 1',
-    children: [
-      {
-        title: 'Sub-category 1',
-      },
-      {
-        title: 'Sub-category 2',
-      },
-      {
-        title: 'Sub-category 3',
-      },
-    ],
-  },
-  {
-    title: 'Category 2',
-    children: [
-      {
-        title: 'Sub-category 1',
-        children: [
-          {
-            title: 'Sub/Sub-category 1',
-          },
-          {
-            title: 'Sub/Sub-category 2',
-          },
-        ],
-      },
-      {
-        title: 'Sub-category 2',
-        children: [
-          {
-            title: 'Sub/Sub-category 1',
-          },
-          {
-            title: 'Sub/Sub-category 2',
-          },
-        ],
-      },
-    ],
-  },
-];
-
 @Component({
   selector: 'dr-categories-tree',
   templateUrl: './categories-tree.component.html',
@@ -158,6 +114,6 @@ export class CategoriesTreeComponent implements OnInit {
     this.api
       .getTree(id)
       .then((tree: CategoryTree) => (this.dataSource.data = this.service.activeTree = tree.nodes))
-      .catch((err: any) => (this.dataSource.data = TREE_DATA));
+      .catch((err: any) => console.error(err));
   }
 }
