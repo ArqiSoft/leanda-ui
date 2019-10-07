@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-8">
       <div class="card">
-        <h4>Tree:</h4>
+        <h4>Tree</h4>
         <ng-container [ngSwitch]="isTreeEmpty()">
           <ng-container *ngSwitchCase="true">
             <ng-container *ngTemplateOutlet="emptyTree"></ng-container>
@@ -19,7 +19,7 @@
     </div>
     <div class="col-4">
       <div class="card h-50">
-        <h4>Available Categories:</h4>
+        <h4>Available Categories</h4>
         <ul>
           <li>Created by: {{ treeInfo?.createdBy }}</li>
           <li>Created date: {{ treeInfo?.createdDateTime | date: 'short' }}</li>
@@ -28,13 +28,13 @@
         </ul>
       </div>
       <div class="card h-50">
-        <h4>Hints & Rules:</h4>
+        <h4>Hints & Rules</h4>
         <ul>
           <li>Tree can consisnt of multiple <strong>Nodes</strong></li>
           <li>Tree node can be flat or nested</li>
           <li>Flat node has only one property - <strong>Title</strong></li>
           <li>Nested node may have two properties - <strong>Title</strong> and <strong>Children</strong></li>
-          <li>Children have same structure as parent nodes</li>
+          <li>Children nodes can be flat or nested</li>
           <li>Node title may not exceed <strong>30</strong> symbols</li>
         </ul>
       </div>
@@ -52,7 +52,7 @@
     </p>
   </small>
   <mat-form-field>
-    <input matInput type="text" #initNodeTitle placeholder="Title..." [(ngModel)]="initNodeTitle.value" />
+    <input matInput type="text" #initNodeTitle placeholder="Title..." [(ngModel)]="initNodeTitle.value" maxlength="30" />
     <button matSuffix mat-icon-button aria-label="Clear" [disabled]="initNodeTitle.value === ''" (click)="initNodeTitle.value = ''">
       <mat-icon>close</mat-icon>
     </button>
