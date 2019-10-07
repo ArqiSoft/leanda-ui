@@ -95,28 +95,29 @@ export class CategoriesTreeManagmentComponent implements OnInit {
 
   /** Remove node from database */
   removeNode(node: CategoryFlatNode): void {
-    const parentNode = this.flatNodeMap.get(this.getParentNode(node));
+    const parentFlatNode = this.getParentNode(node);
+    const parentNode = this.flatNodeMap.get(parentFlatNode);
     const nestedNode = this.flatNodeMap.get(node);
 
     if (!parentNode) {
       this.service.removeNode(nestedNode);
     } else {
       this.service.removeNestedNode(parentNode, nestedNode);
+      if (!parentNode.children || parentNode.children.length === 0) {
+        parentFlatNode.editable = false;
+      }
     }
   }
 
   /** Save the node to database */
-  saveNode(node: CategoryFlatNode, itemValue: string): void {
+  saveNode(node: CategoryFlatNode, title: string): void {
     const nestedNode = this.flatNodeMap.get(node);
-    this.service.updateItem(nestedNode, itemValue);
+    this.service.updateItem(nestedNode, title);
   }
 
+  /** Updated entire tree*/
   updateTree(): void {
     this.service.updateTree();
-  }
-
-  updateTreeNode(node: CategoryNode): void {
-    this.service.updateTreeNode(node);
   }
 
   /**
@@ -137,7 +138,7 @@ export class CategoriesTreeManagmentComponent implements OnInit {
     return flatNode;
   }
 
-  /* Get the parent node of a node */
+  /* Return the parent node of a node if it has one */
   private getParentNode(node: CategoryFlatNode): CategoryFlatNode | null {
     const currentLevel = this.getLevel(node);
 

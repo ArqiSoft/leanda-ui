@@ -1,8 +1,10 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EEntityFilter, ICounter } from 'app/shared/models/entity-filter';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import { CategoriesApiService } from '../../../core/services/api/categories-api.service';
 import { EntityCountsService } from '../entity-counts/entity-counts.service';
@@ -105,15 +107,17 @@ export class CategoriesTreeComponent implements OnInit {
   private getCategories(): void {
     this.api
       .getCategories()
-      .then((categoryList: Category[]) => (this.service.categories = categoryList))
-      .then(() => this.getTree(this.categories[0].id))
-      .catch((err: any) => (this.service.categories = []));
+      .pipe(
+        map((list: Category[]) => (this.service.categories = list)),
+        tap(() => this.getTree(this.categories[0].id)),
+        catchError((err: any) => (this.service.categories = [])),
+      )
+      .subscribe(() => null, (error: HttpErrorResponse) => console.error());
   }
 
   private getTree(id: string): void {
     this.api
       .getTree(id)
-      .then((tree: CategoryTree) => (this.dataSource.data = this.service.activeTree = tree.nodes))
-      .catch((err: any) => console.error(err));
+      .subscribe((tree: CategoryTree) => (this.dataSource.data = this.service.activeTree = tree.nodes), (err: any) => console.error(err));
   }
 }

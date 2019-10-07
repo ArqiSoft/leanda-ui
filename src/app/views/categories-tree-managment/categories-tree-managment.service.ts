@@ -4,7 +4,7 @@ import { UsersApiService } from 'app/core/services/api/users-api.service';
 import { Category } from 'app/shared/components/categories-tree/models/category';
 import { CategoryNode } from 'app/shared/components/categories-tree/models/category-node';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 
 import { CategoryTreeInfo } from './CategoryTreeInfo';
 
@@ -33,7 +33,7 @@ export class CategoriesTreeManagmentService {
    */
   initialize() {
     // retriving list of avalible categories
-    this.getCategories().then((categories: Category[]) => {
+    this.getCategories().subscribe((categories: Category[]) => {
       // notyfing `categories` subject
       this._cateogories.next(categories);
       // if categories list is not empty - retrieving first category
@@ -72,6 +72,12 @@ export class CategoriesTreeManagmentService {
    * @param title Title of the category to be pushed as child
    */
   updateItem(node: CategoryNode, title: string) {
+    // update node in databse separatly from tree if it has assigned ID
+    if (Object.keys(node).includes('id')) {
+      this.updateTreeNode(node);
+    }
+
+    // if there is no ID assigned to a node, store in memory until user update entire tree
     node.title = title;
     this.dataChange.next(this.data);
   }
@@ -81,7 +87,9 @@ export class CategoriesTreeManagmentService {
    * @param deletedNode the node that has to be deleted
    */
   removeNode(deletedNode: CategoryNode) {
-    this.dataChange.next(this.data.filter(node => node !== deletedNode));
+    this.api
+      .deleteTreeNode(this.categories[0].id, deletedNode, this.categories[0].version)
+      .subscribe(() => this.dataChange.next(this.data.filter(node => node !== deletedNode)));
   }
 
   /**
@@ -100,8 +108,12 @@ export class CategoriesTreeManagmentService {
     }
   }
 
+  /**
+   * Updated entire tree
+   */
   updateTree() {
     this.api.updateTree(this.categories[0].id, this.data);
+    // TODO: update the data about current tree from BE
   }
 
   /**
@@ -114,8 +126,12 @@ export class CategoriesTreeManagmentService {
     this.api.updateTreeNode(this.categories[0].id, node);
   }
 
+  /**
+   * Creates new Category
+   * @param tree is a new CategoryNode array
+   */
   createCategory(tree: CategoryNode[]): void {
-    this.api.createTree(tree).then(id => this.getCategoryTree(id));
+    this.api.createTree(tree).subscribe(id => this.getCategoryTree(id));
   }
 
   treeInfo(createdBy: string, updatedBy: string): Observable<CategoryTreeInfo> {
@@ -133,11 +149,11 @@ export class CategoriesTreeManagmentService {
     );
   }
 
-  private getCategories(): Promise<Category[]> {
-    return this.api.getCategories();
+  private getCategoryTree(id: string): void {
+    this.api.getTree(id).subscribe(tree => this.dataChange.next(tree.nodes));
   }
 
-  private getCategoryTree(id: string): void {
-    this.api.getTree(id).then(tree => this.dataChange.next(tree.nodes));
+  private getCategories(): Observable<Category[]> {
+    return this.api.getCategories();
   }
 }
