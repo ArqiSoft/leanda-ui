@@ -39,7 +39,7 @@ export class CategoriesTreeManagmentComponent implements OnInit {
   ngOnInit() {
     this.service.dataChange.subscribe((data: CategoryNode[]) => {
       this.dataSource.data = data;
-      this.categories = this.service.categories;
+      this.categories = this.service.categoryList;
       if (this.categories.length > 0) {
         this.service.treeInfo(this.categories[0].createdBy, this.categories[0].updatedBy).subscribe(res => (this.treeInfo = res));
       }

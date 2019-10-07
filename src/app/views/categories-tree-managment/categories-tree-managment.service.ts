@@ -8,20 +8,36 @@ import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 
 import { CategoryTreeInfo } from './CategoryTreeInfo';
 
+type Tree = CategoryNode[];
+
 @Injectable({
   providedIn: 'root',
 })
 export class CategoriesTreeManagmentService {
+  /**
+   * TODO: implement multiple categories managment
+   * -> replace all use of all `category[0]` with appropriate logic for managing multiple categories
+   */
+
   dataChange = new BehaviorSubject<CategoryNode[]>([]);
 
-  private _cateogories = new BehaviorSubject<Category[]>([]);
+  private _category = new BehaviorSubject<Category>(null);
+  private _categoryList = new BehaviorSubject<Category[]>([]);
 
-  get data(): CategoryNode[] {
+  get tree(): Tree {
     return this.dataChange.value;
   }
 
-  get categories(): Category[] {
-    return this._cateogories.value;
+  get categoryList(): Category[] {
+    return this._categoryList.value;
+  }
+
+  get category(): Category {
+    return this._category.value;
+  }
+
+  set category(category: Category) {
+    this._category.next(category);
   }
 
   constructor(private api: CategoriesApiService, private userApi: UsersApiService) {
@@ -35,35 +51,39 @@ export class CategoriesTreeManagmentService {
     // retriving list of avalible categories
     this.getCategories().subscribe((categories: Category[]) => {
       // notyfing `categories` subject
-      this._cateogories.next(categories);
-      // if categories list is not empty - retrieving first category
+      this._categoryList.next(categories);
+      // if categories list is not empty - retrieving first category as default
       // TBD: change when `Leanda` will support multiple categories functionality
       if (categories.length > 0) {
-        this.getCategoryTree(this.categories[0].id);
+        this.getCategoryTree(this.categoryList[0].id);
       }
     });
   }
 
   /**
-   * Add an item to to-do list
+   * Add a new node to the CategoryTree Node
    * @param parent Parent CategoryNode
    * @param name Title of the category to be pushed as child
-   * @param hasChildren If True - adds 'children' property
    */
   insertItem(parent: CategoryNode, name: string) {
     if (parent.children) {
       parent.children.push({ title: name } as CategoryNode);
-      this.dataChange.next(this.data);
+      this.dataChange.next(this.tree);
     } else {
       parent.children = [];
       parent.children.push({ title: name, children: [] } as CategoryNode);
-      this.dataChange.next(this.data);
+      this.dataChange.next(this.tree);
     }
   }
 
+  /**
+   * Add a new node at level 0 of the CategoryTree
+   * @param parent Parent CategoryNode
+   * @param name Title of the category to be pushed as child
+   */
   insertMainItem() {
-    this.data.push({ title: '' } as CategoryNode);
-    this.dataChange.next(this.data);
+    this.tree.push({ title: '' } as CategoryNode);
+    this.dataChange.next(this.tree);
   }
 
   /**
@@ -79,7 +99,7 @@ export class CategoriesTreeManagmentService {
 
     // if there is no ID assigned to a node, store in memory until user update entire tree
     node.title = title;
-    this.dataChange.next(this.data);
+    this.dataChange.next(this.tree);
   }
 
   /**
@@ -88,8 +108,8 @@ export class CategoriesTreeManagmentService {
    */
   removeNode(deletedNode: CategoryNode) {
     this.api
-      .deleteTreeNode(this.categories[0].id, deletedNode, this.categories[0].version)
-      .subscribe(() => this.dataChange.next(this.data.filter(node => node !== deletedNode)));
+      .deleteTreeNode(this.categoryList[0].id, deletedNode, this.categoryList[0].version)
+      .subscribe(() => this.dataChange.next(this.tree.filter(node => node !== deletedNode)));
   }
 
   /**
@@ -104,7 +124,7 @@ export class CategoriesTreeManagmentService {
         parent.children = parent.children.filter(node => node !== deletedNode);
       }
 
-      this.dataChange.next(this.data);
+      this.dataChange.next(this.tree);
     }
   }
 
@@ -112,8 +132,8 @@ export class CategoriesTreeManagmentService {
    * Updated entire tree
    */
   updateTree() {
-    this.api.updateTree(this.categories[0].id, this.data);
-    // TODO: update the data about current tree from BE
+    // this.api.updateTree(this.currentCategory, this.tree);
+    this.api.updateTree(this.categoryList[0].id, this.tree);
   }
 
   /**
@@ -123,7 +143,7 @@ export class CategoriesTreeManagmentService {
    * @param nodes category tree new nodes
    */
   updateTreeNode(node: CategoryNode) {
-    this.api.updateTreeNode(this.categories[0].id, node);
+    this.api.updateTreeNode(this.categoryList[0].id, node);
   }
 
   /**
@@ -140,8 +160,8 @@ export class CategoriesTreeManagmentService {
         const treeInfo: CategoryTreeInfo = {
           createdBy: `${_createdBy.firstName} ${_createdBy.lastName}`,
           updatedBy: `${_updatedBy.firstName} ${_updatedBy.lastName}`,
-          createdDateTime: this.categories[0].createdDateTime,
-          updatedDateTime: this.categories[0].updatedDateTime,
+          createdDateTime: this.categoryList[0].createdDateTime,
+          updatedDateTime: this.categoryList[0].updatedDateTime,
         };
 
         return treeInfo;
