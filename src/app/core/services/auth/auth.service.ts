@@ -190,6 +190,7 @@ export class AuthService {
       Email: userProfile.email || '',
       Avatar: '',
       LoginName: userProfile.preferred_username,
+      Role: userProfile.user_role,
     };
     this.http.put(url, profileObject).subscribe((response: Response) => {}, error => console.log(error));
   }
