@@ -3,6 +3,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BrowserDataBaseService } from 'app/core/services/browser-services/browser-data-base.service';
+import { BrowserDataService } from 'app/core/services/browser-services/browser-data.service';
 import { EEntityFilter, ICounter } from 'app/shared/models/entity-filter';
 import { catchError, map, tap } from 'rxjs/operators';
 
@@ -18,6 +20,7 @@ import { CategoryNode, CategoryTree } from './models/category-node';
   selector: 'dr-categories-tree',
   templateUrl: './categories-tree.component.html',
   styleUrls: ['./categories-tree.component.scss'],
+  providers: [{ provide: BrowserDataBaseService, useClass: BrowserDataService }],
 })
 export class CategoriesTreeComponent implements OnInit {
   treeControl = new NestedTreeControl<CategoryNode>(node => node.children);
@@ -31,6 +34,7 @@ export class CategoriesTreeComponent implements OnInit {
 
   constructor(
     public sidebarContent: SidebarContentService,
+    public dataService: BrowserDataBaseService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private api: CategoriesApiService,
@@ -105,6 +109,8 @@ export class CategoriesTreeComponent implements OnInit {
   }
 
   private getCategories(): void {
+    this.dataService.browserLoading = true;
+
     this.api
       .getCategories()
       .pipe(
@@ -112,7 +118,7 @@ export class CategoriesTreeComponent implements OnInit {
         tap(() => this.getTree(this.categories[0].id)),
         catchError((err: any) => (this.service.categories = [])),
       )
-      .subscribe(() => null, (error: HttpErrorResponse) => console.error());
+      .subscribe(() => this.dataService.browserLoading = false, (error: HttpErrorResponse) => console.error());
   }
 
   private getTree(id: string): void {

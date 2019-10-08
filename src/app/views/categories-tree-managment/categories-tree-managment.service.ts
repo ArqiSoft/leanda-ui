@@ -3,8 +3,8 @@ import { CategoriesApiService } from 'app/core/services/api/categories-api.servi
 import { UsersApiService } from 'app/core/services/api/users-api.service';
 import { Category } from 'app/shared/components/categories-tree/models/category';
 import { CategoryNode } from 'app/shared/components/categories-tree/models/category-node';
-import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, Observable, combineLatest, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { CategoryTreeInfo } from './CategoryTreeInfo';
 
@@ -165,6 +165,9 @@ export class CategoriesTreeManagmentService {
         };
 
         return treeInfo;
+      }),
+      catchError((error: any) => {
+        return throwError(error);
       }),
     );
   }
