@@ -14,13 +14,13 @@ export class AuthService {
   static user_test_id = 'b04e0ffb-4156-411a-8e5a-5b28c6c25e7c';
   static _debug = false;
 
-  appServer = window.location.protocol + '//' + window.location.host;
+  appServer = `${window.location.protocol}//${window.location.host}`;
 
   settings: any = {
     authority: environment.identityServerUrl,
     client_id: 'leanda_angular',
-    redirect_uri: this.appServer + '/auth.html',
-    silent_redirect_uri: this.appServer + '/silent-renew.html',
+    redirect_uri: `${this.appServer}/auth.html`,
+    silent_redirect_uri: `${this.appServer}/silent-renew.html`,
     post_logout_redirect_uri: this.appServer,
     response_type: 'id_token token',
     scope: 'openid profile email',
@@ -83,7 +83,7 @@ export class AuthService {
       });
   }
 
-  loadUserSettings(user) {
+  loadUserSettings(user: User) {
     this.ngZone.runOutsideAngular(() => {
       if (user) {
         this.loggedIn = true;
@@ -109,12 +109,8 @@ export class AuthService {
     this.ngZone.runOutsideAngular(() => {
       this.manager
         .signinRedirect({ data: localStorage.getItem('redirectUrl') })
-        .then(() => {
-          console.log('signinRedirect done');
-        })
-        .catch(function(err) {
-          console.log(err);
-        });
+        .then(() => console.log('signinRedirect done'))
+        .catch(err => console.log(err));
     });
   }
 
@@ -127,7 +123,7 @@ export class AuthService {
             // console.log('got user', user);
             return user;
           })
-          .catch(function(err) {
+          .catch(err => {
             console.log(err);
             return null;
           }),
@@ -150,19 +146,15 @@ export class AuthService {
   startSignout() {
     this.manager
       .signoutRedirect()
-      .then(function(resp) {
-        console.log('signed out', resp);
-      })
-      .catch(function(err) {
-        console.log(err);
-      });
+      .then(resp => console.log('signed out', resp))
+      .catch(err => console.log(err));
   }
 
   logout() {
     this.startSignout();
   }
 
-  askAboutProfile(userProfile) {
+  askAboutProfile(userProfile: { sub: any }) {
     // just for test user profile put here new guid
     let url = '';
     if (AuthService._debug) {
@@ -189,7 +181,7 @@ export class AuthService {
     }
 
     let displayName = userProfile.given_name ? userProfile.given_name : '';
-    displayName += userProfile.family_name ? ' ' + userProfile.family_name : '';
+    displayName += userProfile.family_name ? ` ${userProfile.family_name}` : '';
 
     const profileObject = {
       DisplayName: displayName,
@@ -199,11 +191,6 @@ export class AuthService {
       Avatar: '',
       LoginName: userProfile.preferred_username,
     };
-    this.http.put(url, profileObject).subscribe(
-      (response: Response) => {},
-      error => {
-        console.log(error);
-      },
-    );
+    this.http.put(url, profileObject).subscribe((response: Response) => {}, error => console.log(error));
   }
 }

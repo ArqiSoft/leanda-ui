@@ -41,6 +41,26 @@
 </ng-template>
 
 <ng-template #tree>
+  <div *ngIf="dataService.browserLoading" class="browser-loader">
+    <img src="img/svg/browser-loader.svg" no-inline height="16" width="16" />
+  </div>
+
+  <ng-container [ngSwitch]="dataService.browserLoading">
+    <ng-container *ngSwitchCase="true">
+      <div class="browser-loader">
+        <img src="img/svg/browser-loader.svg" no-inline height="16" width="16" />
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="false">
+      <ng-container *ngIf="!dataService.data.length; else treeList">
+        <p class="browser-no-items">No categories yet</p>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngSwitchDefault> </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #treeList>
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
       <li
