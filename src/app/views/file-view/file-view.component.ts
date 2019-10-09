@@ -270,8 +270,7 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
 
     this.categoriesApi
       .getTree(file_id)
-      .then(tree => (this.categories = tree.nodes))
-      .catch(error => console.error(error));
+      .subscribe(tree => (this.categories = tree.nodes), (error => console.error(error)));
   }
 
   subscribeToSignalr() {

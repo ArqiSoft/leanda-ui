@@ -1,8 +1,12 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BrowserDataBaseService } from 'app/core/services/browser-services/browser-data-base.service';
+import { BrowserDataService } from 'app/core/services/browser-services/browser-data.service';
 import { EEntityFilter, ICounter } from 'app/shared/models/entity-filter';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import { CategoriesApiService } from '../../../core/services/api/categories-api.service';
 import { EntityCountsService } from '../entity-counts/entity-counts.service';
@@ -16,6 +20,7 @@ import { CategoryNode, CategoryTree } from './models/category-node';
   selector: 'dr-categories-tree',
   templateUrl: './categories-tree.component.html',
   styleUrls: ['./categories-tree.component.scss'],
+  providers: [{ provide: BrowserDataBaseService, useClass: BrowserDataService }],
 })
 export class CategoriesTreeComponent implements OnInit {
   treeControl = new NestedTreeControl<CategoryNode>(node => node.children);
@@ -29,6 +34,7 @@ export class CategoriesTreeComponent implements OnInit {
 
   constructor(
     public sidebarContent: SidebarContentService,
+    public dataService: BrowserDataBaseService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private api: CategoriesApiService,
@@ -103,17 +109,21 @@ export class CategoriesTreeComponent implements OnInit {
   }
 
   private getCategories(): void {
+    this.dataService.browserLoading = true;
+
     this.api
       .getCategories()
-      .then((categoryList: Category[]) => (this.service.categories = categoryList))
-      .then(() => this.getTree(this.categories[0].id))
-      .catch((err: any) => (this.service.categories = []));
+      .pipe(
+        map((list: Category[]) => (this.service.categories = list)),
+        tap(() => this.getTree(this.categories[0].id)),
+        catchError((err: any) => (this.service.categories = [])),
+      )
+      .subscribe(() => this.dataService.browserLoading = false, (error: HttpErrorResponse) => console.error());
   }
 
   private getTree(id: string): void {
     this.api
       .getTree(id)
-      .then((tree: CategoryTree) => (this.dataSource.data = this.service.activeTree = tree.nodes))
-      .catch((err: any) => console.error(err));
+      .subscribe((tree: CategoryTree) => (this.dataSource.data = this.service.activeTree = tree.nodes), (err: any) => console.error(err));
   }
 }
