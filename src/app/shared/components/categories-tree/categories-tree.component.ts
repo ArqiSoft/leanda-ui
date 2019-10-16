@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BrowserDataBaseService } from 'app/core/services/browser-services/browser-data-base.service';
 import { BrowserDataService } from 'app/core/services/browser-services/browser-data.service';
 import { EEntityFilter, ICounter } from 'app/shared/models/entity-filter';
+import { throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { CategoriesApiService } from '../../../core/services/api/categories-api.service';
@@ -110,15 +111,18 @@ export class CategoriesTreeComponent implements OnInit {
 
   private getCategories(): void {
     this.dataService.browserLoading = true;
-
     this.api
       .getCategories()
       .pipe(
         map((list: Category[]) => (this.service.categories = list)),
         tap(() => this.getTree(this.categories[0].id)),
-        catchError((err: any) => (this.service.categories = [])),
+        catchError((err: any) => {
+          this.service.categories = [];
+          this.dataService.browserLoading = false;
+          return throwError(err);
+        }),
       )
-      .subscribe(() => this.dataService.browserLoading = false, (error: HttpErrorResponse) => console.error());
+      .subscribe(() => (this.dataService.browserLoading = false), (error: HttpErrorResponse) => console.error());
   }
 
   private getTree(id: string): void {
