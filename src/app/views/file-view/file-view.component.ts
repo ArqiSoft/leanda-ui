@@ -511,7 +511,7 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
           (environment.capabilities.webPage || environment.capabilities.pdf)
         ) {
           return PdfFileViewComponent;
-        } else if (dataItem.getSubType() === SubType.Tabular && environment.capabilities.tabular) {
+        } else if (dataItem.getSubType() === SubType.Tabular && environment.capabilities.datasets) {
           return CSVPreviewComponent;
         } else if (dataItem.getSubType() === SubType.Office && environment.capabilities.office) {
           return OfficePreviewComponent;

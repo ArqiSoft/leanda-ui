@@ -19,24 +19,24 @@ export const environment = {
   ketcher: 'https://core.dev.your-company.com/ketcher/indigo/layout',
   maxBlobUploadingFileSize: 10240 * 1024,
   capabilities: {
-    chemical: true,
-    crystal: true,
-    image: true,
-    machineLearning: true,
+    chemical: false,
+    crystal: false,
+    image: false,
+    machineLearning: false,
     microscopy: true,
-    office: true,
-    pdf: true,
-    reaction: true,
-    spectrum: true,
-    tabular: true,
-    webPage: true,
+    office: false,
+    pdf: false,
+    reaction: false,
+    spectrum: false,
+    datasets: false,
+    webPage: false,
     login: true,
     fvc: false,
     ssp: false,
-    labwiz: false,
+    labwiz: true
   },
   distribution: {
     code: 'leanda',
-    title: 'Leanda',
-  },
+    title: 'Leanda'
+  }
 };
