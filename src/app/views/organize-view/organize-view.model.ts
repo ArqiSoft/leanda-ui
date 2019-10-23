@@ -824,4 +824,5 @@ export enum ESidebarTab {
 export interface ISidebarTab {
   title: string;
   type: ESidebarTab;
+  tooltip: string;
 }

@@ -36,10 +36,10 @@ export class CategoriesTreeComponent implements OnInit {
   constructor(
     public sidebarContent: SidebarContentService,
     public dataService: BrowserDataBaseService,
+    public service: CategoriesService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private api: CategoriesApiService,
-    private service: CategoriesService,
     private entityCounterService: EntityCountsService,
   ) {}
 
@@ -56,9 +56,6 @@ export class CategoriesTreeComponent implements OnInit {
     this.currentFilter = this.entityCounterService.activeFilter;
 
     this.getCategories();
-
-    console.log(this.service.activeTree);
-    console.log(this.service.categories);
   }
 
   hasChild = (_: number, node: CategoryNode) => !!node.children && node.children.length > 0;
