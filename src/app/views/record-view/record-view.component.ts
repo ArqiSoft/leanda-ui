@@ -135,11 +135,11 @@ export class RecordViewComponent implements OnInit {
 
   updateProperties(recordId) {
     this.entitiesApi.getEntitiesProperties(recordId, 'records').subscribe(data => {
-      let issues;
-      if (data.properties) {
-        issues = { name: 'issues', img: 'intrinsic.ico', properties: data.properties['issues'] };
-        delete data.properties['issues'];
-      }
+      // let issues;
+      // if (data.properties) {
+      //   issues = { name: 'issues', img: 'intrinsic.ico', properties: data.properties['issues'] };
+      //   delete data.properties['issues'];
+      // }
 
       this.listProperties = [];
       if (data.properties) {
@@ -150,10 +150,10 @@ export class RecordViewComponent implements OnInit {
           }
         }
       }
-      if (issues && this.record && this.record.subType === 'Structure') {
-        this.infoBoxes.push(issues.properties);
-        this.listProperties.push(issues);
-      }
+      // if (issues && this.record && this.record.subType === 'Structure') {
+      //   this.infoBoxes.push(issues.properties);
+      //   this.listProperties.push(issues);
+      // }
       this.getPropertiesMeta(this.listProperties);
     });
   }
