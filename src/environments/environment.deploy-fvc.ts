@@ -26,17 +26,17 @@ export const environment = {
     pdf: false,
     reaction: false,
     spectrum: false,
-    tabular: false,
+    datasets: false,
     webPage: false,
     login: false,
     fvc: true,
     ssp: false,
-    labwiz: false,
+    labwiz: false
   },
   distribution: [
     {
       code: 'fvc',
-      title: 'Feature Vector Calculation',
-    },
-  ],
+      title: 'Feature Vector Calculation'
+    }
+  ]
 };

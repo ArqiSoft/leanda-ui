@@ -52,7 +52,7 @@
       </div>
     </ng-container>
     <ng-container *ngSwitchCase="false">
-      <ng-container *ngIf="!dataService.data.length; else treeList">
+      <ng-container *ngIf="!service.categories.length; else treeList">
         <p class="browser-no-items">No categories yet</p>
       </ng-container>
     </ng-container>

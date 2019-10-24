@@ -40,11 +40,6 @@ export class NavbarComponent implements OnInit {
       path: 'about',
       visible: () => true,
     },
-    {
-      name: 'LabWiz',
-      path: 'labwiz',
-      visible: () => environment.capabilities.labwiz,
-    },
   ];
   @ViewChild('profileMenu', { static: true }) public profileMenu: ContextMenuComponent;
   user: User;

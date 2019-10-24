@@ -267,10 +267,12 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
         }
       });
     }
-
+    /**
+     * Gets categories to which current file belongs
+     */
     this.categoriesApi
-      .getTree(file_id)
-      .subscribe(tree => (this.categories = tree.nodes), (error => console.error(error)));
+      .getFileTreeNodes(file_id)
+      .subscribe(treeNodes => (this.categories = treeNodes), (error => console.error(error)));
   }
 
   subscribeToSignalr() {
@@ -511,7 +513,7 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
           (environment.capabilities.webPage || environment.capabilities.pdf)
         ) {
           return PdfFileViewComponent;
-        } else if (dataItem.getSubType() === SubType.Tabular && environment.capabilities.tabular) {
+        } else if (dataItem.getSubType() === SubType.Tabular && environment.capabilities.datasets) {
           return CSVPreviewComponent;
         } else if (dataItem.getSubType() === SubType.Office && environment.capabilities.office) {
           return OfficePreviewComponent;

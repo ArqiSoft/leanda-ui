@@ -12,19 +12,19 @@ import { BehaviorSubject } from 'rxjs';
 export class EntityCountsService {
   private _activeFilter: BehaviorSubject<EEntityFilter> = new BehaviorSubject(null);
   private _entities: BehaviorSubject<ICounter[]> = new BehaviorSubject([
-    { title: 'All Files', key: EEntityFilter.ALL, count: 0, hidden: false },
-    { title: 'Shared By Me', key: EEntityFilter.SHARED_BY_ME, count: 0, hidden: false },
-    { title: 'Shared With Me', key: EEntityFilter.SHARED_WITH_ME, count: 0, hidden: false },
-    { title: 'Documents', key: EEntityFilter.DOCUMENTS, count: 0, hidden: false },
-    { title: 'Images', key: EEntityFilter.IMAGES, count: 0, hidden: false },
-    { title: 'Microscopy', key: EEntityFilter.MICROSCOPY, count: 0, hidden: false },
-    { title: 'Models', key: EEntityFilter.MODELS, count: 0, hidden: false },
-    { title: 'Structures', key: EEntityFilter.STRUCTURES, count: 0, hidden: false },
-    { title: 'Crystals', key: EEntityFilter.CRYSTALS, count: 0, hidden: false },
-    { title: 'Reactions', key: EEntityFilter.REACTIONS, count: 0, hidden: false },
-    { title: 'Spectra', key: EEntityFilter.SPECTRA, count: 0, hidden: false },
-    { title: 'Datasets', key: EEntityFilter.DATASETS, count: 0, hidden: false },
-    { title: 'Webpages', key: EEntityFilter.WEBPAGES, count: 0, hidden: false },
+    { title: 'All Files', key: EEntityFilter.ALL, count: 0 },
+    { title: 'Shared By Me', key: EEntityFilter.SHARED_BY_ME, count: 0 },
+    { title: 'Shared With Me', key: EEntityFilter.SHARED_WITH_ME, count: 0 },
+    { title: 'Documents', key: EEntityFilter.DOCUMENTS, count: 0 },
+    { title: 'Images', key: EEntityFilter.IMAGES, count: 0 },
+    { title: 'Microscopy', key: EEntityFilter.MICROSCOPY, count: 0 },
+    { title: 'Models', key: EEntityFilter.MODELS, count: 0 },
+    { title: 'Structures', key: EEntityFilter.STRUCTURES, count: 0 },
+    { title: 'Crystals', key: EEntityFilter.CRYSTALS, count: 0 },
+    { title: 'Reactions', key: EEntityFilter.REACTIONS, count: 0 },
+    { title: 'Spectra', key: EEntityFilter.SPECTRA, count: 0 },
+    { title: 'Datasets', key: EEntityFilter.DATASETS, count: 0 },
+    { title: 'Webpages', key: EEntityFilter.WEBPAGES, count: 0 },
   ]);
   private filters: IFilter[] = [
     {
@@ -62,6 +62,10 @@ export class EntityCountsService {
     {
       capability: Capability.SPECTRUM,
       filterKey: [EEntityFilter.SPECTRA],
+    },
+    {
+      capability: Capability.DATASETS,
+      filterKey: [EEntityFilter.DATASETS],
     },
     {
       capability: Capability.WEBPAGE,
@@ -128,21 +132,18 @@ export class EntityCountsService {
     });
   }
 
-  public sortFilters(): ICounter[] {
+  public sortFilters(): void {
     const forbiddenCapabilities: string[] = Object.keys(environment.capabilities).filter(k => !environment.capabilities[k]);
 
-    let result: ICounter[] = [];
 
     forbiddenCapabilities.forEach((capability: string) => {
       const filter = this.filters.find(x => x.capability === capability);
 
       if (filter) {
-        result = this.entities.filter((c: ICounter) => filter.filterKey.find((d: string) => c.key !== d));
+        this.entities = this.entities.filter((c: ICounter) => filter.filterKey.find((d: string) => c.key !== d));
       } else {
-        result = this.entities;
+        this.entities = this.entities;
       }
     });
-
-    return result;
   }
 }

@@ -1,6 +1,14 @@
 /* tslint:disable:no-access-missing-member */
 // TODO remove it after lint bug will fix
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { SidebarContentService } from 'app/shared/components/sidebar-content/sidebar-content.service';
@@ -15,10 +23,19 @@ import { NodesApiService } from '../../core/services/api/nodes-api.service';
 import { NotificationsApiService } from '../../core/services/api/notifications-api.service';
 import { WebPagesApiService } from '../../core/services/api/web-pages-api.service';
 import { AuthService } from '../../core/services/auth/auth.service';
-import { BrowserDataBaseService, BrowserViewState } from '../../core/services/browser-services/browser-data-base.service';
-import { BrowserDataService, IBrowserEvent } from '../../core/services/browser-services/browser-data.service';
+import {
+  BrowserDataBaseService,
+  BrowserViewState,
+} from '../../core/services/browser-services/browser-data-base.service';
+import {
+  BrowserDataService,
+  IBrowserEvent,
+} from '../../core/services/browser-services/browser-data.service';
 import { PaginatorManagerService } from '../../core/services/browser-services/paginator-manager.service';
-import { IQuickFilter, QuickFilterService } from '../../core/services/browser-services/quick-filter.service';
+import {
+  IQuickFilter,
+  QuickFilterService,
+} from '../../core/services/browser-services/quick-filter.service';
 import { NotificationsService } from '../../core/services/notifications/notifications.service';
 import { PageTitleService } from '../../core/services/page-title/page-title.service';
 import { SignalrService } from '../../core/services/signalr/signalr.service';
@@ -26,32 +43,60 @@ import { CategoriesService } from '../../shared/components/categories-tree/categ
 import { ExportDialogComponent } from '../../shared/components/export-dialog/export-dialog.component';
 import { CreateFolderComponent } from '../../shared/components/folder-actions/create-folder/create-folder.component';
 import { DeleteFolderComponent } from '../../shared/components/folder-actions/delete-folder/delete-folder.component';
-import { MoveDialogType, MoveFolderComponent } from '../../shared/components/folder-actions/move-folder/move-folder.component';
+import {
+  MoveDialogType,
+  MoveFolderComponent,
+} from '../../shared/components/folder-actions/move-folder/move-folder.component';
 import { RenameFolderComponent } from '../../shared/components/folder-actions/rename-folder/rename-folder.component';
 // import { MachineLearningService } from '../../shared/components/full-screen-dialogs/machine-learning/machine-learning.service';
 import { ActionViewService } from '../../shared/components/full-screen-dialogs/action-view.service';
 import { ImportWebPageComponent } from '../../shared/components/import-web-page/import-web-page.component';
-import { NotificationType, SignalREvent } from '../../shared/components/notifications/events.model';
+import {
+  NotificationType,
+  SignalREvent,
+} from '../../shared/components/notifications/events.model';
 import { NotificationCommonItemComponent } from '../../shared/components/notifications/notifications-side-bar/notification-common-item/notification-common-item.component';
 import { NotificationUploadItemComponent } from '../../shared/components/notifications/notifications-side-bar/notification-upload-item/notification-upload-item.component';
-import { NotificationItem, NotificationMessage, NotificationUploadMessage } from '../../shared/components/notifications/notifications.model';
-import { BrowserDataItem, BrowserOptions, NodeType } from '../../shared/components/organize-browser/browser-types';
+import {
+  NotificationItem,
+  NotificationMessage,
+  NotificationUploadMessage,
+} from '../../shared/components/notifications/notifications.model';
+import {
+  BrowserDataItem,
+  BrowserOptions,
+  NodeType,
+} from '../../shared/components/organize-browser/browser-types';
 import { OrganizeBrowserComponent } from '../../shared/components/organize-browser/organize-browser.component';
 import { ToolbarButtonType } from '../../shared/components/organize-toolbar/organize-toolbar.model';
 import { SharedLinksComponent } from '../../shared/components/shared-links/shared-links.component';
 
-import { ActionMenuItemData, ActionMenuItemsManager, ContextMenu, ESidebarTab, ISidebarTab } from './organize-view.model';
+import {
+  ActionMenuItemData,
+  ActionMenuItemsManager,
+  ContextMenu,
+  ESidebarTab,
+  ISidebarTab,
+} from './organize-view.model';
+import { CategoryNode } from 'app/shared/components/categories-tree/models/category-node';
 
 @Component({
   selector: 'dr-organize-view',
   templateUrl: './organize-view.component.html',
   styleUrls: ['./organize-view.component.scss'],
-  providers: [{ provide: BrowserDataBaseService, useClass: BrowserDataService }, PaginatorManagerService, QuickFilterService],
+  providers: [
+    { provide: BrowserDataBaseService, useClass: BrowserDataService },
+    PaginatorManagerService,
+    QuickFilterService,
+  ],
 })
-export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(OrganizeBrowserComponent, { static: false }) browser: OrganizeBrowserComponent;
+export class OrganizeViewComponent extends BrowserOptions
+  implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild(OrganizeBrowserComponent, { static: false })
+  browser: OrganizeBrowserComponent;
 
-  @ViewChild(ImportWebPageComponent, { static: false }) uploadWebPage: ImportWebPageComponent;
+  @ViewChild(ImportWebPageComponent, { static: false })
+  uploadWebPage: ImportWebPageComponent;
   @ViewChild('fileUpload', { static: true }) fileInput: ElementRef;
 
   @ViewChild('defaultContextMenu', { static: true })
@@ -78,10 +123,12 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
     {
       title: 'Filters',
       type: ESidebarTab.FILTERS,
+      tooltip: 'List of Filters',
     },
     {
       title: 'Categories',
       type: ESidebarTab.CATEGORIES,
+      tooltip: 'Categories Tree',
     },
   ];
 
@@ -89,6 +136,10 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
   private browserEventSubscription: Subscription = null;
   private idUrlParameter: string;
   private routeEventsSubscription: Subscription;
+
+  get categoriesTree(): Observable<CategoryNode[]> {
+    return this.categoryService.activeTreeAsync;
+  }
 
   get currentView() {
     return localStorage.getItem('currentBrowserViewFor:nodes-view') || 'tile';
@@ -129,26 +180,50 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
 
     // File folders context menu
     this.folderContextMenuManager.add(
-      new ActionMenuItemData(ContextMenu.CREATE, '/img/svg/imp/add-folder.svg', true, true, item => this.openCreateFolderDialog()),
+      new ActionMenuItemData(
+        ContextMenu.CREATE,
+        '/img/svg/imp/add-folder.svg',
+        true,
+        true,
+        item => this.openCreateFolderDialog(),
+      ),
     );
 
     this.folderContextMenuManager.add(
-      new ActionMenuItemData(ContextMenu.DELETE, '/img/svg/draft-menu/delete.svg', true, true, item => {
-        this.openDeleteItemDialog();
-      }),
+      new ActionMenuItemData(
+        ContextMenu.DELETE,
+        '/img/svg/draft-menu/delete.svg',
+        true,
+        true,
+        item => {
+          this.openDeleteItemDialog();
+        },
+      ),
     );
 
     this.folderContextMenuManager.add(
-      new ActionMenuItemData(ContextMenu.RENAME, '/img/svg/draft-menu/rename.svg', true, true, item => {
-        // this.browser.editMode = true
-        this.openRenameItemDialog();
-      }),
+      new ActionMenuItemData(
+        ContextMenu.RENAME,
+        '/img/svg/draft-menu/rename.svg',
+        true,
+        true,
+        item => {
+          // this.browser.editMode = true
+          this.openRenameItemDialog();
+        },
+      ),
     );
 
     this.folderContextMenuManager.add(
-      new ActionMenuItemData(ContextMenu.MOVE, '/img/svg/draft-menu/move.svg', true, true, item => {
-        this.openMoveItemDialog();
-      }),
+      new ActionMenuItemData(
+        ContextMenu.MOVE,
+        '/img/svg/draft-menu/move.svg',
+        true,
+        true,
+        item => {
+          this.openMoveItemDialog();
+        },
+      ),
     );
 
     // const machineLearning = new ActionMenuItemData(ContextMenu.MACHINE_LEARNING, '/img/svg/ml.svg',
@@ -169,42 +244,85 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
     // ];
     // this.folderContextMenuManager.add(machineLearning);
     this.folderContextMenuManager.add(
-      new ActionMenuItemData(ContextMenu.DOWNLOAD, '/img/svg/material/ic_file_download_black_24px.svg', false, false, item => {
-        const blobUrl = this.blobsApi.getBlobUrl(item ? item : this.dataService.getSelectedItems()[0], true);
-        window.open(blobUrl, '_self');
-      }),
+      new ActionMenuItemData(
+        ContextMenu.DOWNLOAD,
+        '/img/svg/material/ic_file_download_black_24px.svg',
+        false,
+        false,
+        item => {
+          const blobUrl = this.blobsApi.getBlobUrl(
+            item ? item : this.dataService.getSelectedItems()[0],
+            true,
+          );
+          window.open(blobUrl, '_self');
+        },
+      ),
     );
 
     if (environment.capabilities.webPage) {
       this.folderContextMenuManager.add(
-        new ActionMenuItemData(ContextMenu.UPLOAD_WEB_PAGE, '/img/svg/material/ic_pages_black_24px.svg', true, true, item => {
-          this.openWebPageImportDialog();
-        }),
+        new ActionMenuItemData(
+          ContextMenu.UPLOAD_WEB_PAGE,
+          '/img/svg/material/ic_pages_black_24px.svg',
+          true,
+          true,
+          item => {
+            this.openWebPageImportDialog();
+          },
+        ),
       );
     }
 
     this.folderContextMenuManager.add(
-      new ActionMenuItemData(ContextMenu.UPLOAD, '/img/svg/material/ic_file_upload_black_24px.svg', true, true, item =>
-        this.fileInput.nativeElement.click(),
+      new ActionMenuItemData(
+        ContextMenu.UPLOAD,
+        '/img/svg/material/ic_file_upload_black_24px.svg',
+        true,
+        true,
+        item => this.fileInput.nativeElement.click(),
       ),
     );
 
     this.folderContextMenuManager.add(
-      new ActionMenuItemData(ContextMenu.ENTITY_LOCATION, '/img/svg/import.svg', true, true, item => {
-        this.goToFileLocation(item);
-      }),
+      new ActionMenuItemData(
+        ContextMenu.ENTITY_LOCATION,
+        '/img/svg/import.svg',
+        true,
+        true,
+        item => {
+          this.goToFileLocation(item);
+        },
+      ),
     );
 
-    const exportFile = new ActionMenuItemData(ContextMenu.EXPORT, '/img/svg/draft-menu/export.svg', true, true, item => {
-      this.openExportDialog('csv');
-    });
-    exportFile.subItems = [
-      new ActionMenuItemData(ContextMenu.EXPORT_TO_CSV, '/img/svg/material/ic_file_download_black_24px.svg', true, true, item => {
+    const exportFile = new ActionMenuItemData(
+      ContextMenu.EXPORT,
+      '/img/svg/draft-menu/export.svg',
+      true,
+      true,
+      item => {
         this.openExportDialog('csv');
-      }),
-      new ActionMenuItemData(ContextMenu.EXPORT_TO_SDF, '/img/svg/material/ic_file_download_black_24px.svg', true, true, item => {
-        this.openExportDialog('sdf');
-      }),
+      },
+    );
+    exportFile.subItems = [
+      new ActionMenuItemData(
+        ContextMenu.EXPORT_TO_CSV,
+        '/img/svg/material/ic_file_download_black_24px.svg',
+        true,
+        true,
+        item => {
+          this.openExportDialog('csv');
+        },
+      ),
+      new ActionMenuItemData(
+        ContextMenu.EXPORT_TO_SDF,
+        '/img/svg/material/ic_file_download_black_24px.svg',
+        true,
+        true,
+        item => {
+          this.openExportDialog('sdf');
+        },
+      ),
       // new ActionMenuItemData(ContextMenu.EXPORT_TO_SPL, '/img/svg/material/ic_file_download_black_24px.svg',
       //   true,
       //   true,
@@ -221,12 +339,24 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
       item => {},
     );
     sharingSettings.subItems = [
-      new ActionMenuItemData(ContextMenu.CREATE_PUBLIC_LINK, '/img/svg/material/ic_link_black_24px.svg', true, true, item => {
-        this.openSharedLinksDialog();
-      }),
-      new ActionMenuItemData(ContextMenu.CHANGE_SHARING_SETTINGS, '/img/svg/material/ic_link_black_24px.svg', true, true, item => {
-        this.openSharedLinksDialog();
-      }),
+      new ActionMenuItemData(
+        ContextMenu.CREATE_PUBLIC_LINK,
+        '/img/svg/material/ic_link_black_24px.svg',
+        true,
+        true,
+        item => {
+          this.openSharedLinksDialog();
+        },
+      ),
+      new ActionMenuItemData(
+        ContextMenu.CHANGE_SHARING_SETTINGS,
+        '/img/svg/material/ic_link_black_24px.svg',
+        true,
+        true,
+        item => {
+          this.openSharedLinksDialog();
+        },
+      ),
     ];
     this.folderContextMenuManager.add(sharingSettings);
 
@@ -256,10 +386,17 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
 
       for (const i in queryParam) {
         if (queryParam.hasOwnProperty(i)) {
-          if ((i === '$filter' && this.quickFilter.getFilterKeyByValue(queryParam[i])) || i !== '$filter') {
+          if (
+            (i === '$filter' &&
+              this.quickFilter.getFilterKeyByValue(queryParam[i])) ||
+            i !== '$filter'
+          ) {
             p[i] = queryParam[i];
           }
-          if (i === '$filter' && this.quickFilter.getFilterKeyByValue(queryParam[i])) {
+          if (
+            i === '$filter' &&
+            this.quickFilter.getFilterKeyByValue(queryParam[i])
+          ) {
             applyFilter = true;
             const key = this.quickFilter.getFilterKeyByValue(queryParam[i]);
             this.quickFilter.initView({ filterValue: key, isFilterSet: true });
@@ -289,16 +426,21 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
     });
 
     if (!this.browserEventSubscription) {
-      this.browserEventSubscription = (this.dataService as BrowserDataService).browserEvents.subscribe((eventData: IBrowserEvent) => {
-        if (eventData.event.type === 'dblclick') {
-          this.itemDbClick(eventData.event, eventData.item);
-        } else if (eventData.event.type === 'click') {
-          this.itemClick(eventData.event, eventData.item);
-        }
-      });
+      this.browserEventSubscription = (this
+        .dataService as BrowserDataService).browserEvents.subscribe(
+        (eventData: IBrowserEvent) => {
+          if (eventData.event.type === 'dblclick') {
+            this.itemDbClick(eventData.event, eventData.item);
+          } else if (eventData.event.type === 'click') {
+            this.itemClick(eventData.event, eventData.item);
+          }
+        },
+      );
     }
 
-    this.quickFilter.filterEvents.subscribe((filterData: IQuickFilter) => this.onFilterChange(filterData));
+    this.quickFilter.filterEvents.subscribe((filterData: IQuickFilter) =>
+      this.onFilterChange(filterData),
+    );
 
     this.dataService.browserStateChange.subscribe(data => {
       this.onBrowseSearchResult(data);
@@ -326,7 +468,9 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
           this.dataService.breadcrumbs = [
             { text: 'DRAFTS', width: null, link: '/organize/drafts' },
             {
-              text: `FILTER: ${this.quickFilter.getFilterTitle(this.dataService.viewParams['$filter'])}`,
+              text: `FILTER: ${this.quickFilter.getFilterTitle(
+                this.dataService.viewParams['$filter'],
+              )}`,
               width: null,
               link: '/organize/drafts',
             },
@@ -339,7 +483,8 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
             ToolbarButtonType.export,
           ];
         } else if (`$category` in this.dataService.viewParams) {
-          this.dataService.browserServiceState = BrowserViewState.categoryBrowser;
+          this.dataService.browserServiceState =
+            BrowserViewState.categoryBrowser;
           this.folderContextMenuManager.filtered = true;
           this.dataService.breadcrumbs = [
             { text: 'DRAFTS', width: null, link: '/organize/drafts' },
@@ -375,7 +520,8 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
             },
           ];
 
-          this.dataService.browserServiceState = BrowserViewState.searchResultBrowser;
+          this.dataService.browserServiceState =
+            BrowserViewState.searchResultBrowser;
         } else {
           this.dataService.browserServiceState = BrowserViewState.browser;
           this.folderContextMenuManager.filtered = false;
@@ -427,9 +573,11 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
         this.router.navigate(['/file', parentItem.id]);
       } else if (parentItem.getNodeType() === NodeType.User) {
         const itemsPerPage = this.paginator.paging.itemsPerPage;
-        this.nodesApi.getNodePageLocationNumber(currentItem.id, itemsPerPage).subscribe(y => {
-          this.paginator.paging.current = y.body as number;
-        });
+        this.nodesApi
+          .getNodePageLocationNumber(currentItem.id, itemsPerPage)
+          .subscribe(y => {
+            this.paginator.paging.current = y.body as number;
+          });
         this.router.navigate([`organize/drafts`]);
       }
     });
@@ -491,17 +639,21 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
     const dialogRef = this.dialog.open(MoveFolderComponent, {
       width: '500px',
       data: {
-        startFolder: this.dataService.currentItem ? this.dataService.parentItem : null,
+        startFolder: this.dataService.currentItem
+          ? this.dataService.parentItem
+          : null,
         movedItems: this.dataService.getSelectedItems(),
         options: this.getOptions(),
         submitButtonText: 'Move to this folder',
         dialogType: MoveDialogType.FileManager,
       },
     });
-    dialogRef.componentInstance.moveFolderEvent.subscribe((e: { toFolder: BrowserDataItem; folder: BrowserDataItem }) => {
-      this.moveFolderAction(e.folder, e.toFolder);
-      dialogRef.close();
-    });
+    dialogRef.componentInstance.moveFolderEvent.subscribe(
+      (e: { toFolder: BrowserDataItem; folder: BrowserDataItem }) => {
+        this.moveFolderAction(e.folder, e.toFolder);
+        dialogRef.close();
+      },
+    );
   }
 
   openRenameItemDialog(): void {
@@ -509,10 +661,12 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
       width: '500px',
       data: { fileInfo: this.dataService.selectedItems[0] },
     });
-    dialogRef.componentInstance.renameFolderEvent.subscribe((e: { item: BrowserDataItem; name: string }) => {
-      this.renameFolderAction(e.item, e.name);
-      dialogRef.close();
-    });
+    dialogRef.componentInstance.renameFolderEvent.subscribe(
+      (e: { item: BrowserDataItem; name: string }) => {
+        this.renameFolderAction(e.item, e.name);
+        dialogRef.close();
+      },
+    );
   }
 
   openWebPageImportDialog(): void {
@@ -527,7 +681,10 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
   }
 
   onToolBarButtonClick(button_type: ToolbarButtonType) {
-    if (button_type === ToolbarButtonType.tile || button_type === ToolbarButtonType.table) {
+    if (
+      button_type === ToolbarButtonType.tile ||
+      button_type === ToolbarButtonType.table
+    ) {
       this.browser.toolBarEvent(button_type);
     } else if (button_type === ToolbarButtonType.upload) {
       this.fileInput.nativeElement.click();
@@ -564,11 +721,18 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
         fileLimitMessage.message = file.name;
         fileLimitMessage.type = NotificationType.Error;
         fileLimitMessage.actionDate = new Date();
-        this.notificationService.showToastNotification(new NotificationItem(NotificationCommonItemComponent, fileLimitMessage));
+        this.notificationService.showToastNotification(
+          new NotificationItem(
+            NotificationCommonItemComponent,
+            fileLimitMessage,
+          ),
+        );
         continue;
       }
       const uploadTask: Observable<any> = this.blobsApi.uploadFiles(
-        this.dataService.parentItem != null ? this.dataService.parentItem.id : null,
+        this.dataService.parentItem != null
+          ? this.dataService.parentItem.id
+          : null,
         formData,
       );
 
@@ -581,7 +745,10 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
       message.type = NotificationType.Process;
       message.actionDate = new Date();
 
-      const notificationItem = new NotificationItem(NotificationUploadItemComponent, message);
+      const notificationItem = new NotificationItem(
+        NotificationUploadItemComponent,
+        message,
+      );
       this.notificationService.showToastNotification(notificationItem);
     }
   }
@@ -636,7 +803,10 @@ export class OrganizeViewComponent extends BrowserOptions implements OnInit, OnD
     }
   }
 
-  onMoveFolder(moveObj: { toFolder: BrowserDataItem; folder: BrowserDataItem }) {
+  onMoveFolder(moveObj: {
+    toFolder: BrowserDataItem;
+    folder: BrowserDataItem;
+  }) {
     this.moveFolderAction(moveObj.folder, moveObj.toFolder);
   }
 

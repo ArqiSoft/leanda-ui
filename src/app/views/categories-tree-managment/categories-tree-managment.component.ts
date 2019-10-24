@@ -73,7 +73,7 @@ export class CategoriesTreeManagmentComponent implements OnInit {
      */
     const node = new CategoryNode();
 
-    if (!this.isTreeEmpty()) {
+    if (this.isTreeEmpty()) {
       node.title = title;
 
       this.service.createCategory([node]);

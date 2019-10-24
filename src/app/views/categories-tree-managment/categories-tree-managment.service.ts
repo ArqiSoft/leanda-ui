@@ -131,9 +131,9 @@ export class CategoriesTreeManagmentService {
   /**
    * Updated entire tree
    */
-  updateTree() {
+  updateTree(): void {
     // this.api.updateTree(this.currentCategory, this.tree);
-    this.api.updateTree(this.categoryList[0].id, this.tree);
+    this.api.updateTree(this.categoryList[0].id, this.tree).subscribe();
   }
 
   /**
@@ -142,8 +142,8 @@ export class CategoriesTreeManagmentService {
    * @param node category tree node id
    * @param nodes category tree new nodes
    */
-  updateTreeNode(node: CategoryNode) {
-    this.api.updateTreeNode(this.categoryList[0].id, node);
+  updateTreeNode(node: CategoryNode): void {
+    this.api.updateTreeNode(this.categoryList[0].id, node).subscribe();
   }
 
   /**

@@ -35,4 +35,12 @@ export class CategoriesApiService {
   deleteTreeNode(id: string, node: CategoryNode, version: number) {
     return this.http.delete<boolean>(`${environment.apiUrl}/categories/tree/${id}/${node.id}?$version=${version}`);
   }
+
+  getFileTreeNodes(file_id: string, category_id?: string): Observable<CategoryNode[]> {
+    // category_id will be used when Leanda will work wit multiple categories
+    if (category_id) {
+      return this.http.get<CategoryNode[]>(`${environment.apiUrl}/categories/${category_id}/${file_id}/tree`);
+    }
+    // return this.http.get<CategoryNode[]>(`${environment.apiUrl}/categories/0/${file_id}/tree`);
+  }
 }

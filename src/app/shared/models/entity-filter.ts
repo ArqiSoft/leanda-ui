@@ -23,7 +23,6 @@ export interface ICounter {
   title: string;
   key: string;
   count: number;
-  hidden: boolean;
 }
 
 export enum Capability {
@@ -36,7 +35,7 @@ export enum Capability {
   PDF = 'pdf',
   REACTION = 'reaction',
   SPECTRUM = 'spectrum',
-  TABULAR = 'tabular',
+  DATASETS = 'datasets',
   WEBPAGE = 'webPage',
   LOGIN = 'login',
 }

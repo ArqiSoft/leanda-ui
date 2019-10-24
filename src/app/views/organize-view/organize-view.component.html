@@ -28,7 +28,11 @@
       </ng-container>
     </ng-contaner>
   </sidebar>
-  <content [drFileDragDrop]="true" (fileDrop)="onFileDrop($event)" hoverClass="browser-drag-hover">
+  <content
+    [drFileDragDrop]="true"
+    (fileDrop)="onFileDrop($event)"
+    hoverClass="browser-drag-hover"
+  >
     <dr-organize-toolbar
       [contextMenuActionsManager]="folderContextMenuManager"
       [drContextMenu]="defaultContextMenu"
@@ -47,22 +51,49 @@
   </content>
   <br />
 </dr-sidebar-content>
-<dr-machine-learning-factory [componentData]="componentData" *ngIf="display"></dr-machine-learning-factory>
+<dr-machine-learning-factory
+  [componentData]="componentData"
+  *ngIf="display"
+></dr-machine-learning-factory>
 <dr-notifications-side-bar></dr-notifications-side-bar>
 <dr-splash-notification></dr-splash-notification>
 
-<input class="e2e-upload-file" #fileUpload type="file" multiple style="display: none;" (change)="onFileChange($event)" />
+<input
+  class="e2e-upload-file"
+  #fileUpload
+  type="file"
+  multiple
+  style="display: none;"
+  (change)="onFileChange($event)"
+/>
 
 <ng-template #tabsTemp>
-  <div class="c-pointer text-uppercase tab_padding">
+  <div class="tab_padding">
     <ng-container *ngFor="let tab of tabs; let first = first">
       <span
         class="pr-2"
-        [ngClass]="{ 'active-tab': currentSidebarTab === tab.type, 'v-separator pl-2': !first }"
+        [ngClass]="{
+          'active-tab': currentSidebarTab === tab.type,
+          'v-separator pl-2': !first
+        }"
         (click)="changeTab(tab.type)"
       >
-        {{ tab.title }}
+        <span class="text-uppercase c-pointer" [matTooltip]="tab.tooltip">
+          {{ tab.title }}
+        </span>
       </span>
     </ng-container>
+    <div
+      *ngIf="currentSidebarTab === sidebarTab.CATEGORIES"
+      class="float-right"
+      matTooltip="Tree Managment"
+    >
+      <a
+        [routerLink]="['/tree-managment']"
+        routerLinkActive="router-link-active"
+      >
+        <mat-icon class="primary">edit</mat-icon>
+      </a>
+    </div>
   </div>
 </ng-template>

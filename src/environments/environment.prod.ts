@@ -21,15 +21,15 @@ export const environment = {
     pdf: true,
     reaction: true,
     spectrum: true,
-    tabular: true,
+    datasets: true,
     webPage: true,
     login: true,
     fvc: false,
     ssp: false,
-    labwiz: false,
+    labwiz: false
   },
   distribution: {
     code: 'leanda',
-    title: 'Leanda',
-  },
+    title: 'Leanda'
+  }
 };

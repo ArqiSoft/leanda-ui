@@ -26,17 +26,17 @@ export const environment = {
     pdf: true,
     reaction: true,
     spectrum: true,
-    tabular: true,
+    datasets: true,
     webPage: true,
     login: true,
     fvc: false,
     ssp: false,
-    labwiz: true,
+    labwiz: true
   },
   distribution: [
     {
       code: 'labwiz',
-      title: 'LabWiz',
-    },
-  ],
+      title: 'LabWiz'
+    }
+  ]
 };

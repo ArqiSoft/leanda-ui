@@ -28,7 +28,7 @@ export const environment = {
     pdf: true,
     reaction: true,
     spectrum: true,
-    tabular: true,
+    datasets: true,
     webPage: true,
     login: true,
     fvc: false,
