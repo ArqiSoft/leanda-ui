@@ -267,10 +267,12 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
         }
       });
     }
-
+    /**
+     * Gets categories to which current file belongs
+     */
     this.categoriesApi
-      .getTree(file_id)
-      .subscribe(tree => (this.categories = tree.nodes), (error => console.error(error)));
+      .getFileTreeNodes(file_id)
+      .subscribe(treeNodes => (this.categories = treeNodes), (error => console.error(error)));
   }
 
   subscribeToSignalr() {

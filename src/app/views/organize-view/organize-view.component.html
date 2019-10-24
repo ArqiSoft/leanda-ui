@@ -68,7 +68,7 @@
 />
 
 <ng-template #tabsTemp>
-  <div class="c-pointer tab_padding">
+  <div class="tab_padding">
     <ng-container *ngFor="let tab of tabs; let first = first">
       <span
         class="pr-2"
@@ -78,7 +78,7 @@
         }"
         (click)="changeTab(tab.type)"
       >
-        <span class="text-uppercase" [matTooltip]="tab.tooltip">
+        <span class="text-uppercase c-pointer" [matTooltip]="tab.tooltip">
           {{ tab.title }}
         </span>
       </span>
