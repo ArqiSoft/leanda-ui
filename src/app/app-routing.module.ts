@@ -5,52 +5,78 @@ import { AuthProfileGuard } from 'app/core/services/auth/auth-profile-guard.guar
 import { environment } from 'environments/environment';
 
 import { CapabilitiesGuard } from './core/services/guards/capabilities.guard';
-import { CategoriesTreeManagmentComponent } from './views/categories-tree-managment/categories-tree-managment.component';
+import { RoleGuard } from './core/services/guards/role.guard';
+import { Role } from './shared/models/roles';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', loadChildren: () => import('./views/home-page/home-page.module').then(m => m.HomePageModule) },
-  { path: 'about', loadChildren: () => import('./views/about-page/about-page.module').then(m => m.AboutPageModule) },
+  {
+    path: 'home',
+    loadChildren: () =>
+      import('./views/home-page/home-page.module').then(m => m.HomePageModule),
+  },
+  {
+    path: 'about',
+    loadChildren: () =>
+      import('./views/about-page/about-page.module').then(
+        m => m.AboutPageModule,
+      ),
+  },
   {
     path: 'organize/:id',
-    loadChildren: () => import('./views/organize-view/organize-view.module').then(m => m.OrganizeViewModule),
+    loadChildren: () =>
+      import('./views/organize-view/organize-view.module').then(
+        m => m.OrganizeViewModule,
+      ),
     canActivate: [AuthGuardService, AuthProfileGuard, CapabilitiesGuard],
     data: { active: environment.capabilities.login },
   },
   {
     path: 'tree-managment',
     loadChildren: () =>
-      import('./views/categories-tree-managment/categories-tree-managment.module').then(m => m.CategoriesTreeManagmentModule),
-    canActivate: [AuthGuardService, AuthProfileGuard, CapabilitiesGuard],
-    data: { active: environment.capabilities.login },
+      import(
+        './views/categories-tree-managment/categories-tree-managment.module'
+      ).then(m => m.CategoriesTreeManagmentModule),
+    canActivate: [AuthGuardService, AuthProfileGuard, RoleGuard],
+    data: { active: Role.Admin },
   },
   {
     path: 'model',
-    loadChildren: () => import('./views/file-view/file-view.module').then(m => m.FileViewModule),
+    loadChildren: () =>
+      import('./views/file-view/file-view.module').then(m => m.FileViewModule),
   },
   {
     path: 'file',
-    loadChildren: () => import('./views/file-view/file-view.module').then(m => m.FileViewModule),
+    loadChildren: () =>
+      import('./views/file-view/file-view.module').then(m => m.FileViewModule),
   },
   {
     path: 'record',
-    loadChildren: () => import('./views/record-view/record-view.module').then(m => m.RecordViewModule),
+    loadChildren: () =>
+      import('./views/record-view/record-view.module').then(
+        m => m.RecordViewModule,
+      ),
   },
   {
     path: 'predict',
-    loadChildren: () => import('./views/prediction/prediction.module').then(m => m.PredictionModule),
+    loadChildren: () =>
+      import('./views/prediction/prediction.module').then(
+        m => m.PredictionModule,
+      ),
     canActivate: [CapabilitiesGuard],
     data: { active: environment.capabilities.ssp },
   },
   {
     path: 'features',
-    loadChildren: () => import('./views/features/features.module').then(m => m.FeaturesModule),
+    loadChildren: () =>
+      import('./views/features/features.module').then(m => m.FeaturesModule),
     canActivate: [CapabilitiesGuard],
     data: { active: environment.capabilities.fvc },
   },
   {
     path: '404',
-    loadChildren: () => import('./views/errors/404/error-404.module').then(m => m.Error404Module),
+    loadChildren: () =>
+      import('./views/errors/404/error-404.module').then(m => m.Error404Module),
   },
   { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];
@@ -59,4 +85,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
