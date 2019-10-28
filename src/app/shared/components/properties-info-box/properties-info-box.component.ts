@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
@@ -6,7 +6,7 @@ import { MatExpansionPanel } from '@angular/material/expansion';
   templateUrl: './properties-info-box.component.html',
   styleUrls: ['./properties-info-box.component.scss'],
 })
-export class PropertiesInfoBoxComponent implements OnInit {
+export class PropertiesInfoBoxComponent {
   @ViewChild(MatExpansionPanel, { static: false }) panel: { expanded: boolean };
 
   @Input() meta: any;
@@ -18,10 +18,6 @@ export class PropertiesInfoBoxComponent implements OnInit {
     @Input() properties; */
   @Output() edit = new EventEmitter<any>();
   maxPropNameElWidth = 300; // px
-
-  constructor() {}
-
-  ngOnInit() {}
 
   onEditClick(e: { preventDefault: () => void; stopPropagation: () => void }) {
     e.preventDefault();

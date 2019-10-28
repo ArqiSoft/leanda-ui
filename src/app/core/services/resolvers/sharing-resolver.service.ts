@@ -27,7 +27,7 @@ export class SharingResolver implements Resolve<boolean> {
         },
       ), catchError(
         (error) => {
-          return Observable.create(
+          return new Observable(
             (observer) => {
               observer.next(false);
             },
