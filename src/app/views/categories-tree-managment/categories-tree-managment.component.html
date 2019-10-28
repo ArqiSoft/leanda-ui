@@ -3,7 +3,7 @@
   <h3>Categories</h3>
   <div class="row">
     <div [ngClass]="{ 'col-8': !isTreeEmpty(), 'col-6': isTreeEmpty() }">
-      <div class="card" [ngSwitch]="isTreeEmpty()">
+      <div class="card" [ngSwitch]="isTreeEmpty() && hasCategories()">
         <ng-container *ngSwitchCase="true">
           <ng-container *ngTemplateOutlet="emptyTree"></ng-container>
         </ng-container>
@@ -25,7 +25,7 @@
           <li>Updated date: {{ treeInfo?.updatedDateTime | date: 'short' }}</li>
         </ul>
       </div>
-      <div class="card" [ngClass]="{ 'h-50': !isTreeEmpty() }">
+      <div class="card" [ngClass]="{ 'h-49 mt-2': !isTreeEmpty() }">
         <h4>Hints & Rules</h4>
         <ul>
           <li>Tree can consisnt of multiple <strong>Nodes</strong></li>

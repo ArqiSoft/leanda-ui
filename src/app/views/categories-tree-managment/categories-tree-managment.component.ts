@@ -54,7 +54,7 @@ export class CategoriesTreeManagmentComponent implements OnInit {
     this.service.dataChange.subscribe((data: CategoryNode[]) => {
       this.dataSource.data = data;
       this.categories = this.service.categoryList;
-      if (this.categories.length > 0) {
+      if (this.service.categoryList.length > 0) {
         this.service
           .treeInfo(this.categories[0].createdBy, this.categories[0].updatedBy)
           .subscribe(res => (this.treeInfo = res));
@@ -64,7 +64,7 @@ export class CategoriesTreeManagmentComponent implements OnInit {
 
   hasData = () => !!this.dataSource.data;
 
-  isTreeEmpty = () => this.dataSource.data === null || this.dataSource.data.length === 0;
+  isTreeEmpty = () => this.dataSource.data.length === 0;
 
   getLevel = (node: CategoryFlatNode) => node.level;
 

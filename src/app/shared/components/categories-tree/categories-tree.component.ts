@@ -1,5 +1,5 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,7 +21,9 @@ import { CategoryNode, CategoryTree } from './models/category-node';
   selector: 'dr-categories-tree',
   templateUrl: './categories-tree.component.html',
   styleUrls: ['./categories-tree.component.scss'],
-  providers: [{ provide: BrowserDataBaseService, useClass: BrowserDataService }],
+  providers: [
+    { provide: BrowserDataBaseService, useClass: BrowserDataService },
+  ],
 })
 export class CategoriesTreeComponent implements OnInit {
   treeControl = new NestedTreeControl<CategoryNode>(node => node.children);
@@ -48,17 +50,24 @@ export class CategoriesTreeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.service.selectedCategoryAsync.subscribe(node => (this.selectedNode = node));
-    this.service.activeTreeAsync.subscribe(tree => (this.dataSource.data = tree));
+    this.service.selectedCategoryAsync.subscribe(
+      node => (this.selectedNode = node),
+    );
+    this.service.activeTreeAsync.subscribe(
+      tree => (this.dataSource.data = tree),
+    );
 
     this.entityCounterService.updateCounters();
-    this.entitiyFilter = this.entityCounterService.getCounter(EEntityFilter.ALL);
+    this.entitiyFilter = this.entityCounterService.getCounter(
+      EEntityFilter.ALL,
+    );
     this.currentFilter = this.entityCounterService.activeFilter;
 
     this.getCategories();
   }
 
-  hasChild = (_: number, node: CategoryNode) => !!node.children && node.children.length > 0;
+  hasChild = (_: number, node: CategoryNode) =>
+    !!node.children && node.children.length > 0
 
   selectCategory(node: CategoryNode): void {
     this.service.selectedCategory = node;
@@ -66,7 +75,8 @@ export class CategoriesTreeComponent implements OnInit {
   }
 
   displayAllFiles(): void {
-    this.entityCounterService.activeFilter = this.currentFilter = EEntityFilter.ALL;
+    this.entityCounterService.activeFilter = this.currentFilter =
+      EEntityFilter.ALL;
     this.selectedNode = { title: 'None' };
     this.router.navigate(['./'], {
       relativeTo: this.activatedRoute,
@@ -74,7 +84,10 @@ export class CategoriesTreeComponent implements OnInit {
   }
 
   showPopover(popoverName: string) {
-    if (this.lastShownPopoverName === popoverName && this.lastShownPopoverTimeoutId) {
+    if (
+      this.lastShownPopoverName === popoverName &&
+      this.lastShownPopoverTimeoutId
+    ) {
       clearTimeout(this.lastShownPopoverTimeoutId);
       this.lastShownPopoverTimeoutId = null;
     }
@@ -119,7 +132,10 @@ export class CategoriesTreeComponent implements OnInit {
           return throwError(err);
         }),
       )
-      .subscribe(() => (this.dataService.browserLoading = false), (error: HttpErrorResponse) => console.error());
+      .subscribe(
+        () => (this.dataService.browserLoading = false),
+        (error: HttpErrorResponse) => console.error(),
+      );
   }
 
   private getTree(id: string): void {

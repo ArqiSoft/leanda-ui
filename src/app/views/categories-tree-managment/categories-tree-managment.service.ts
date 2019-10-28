@@ -10,9 +10,10 @@ import {
   NotificationMessage,
 } from 'app/shared/components/notifications/notifications.model';
 import { BehaviorSubject, Observable, combineLatest, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import { CategoryTreeInfo } from './CategoryTreeInfo';
+import { HttpHeaders } from '@angular/common/http';
 
 type Tree = CategoryNode[];
 
@@ -64,7 +65,7 @@ export class CategoriesTreeManagmentService {
       this._categoryList.next(categories);
       // if categories list is not empty - retrieving first category as default
       // TBD: change when `Leanda` will support multiple categories functionality
-      if (categories.length > 0) {
+      if (categories !== null && categories.length !== 0) {
         this.getCategoryTree(this.categoryList[0].id);
       } else if (categories.length === 0) {
         this.dataChange.next([]);
@@ -202,7 +203,11 @@ export class CategoriesTreeManagmentService {
    * @param tree is a new CategoryNode array
    */
   createTree(tree: CategoryNode[]): void {
-    this.api.createTree(tree).subscribe();
+    this.api.createTree(tree).subscribe(category_id =>
+      this.getCategories()
+        .pipe(tap(() => this.getCategoryTree(category_id)))
+        .subscribe(categories => this._categoryList.next(categories)),
+    );
   }
 
   treeInfo(createdBy: string, updatedBy: string): Observable<CategoryTreeInfo> {
