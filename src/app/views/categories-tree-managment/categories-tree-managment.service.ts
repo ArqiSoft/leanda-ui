@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
 import { CategoriesApiService } from 'app/core/services/api/categories-api.service';
 import { UsersApiService } from 'app/core/services/api/users-api.service';
+import { NotificationsService } from 'app/core/services/notifications/notifications.service';
 import { Category } from 'app/shared/components/categories-tree/models/category';
 import { CategoryNode } from 'app/shared/components/categories-tree/models/category-node';
+import { NotificationType } from 'app/shared/components/notifications/events.model';
+import {
+  NotificationItem,
+  NotificationMessage,
+} from 'app/shared/components/notifications/notifications.model';
 import { BehaviorSubject, Observable, combineLatest, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -43,6 +49,7 @@ export class CategoriesTreeManagmentService {
   constructor(
     private api: CategoriesApiService,
     private userApi: UsersApiService,
+    private notification: NotificationsService,
   ) {
     this.initialize();
   }
@@ -59,6 +66,8 @@ export class CategoriesTreeManagmentService {
       // TBD: change when `Leanda` will support multiple categories functionality
       if (categories.length > 0) {
         this.getCategoryTree(this.categoryList[0].id);
+      } else if (categories.length === 0) {
+        this.dataChange.next([]);
       } else {
         this.dataChange.next(null);
       }
@@ -99,7 +108,19 @@ export class CategoriesTreeManagmentService {
   updateItem(node: CategoryNode, title: string) {
     // update node in databse separatly from tree if it has assigned ID
     if (Object.keys(node).includes('id')) {
-      this.updateTreeNode(node).subscribe();
+      this.updateTreeNode(node).subscribe(() =>
+        this.notification.showToastNotification(
+          new NotificationItem(
+            null,
+            NotificationMessage.CreateCommonMessage(
+              NotificationType.Info,
+              'Node Update',
+              'Node has been succefully updated',
+            ),
+          ),
+          false,
+        ),
+      );
     }
 
     // if there is no ID assigned to a node, store in memory until user update entire tree
@@ -135,35 +156,26 @@ export class CategoriesTreeManagmentService {
    */
   removeNestedNode(parent: CategoryNode, deletedNode: CategoryNode) {
     if (parent.children) {
-      if (deletedNode.title === '') {
-        this.api
-          .deleteTreeNode(
-            this.categoryList[0].id,
-            deletedNode,
-            this.categoryList[0].version,
-          )
-          .subscribe(() => {
+      this.api
+        .deleteTreeNode(
+          this.categoryList[0].id,
+          deletedNode,
+          this.categoryList[0].version,
+        )
+        .subscribe(() => {
+          if (deletedNode.title === '') {
             parent.children = parent.children.filter(
               childNode =>
                 childNode !==
                 parent.children.find(node => node === deletedNode),
             );
-          });
-      } else {
-        this.api
-          .deleteTreeNode(
-            this.categoryList[0].id,
-            deletedNode,
-            this.categoryList[0].version,
-          )
-          .subscribe(() => {
+          } else {
             parent.children = parent.children.filter(
               node => node !== deletedNode,
             );
-          });
-      }
-
-      this.dataChange.next(this.tree);
+          }
+          this.dataChange.next(this.tree);
+        });
     }
   }
 
@@ -190,7 +202,7 @@ export class CategoriesTreeManagmentService {
    * @param tree is a new CategoryNode array
    */
   createTree(tree: CategoryNode[]): void {
-    this.api.createTree(tree).subscribe(id => this.getCategoryTree(id));
+    this.api.createTree(tree).subscribe();
   }
 
   treeInfo(createdBy: string, updatedBy: string): Observable<CategoryTreeInfo> {
@@ -217,7 +229,9 @@ export class CategoriesTreeManagmentService {
   private getCategoryTree(id: string): void {
     this.api
       .getTree(id)
-      .subscribe(tree => this.dataChange.next(tree.nodes !== null ? tree.nodes : null));
+      .subscribe(tree =>
+        this.dataChange.next(tree.nodes !== null ? tree.nodes : []),
+      );
   }
 
   private getCategories(): Observable<Category[]> {

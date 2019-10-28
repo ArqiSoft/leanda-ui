@@ -11,11 +11,14 @@ import {
   MatTreeModule,
 } from '@angular/material';
 import { RouterModule, Routes } from '@angular/router';
+import { NotificationsModule } from 'app/shared/components/notifications/notifications.module';
 import { SharedModule } from 'app/shared/shared.module';
 
 import { CategoriesTreeManagmentComponent } from './categories-tree-managment.component';
 
-const routes: Routes = [{ path: '', component: CategoriesTreeManagmentComponent }];
+const routes: Routes = [
+  { path: '', component: CategoriesTreeManagmentComponent },
+];
 
 const MatModules = [
   MatTreeModule,
@@ -31,7 +34,13 @@ const MatModules = [
 
 @NgModule({
   declarations: [CategoriesTreeManagmentComponent],
-  imports: [CommonModule, SharedModule, ...MatModules, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    SharedModule,
+    NotificationsModule,
+    ...MatModules,
+    RouterModule.forChild(routes),
+  ],
   exports: [RouterModule],
 })
 export class CategoriesTreeManagmentModule {}
