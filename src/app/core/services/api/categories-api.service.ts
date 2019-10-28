@@ -20,6 +20,10 @@ export class CategoriesApiService {
     return this.http.post<string>(`${environment.apiUrl}/categories/tree`, node);
   }
 
+  deleteTree(id: string, version: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${environment.apiUrl}/categories/tree/${id}?$version=${version}`);
+  }
+
   getTree(id: string): Observable<CategoryTree> {
     return this.http.get<CategoryTree>(`${environment.apiUrl}/categories/tree/${id}`);
   }
@@ -28,8 +32,8 @@ export class CategoriesApiService {
     return this.http.put<boolean>(`${environment.apiUrl}/categories/tree/${id}`, node);
   }
 
-  updateTreeNode(id: string, node: CategoryNode): Observable<boolean> {
-    return this.http.put<boolean>(`${environment.apiUrl}/categories/tree/${id}/${node.id}`, node);
+  updateTreeNode(id: string, node: CategoryNode): Observable<any> {
+    return this.http.put<any>(`${environment.apiUrl}/categories/tree/${id}/${node.id}`, node);
   }
 
   deleteTreeNode(id: string, node: CategoryNode, version: number) {

@@ -40,7 +40,10 @@ export class CategoriesTreeManagmentService {
     this._category.next(category);
   }
 
-  constructor(private api: CategoriesApiService, private userApi: UsersApiService) {
+  constructor(
+    private api: CategoriesApiService,
+    private userApi: UsersApiService,
+  ) {
     this.initialize();
   }
 
@@ -56,6 +59,8 @@ export class CategoriesTreeManagmentService {
       // TBD: change when `Leanda` will support multiple categories functionality
       if (categories.length > 0) {
         this.getCategoryTree(this.categoryList[0].id);
+      } else {
+        this.dataChange.next(null);
       }
     });
   }
@@ -94,12 +99,18 @@ export class CategoriesTreeManagmentService {
   updateItem(node: CategoryNode, title: string) {
     // update node in databse separatly from tree if it has assigned ID
     if (Object.keys(node).includes('id')) {
-      this.updateTreeNode(node);
+      this.updateTreeNode(node).subscribe();
     }
 
     // if there is no ID assigned to a node, store in memory until user update entire tree
     node.title = title;
     this.dataChange.next(this.tree);
+    // update entire tree in order to get ids for cached on FE nodes and their children
+    this.updateTree();
+  }
+
+  deleteTree(id: string, version: number) {
+    return this.api.deleteTree(id, version).subscribe(() => this.initialize());
   }
 
   /**
@@ -108,8 +119,14 @@ export class CategoriesTreeManagmentService {
    */
   removeNode(deletedNode: CategoryNode) {
     this.api
-      .deleteTreeNode(this.categoryList[0].id, deletedNode, this.categoryList[0].version)
-      .subscribe(() => this.dataChange.next(this.tree.filter(node => node !== deletedNode)));
+      .deleteTreeNode(
+        this.categoryList[0].id,
+        deletedNode,
+        this.categoryList[0].version,
+      )
+      .subscribe(() =>
+        this.dataChange.next(this.tree.filter(node => node !== deletedNode)),
+      );
   }
 
   /**
@@ -119,9 +136,31 @@ export class CategoriesTreeManagmentService {
   removeNestedNode(parent: CategoryNode, deletedNode: CategoryNode) {
     if (parent.children) {
       if (deletedNode.title === '') {
-        parent.children = parent.children.filter(childNode => childNode !== parent.children.find(node => node === deletedNode));
+        this.api
+          .deleteTreeNode(
+            this.categoryList[0].id,
+            deletedNode,
+            this.categoryList[0].version,
+          )
+          .subscribe(() => {
+            parent.children = parent.children.filter(
+              childNode =>
+                childNode !==
+                parent.children.find(node => node === deletedNode),
+            );
+          });
       } else {
-        parent.children = parent.children.filter(node => node !== deletedNode);
+        this.api
+          .deleteTreeNode(
+            this.categoryList[0].id,
+            deletedNode,
+            this.categoryList[0].version,
+          )
+          .subscribe(() => {
+            parent.children = parent.children.filter(
+              node => node !== deletedNode,
+            );
+          });
       }
 
       this.dataChange.next(this.tree);
@@ -142,20 +181,23 @@ export class CategoriesTreeManagmentService {
    * @param node category tree node id
    * @param nodes category tree new nodes
    */
-  updateTreeNode(node: CategoryNode): void {
-    this.api.updateTreeNode(this.categoryList[0].id, node).subscribe();
+  updateTreeNode(node: CategoryNode): Observable<string> {
+    return this.api.updateTreeNode(this.categoryList[0].id, node);
   }
 
   /**
    * Creates new Category
    * @param tree is a new CategoryNode array
    */
-  createCategory(tree: CategoryNode[]): void {
+  createTree(tree: CategoryNode[]): void {
     this.api.createTree(tree).subscribe(id => this.getCategoryTree(id));
   }
 
   treeInfo(createdBy: string, updatedBy: string): Observable<CategoryTreeInfo> {
-    return combineLatest([this.userApi.getUserInfo(createdBy), this.userApi.getUserInfo(updatedBy)]).pipe(
+    return combineLatest([
+      this.userApi.getUserInfo(createdBy),
+      this.userApi.getUserInfo(updatedBy),
+    ]).pipe(
       map(([_createdBy, _updatedBy]) => {
         const treeInfo: CategoryTreeInfo = {
           createdBy: `${_createdBy.firstName} ${_createdBy.lastName}`,
@@ -173,7 +215,9 @@ export class CategoriesTreeManagmentService {
   }
 
   private getCategoryTree(id: string): void {
-    this.api.getTree(id).subscribe(tree => this.dataChange.next(tree.nodes));
+    this.api
+      .getTree(id)
+      .subscribe(tree => this.dataChange.next(tree.nodes !== null ? tree.nodes : null));
   }
 
   private getCategories(): Observable<Category[]> {

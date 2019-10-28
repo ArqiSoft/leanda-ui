@@ -3,7 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 import { Category } from 'app/shared/components/categories-tree/models/category';
 
-import { CategoryFlatNode, CategoryNode } from '../../shared/components/categories-tree/models/category-node';
+import {
+  CategoryFlatNode,
+  CategoryNode,
+} from '../../shared/components/categories-tree/models/category-node';
 
 import { CategoriesTreeManagmentService } from './categories-tree-managment.service';
 import { CategoryTreeInfo } from './CategoryTreeInfo';
@@ -31,9 +34,20 @@ export class CategoriesTreeManagmentComponent implements OnInit {
   treeInfo: CategoryTreeInfo;
 
   constructor(private service: CategoriesTreeManagmentService) {
-    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
-    this.treeControl = new FlatTreeControl<CategoryFlatNode>(this.getLevel, this.isExpandable);
-    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+    this.treeFlattener = new MatTreeFlattener(
+      this.transformer,
+      this.getLevel,
+      this.isExpandable,
+      this.getChildren,
+    );
+    this.treeControl = new FlatTreeControl<CategoryFlatNode>(
+      this.getLevel,
+      this.isExpandable,
+    );
+    this.dataSource = new MatTreeFlatDataSource(
+      this.treeControl,
+      this.treeFlattener,
+    );
   }
 
   ngOnInit() {
@@ -41,30 +55,32 @@ export class CategoriesTreeManagmentComponent implements OnInit {
       this.dataSource.data = data;
       this.categories = this.service.categoryList;
       if (this.categories.length > 0) {
-        this.service.treeInfo(this.categories[0].createdBy, this.categories[0].updatedBy).subscribe(res => (this.treeInfo = res));
+        this.service
+          .treeInfo(this.categories[0].createdBy, this.categories[0].updatedBy)
+          .subscribe(res => (this.treeInfo = res));
       }
     });
   }
 
   hasData = () => !!this.dataSource.data;
 
-  isTreeEmpty = () => !(this.dataSource.data !== null && this.dataSource.data.length > 0);
+  isTreeEmpty = () => this.dataSource.data === null || this.dataSource.data.length === 0;
 
   getLevel = (node: CategoryFlatNode) => node.level;
 
-  isExpandable = (node: CategoryFlatNode) => node.expandable;
+  isExpandable = (node: CategoryFlatNode) => node.isExpandable;
 
   getChildren = (node: CategoryNode): CategoryNode[] => node.children;
 
-  hasChild = (_: number, _nodeData: CategoryFlatNode) => _nodeData.expandable;
+  hasChild = (_: number, _nodeData: CategoryFlatNode) => _nodeData.isExpandable;
 
   hasNoContent = (_: number, _nodeData: CategoryFlatNode) => _nodeData.title === '';
 
-  moreThanOneCategory = () => this.categories.length > 0;
+  hasCategories = () => this.categories.length !== null;
 
   treeHasOneMainNode = () => this.dataSource.data.length === 1;
 
-  /** Creates new Category if non exists */
+  /** Creates new Category and tree if non exists */
   createCategory(title: string) {
     /**
      * As we are working with only one category atm
@@ -73,11 +89,8 @@ export class CategoriesTreeManagmentComponent implements OnInit {
      */
     const node = new CategoryNode();
 
-    if (this.isTreeEmpty()) {
-      node.title = title;
-
-      this.service.createCategory([node]);
-    }
+    node.title = title;
+    this.service.createTree([node]);
   }
 
   /** Select the category so we can insert the new node. */
@@ -104,7 +117,7 @@ export class CategoriesTreeManagmentComponent implements OnInit {
     } else {
       this.service.removeNestedNode(parentNode, nestedNode);
       if (!parentNode.children || parentNode.children.length === 0) {
-        parentFlatNode.editable = false;
+        parentFlatNode.isEditEnabled = false;
       }
     }
   }
@@ -115,9 +128,16 @@ export class CategoriesTreeManagmentComponent implements OnInit {
     this.service.updateItem(nestedNode, title);
   }
 
-  /** Updated entire tree*/
+  /** Updates entire tree*/
   updateTree(): void {
     this.service.updateTree();
+  }
+
+  removeTree() {
+    this.service.deleteTree(
+      this.service.categoryList[0].id,
+      this.service.categoryList[0].version,
+    );
   }
 
   /**
@@ -125,18 +145,22 @@ export class CategoriesTreeManagmentComponent implements OnInit {
    */
   private transformer = (node: CategoryNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
-    const flatNode = existingNode && existingNode.title === node.title ? existingNode : new CategoryFlatNode();
+    const flatNode =
+      existingNode && existingNode.title === node.title
+        ? existingNode
+        : new CategoryFlatNode();
 
     flatNode.title = node.title;
     flatNode.level = level;
-    flatNode.expandable = !!node.children;
-    flatNode.editable = false;
+    flatNode.isExpandable = !!node.children;
+    flatNode.isEditEnabled = false;
+    flatNode.isButtonsShown = false;
 
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
 
     return flatNode;
-  }
+  };
 
   /* Return the parent node of a node if it has one */
   private getParentNode(node: CategoryFlatNode): CategoryFlatNode | null {
