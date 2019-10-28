@@ -1,7 +1,12 @@
+<!-- Toast Notifications -->
 <dr-splash-notification></dr-splash-notification>
+
+<!-- Tree Managment -->
 <div class="container-fluid">
   <h3>Categories</h3>
   <div class="row">
+
+    <!-- Left column -->
     <div [ngClass]="{ 'col-8': !isTreeEmpty(), 'col-6': isTreeEmpty() }">
       <div class="card" [ngSwitch]="isTreeEmpty() && hasCategories()">
         <ng-container *ngSwitchCase="true">
@@ -15,9 +20,12 @@
         </ng-container>
       </div>
     </div>
+
+    <!-- Right column -->
     <div [ngClass]="{ 'col-4': !isTreeEmpty(), 'col-6': isTreeEmpty() }">
+      <!-- Category Info -->
       <div *ngIf="!isTreeEmpty()" class="card h-50">
-        <h4>Category info</h4>
+        <h4>Category Info</h4>
         <ul>
           <li>Created by: {{ treeInfo?.createdBy }}</li>
           <li>Created date: {{ treeInfo?.createdDateTime | date: 'short' }}</li>
@@ -25,6 +33,7 @@
           <li>Updated date: {{ treeInfo?.updatedDateTime | date: 'short' }}</li>
         </ul>
       </div>
+      <!-- Tree Managment Rules -->
       <div class="card" [ngClass]="{ 'h-49 mt-2': !isTreeEmpty() }">
         <h4>Hints & Rules</h4>
         <ul>
@@ -43,6 +52,11 @@
   </div>
 </div>
 
+<!-- 
+  * Empty category tree template.
+  * Asks to enter first in the category node name.
+  * Category name field support TBD
+ -->
 <ng-template #emptyTree>
   <p class="text-info m-0">
     There are no categories assigned to the user.
@@ -70,25 +84,52 @@
     </button>
   </mat-form-field>
   <button
-    mat-stroked-button
+    mat-raised-button
     class="btn btn-primary text-white"
     (click)="createCategory(initNodeTitle.value)"
+    [disabled]="initNodeTitle.value === ''"
   >
     Save
   </button>
 </ng-template>
 
+<!-- Category tree template -->
 <ng-template #tree>
-  <button id="addMainNode" mat-icon-button (click)="addNewMainNode()">
+  <!-- Button
+    * Adds new node on main level
+  -->
+  <button
+    id="addMainNode"
+    mat-button
+    mat-icon-button
+    (click)="addNewMainNode()"
+  >
     <mat-icon>add</mat-icon>
   </button>
+
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
     <!-- 
       * Existing node with title and with/without children
      -->
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-      <!-- Collapse button -->
+    <mat-tree-node
+      *matTreeNodeDef="let node"
+      matTreeNodePadding
+      (mouseenter)="
+        !node.isEditEnabled
+          ? (node.isButtonsVisible = !node.isButtonsVisible)
+          : null
+      "
+      (mouseleave)="
+        !node.isEditEnabled
+          ? (node.isButtonsVisible = !node.isButtonsVisible)
+          : null
+      "
+    >
+      <!-- Button
+        * Toggles node collapse state
+      -->
       <button
+        mat-button
         mat-icon-button
         matTreeNodeToggle
         [attr.aria-label]="'toggle ' + node.title"
@@ -98,14 +139,17 @@
           {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
       </button>
-      <!-- Title and buttons -->
+
+      <!-- Container
+        * Draws 'nodeTemp' which contains node title and actions buttons 
+      -->
       <ng-container
         *ngTemplateOutlet="nodeTemp; context: { node: node }"
       ></ng-container>
     </mat-tree-node>
 
     <!-- 
-      * New node without title and without children
+      * Draws new node without title and without children
      -->
     <mat-tree-node
       *matTreeNodeDef="let node; when: hasNoContent"
@@ -133,7 +177,7 @@
         </button>
       </mat-form-field>
       <button
-        mat-stroked-button
+        mat-button
         class="node-icon-button mx-0-1"
         [hidden]="treeHasOneMainNode() && getLevel(node) === 0"
         (click)="removeNode(node)"
@@ -141,7 +185,8 @@
         <mat-icon>remove</mat-icon>
       </button>
       <button
-        mat-stroked-button
+        mat-button
+        mat-raised-button
         class="mx-0-1"
         (click)="saveNode(node, newNodeTitle.value)"
       >
@@ -151,6 +196,7 @@
   </mat-tree>
 </ng-template>
 
+<!-- Node template -->
 <ng-template #nodeTemp let-node="node">
   <!-- Switch between templates of "edit" and "display" mode-->
   <ng-container [ngSwitch]="node.isEditEnabled">
@@ -165,19 +211,19 @@
     <ng-container *ngSwitchCase="false">
       <div class="pr-3">{{ node.title }}</div>
       <button
-        mat-stroked-button
+        mat-button
         class="node-icon-button mx-0-1"
-        [color]="'primary'"
         (click)="addNewNode(node)"
+        [hidden]="!node.isButtonsVisible"
       >
         <mat-icon>add</mat-icon>
       </button>
       <button
-        mat-stroked-button
+        mat-button
         class="node-icon-button mx-0-1"
-        [color]="'primary'"
         (click)="removeNode(node)"
         [disabled]="treeHasOneMainNode() && node.level === 0"
+        [hidden]="!node.isButtonsVisible"
       >
         <mat-icon>remove</mat-icon>
       </button>
@@ -186,11 +232,16 @@
 
   <!-- Toggles Node Edit Mode -->
   <button
-    mat-stroked-button
+    mat-button
     class="node-icon-button mx-0-1"
     (click)="node.isEditEnabled = !node.isEditEnabled"
+    [ngClass]="{ 'mat-raised-button': node.isEditEnabled }"
+    [color]="node.isEditEnabled ? 'primary' : null"
+    [hidden]="!node.isButtonsVisible"
   >
-    <mat-icon class="icon-large align-bottom" [color]="'primary'"
+    <mat-icon
+      class="icon-large align-bottom"
+      [color]="!node.isEditEnabled ? 'primary' : null"
       >edit</mat-icon
     >
   </button>
@@ -217,7 +268,8 @@
     </button>
   </mat-form-field>
   <button
-    mat-stroked-button
+    mat-button
+    mat-raised-button
     class="flex-last mx-1"
     (click)="saveNode(node, newTitle.value)"
   >
