@@ -5,7 +5,6 @@
 <div class="container-fluid">
   <h3>Categories</h3>
   <div class="row">
-
     <!-- Left column -->
     <div [ngClass]="{ 'col-8': !isTreeEmpty(), 'col-6': isTreeEmpty() }">
       <div class="card" [ngSwitch]="isTreeEmpty() && hasCategories()">
@@ -66,12 +65,12 @@
   </p>
   <mat-form-field>
     <input
+      #initNodeTitle
       matInput
       type="text"
-      #initNodeTitle
       placeholder="Title..."
-      [(ngModel)]="initNodeTitle.value"
       maxlength="30"
+      [(ngModel)]="initNodeTitle.value"
     />
     <button
       matSuffix
@@ -114,16 +113,7 @@
     <mat-tree-node
       *matTreeNodeDef="let node"
       matTreeNodePadding
-      (mouseenter)="
-        !node.isEditEnabled
-          ? (node.isButtonsVisible = !node.isButtonsVisible)
-          : null
-      "
-      (mouseleave)="
-        !node.isEditEnabled
-          ? (node.isButtonsVisible = !node.isButtonsVisible)
-          : null
-      "
+      class="existing-node"
     >
       <!-- Button
         * Toggles node collapse state
@@ -149,7 +139,7 @@
     </mat-tree-node>
 
     <!-- 
-      * Draws new node without title and without children
+      * New node without title and without children
      -->
     <mat-tree-node
       *matTreeNodeDef="let node; when: hasNoContent"
@@ -159,9 +149,10 @@
       <!-- <button mat-icon-button disabled></button> -->
       <mat-form-field class="pl-3">
         <input
+          #newNodeTitle
           matInput
           type="text"
-          #newNodeTitle
+          maxlength="30"
           placeholder="Title..."
           [(ngModel)]="newNodeTitle.value"
         />
@@ -200,30 +191,31 @@
 <ng-template #nodeTemp let-node="node">
   <!-- Switch between templates of "edit" and "display" mode-->
   <ng-container [ngSwitch]="node.isEditEnabled">
-    <!-- If Node name "edit" mode - toggled "ON" -->
+    <!-- Edit node mode layout-->
     <ng-container *ngSwitchCase="true">
       <ng-container
         *ngTemplateOutlet="editNodeTemp; context: { node: node }"
       ></ng-container>
     </ng-container>
 
-    <!-- If Node name "display" mode - toggled "OFF" -->
+    <!-- Reguular node layout -->
     <ng-container *ngSwitchCase="false">
+      <!-- Node Title -->
       <div class="pr-3">{{ node.title }}</div>
+      <!-- Add new sub-node -->
       <button
         mat-button
-        class="node-icon-button mx-0-1"
+        class="node-icon-button mx-0-1 vsc-button"
         (click)="addNewNode(node)"
-        [hidden]="!node.isButtonsVisible"
       >
         <mat-icon>add</mat-icon>
       </button>
+      <!-- Remove current node -->
       <button
         mat-button
-        class="node-icon-button mx-0-1"
+        class="node-icon-button mx-0-1 vsc-button"
         (click)="removeNode(node)"
         [disabled]="treeHasOneMainNode() && node.level === 0"
-        [hidden]="!node.isButtonsVisible"
       >
         <mat-icon>remove</mat-icon>
       </button>
@@ -235,9 +227,11 @@
     mat-button
     class="node-icon-button mx-0-1"
     (click)="node.isEditEnabled = !node.isEditEnabled"
-    [ngClass]="{ 'mat-raised-button': node.isEditEnabled }"
+    [ngClass]="{
+      'mat-raised-button': node.isEditEnabled,
+      'vsc-button': !node.isEditEnabled
+    }"
     [color]="node.isEditEnabled ? 'primary' : null"
-    [hidden]="!node.isButtonsVisible"
   >
     <mat-icon
       class="icon-large align-bottom"
@@ -254,6 +248,7 @@
       #newTitle
       matInput
       type="text"
+      maxlength="30"
       placeholder="Title..."
       [(ngModel)]="newTitle.value"
     />

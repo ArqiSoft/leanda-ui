@@ -49,7 +49,16 @@
   .save-tree {
     flex-grow: 1;
   }
+
   .h-49 {
     height: 49%;
+  }
+
+  .existing-node > button.vsc-button:nth-child(n + 2) {
+    display: none;
+  }
+
+  .existing-node:hover > button.vsc-button:nth-child(n + 2) {
+    display: block;
   }
 }

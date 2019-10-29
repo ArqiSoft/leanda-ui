@@ -128,7 +128,7 @@ export class CategoriesTreeManagmentService {
     node.title = title;
     this.dataChange.next(this.tree);
     // update entire tree in order to get ids for cached on FE nodes and their children
-    this.updateTree();
+    this.updateTree().subscribe(res => this.getCategoryTree(this.categoryList[0].id));
   }
 
   deleteTree(id: string, version: number) {
@@ -177,15 +177,17 @@ export class CategoriesTreeManagmentService {
           }
           this.dataChange.next(this.tree);
         });
+    } else {
+      parent.children = parent.children.filter(node => node.title === '').splice(parent.children.length, 1);
     }
   }
 
   /**
    * Updated entire tree
    */
-  updateTree(): void {
+  updateTree(): Observable<boolean> {
     // this.api.updateTree(this.currentCategory, this.tree);
-    this.api.updateTree(this.categoryList[0].id, this.tree).subscribe();
+    return this.api.updateTree(this.categoryList[0].id, this.tree);
   }
 
   /**
