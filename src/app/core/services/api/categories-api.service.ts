@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Category } from 'app/shared/components/categories-tree/models/category';
 import { environment } from 'environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 import {
   CategoryNode,
@@ -70,5 +70,15 @@ export class CategoriesApiService {
       );
     }
     // return this.http.get<CategoryNode[]>(`${environment.apiUrl}/categories/0/${file_id}/tree`);
+  }
+
+  assignTag(file_id: string): Observable<any> {
+    throwError('Assign Tag to entitnity is not yet implemented');
+    return;
+  }
+
+  removeTag(file_id: string): Observable<any> {
+    throwError('Assign Tag to entitnity is not yet implemented');
+    return;
   }
 }
