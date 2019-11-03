@@ -56,6 +56,7 @@ import { SharedLinksComponent } from '../../shared/components/shared-links/share
 import { SidebarContentService } from '../../shared/components/sidebar-content/sidebar-content.service';
 import { FileViewType } from '../../shared/models/file-view-type';
 import { CategoryEntityApiService } from 'app/core/services/api/category-entity-api.service';
+import { MatAutocompleteSelectedEvent } from '@angular/material';
 
 @Component({
   selector: 'dr-file-view',
@@ -657,19 +658,24 @@ export class FileViewComponent extends BrowserOptions
     this.categoryEntityApi.deleteTags(this.fileInfo.id, ['']);
   }
 
-  /**
-   * Remove category tag from entity
-   * @param tagId Category tag GUID
+   /**
+   * Remove category tag from entitiy
+   * @param category category (tag*) which has to be removed
    */
-  removeCategoryTag(tagId: string): void {
-    this.categoryEntityApi.deleteTag(this.fileInfo.id, tagId);
+  remove(category: CategoryNode): void {
+    const index = this.categories.indexOf(category);
+
+    if (index >= 0) {
+      this.categories.splice(index, 1);
+      this.categoryEntityApi.deleteTag(this.fileInfo.id, category._id).subscribe();
+    }
   }
 
   /**
    * Get categories to which current entity belongs
    * @file_id GUID of the current entity
    */
-  private getEntityCategories(file_id: any) {
+  private getEntityCategories(file_id: any): void {
     this.categoryEntityApi
       .getTags(file_id)
       .subscribe(
