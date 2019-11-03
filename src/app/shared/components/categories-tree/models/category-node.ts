@@ -14,7 +14,7 @@ export interface CategoryTree {
 }
 
 export class CategoryNode {
-  id?: string;
+  _id?: string;
   title: string;
   children?: CategoryNode[];
 }

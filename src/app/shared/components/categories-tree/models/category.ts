@@ -1,5 +1,5 @@
 export interface Category {
-  id: string;
+  _id: string;
   createdBy: string;
   createdDateTime: string;
   updatedBy: string;

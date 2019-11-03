@@ -12,16 +12,16 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class CategoriesApiService {
+export class CategoryTreeApiService {
   constructor(private http: HttpClient) {}
 
   getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${environment.apiUrl}/categories/tree`);
+    return this.http.get<Category[]>(`${environment.apiUrl}/categorytrees/tree`);
   }
 
   createTree(node: CategoryNode[]): Observable<string> {
     return this.http.post<string>(
-      `${environment.apiUrl}/categories/tree`,
+      `${environment.apiUrl}/categorytrees/tree`,
       node,
       { observe: 'body', responseType: 'text' as 'json' },
     );
@@ -29,56 +29,33 @@ export class CategoriesApiService {
 
   deleteTree(id: string, version: number): Observable<boolean> {
     return this.http.delete<boolean>(
-      `${environment.apiUrl}/categories/tree/${id}?$version=${version}`,
+      `${environment.apiUrl}/categorytrees/tree/${id}?$version=${version}`,
     );
   }
 
   getTree(id: string): Observable<CategoryTree> {
     return this.http.get<CategoryTree>(
-      `${environment.apiUrl}/categories/tree/${id}`,
+      `${environment.apiUrl}/categorytrees/tree/${id}`,
     );
   }
 
   updateTree(id: string, node: CategoryNode[]): Observable<boolean> {
     return this.http.put<boolean>(
-      `${environment.apiUrl}/categories/tree/${id}`,
+      `${environment.apiUrl}/categorytrees/tree/${id}`,
       node,
     );
   }
 
   updateTreeNode(id: string, node: CategoryNode): Observable<any> {
     return this.http.put<any>(
-      `${environment.apiUrl}/categories/tree/${id}/${node.id}`,
+      `${environment.apiUrl}/categorytrees/tree/${id}/${node._id}`,
       node,
     );
   }
 
   deleteTreeNode(id: string, node: CategoryNode, version: number) {
     return this.http.delete<boolean>(
-      `${environment.apiUrl}/categories/tree/${id}/${node.id}?$version=${version}`,
+      `${environment.apiUrl}/categorytrees/tree/${id}/${node._id}?$version=${version}`,
     );
-  }
-
-  getFileTreeNodes(
-    file_id: string,
-    category_id?: string,
-  ): Observable<CategoryNode[]> {
-    // category_id will be used when Leanda will work wit multiple categories
-    if (category_id) {
-      return this.http.get<CategoryNode[]>(
-        `${environment.apiUrl}/categories/${category_id}/${file_id}/tree`,
-      );
-    }
-    // return this.http.get<CategoryNode[]>(`${environment.apiUrl}/categories/0/${file_id}/tree`);
-  }
-
-  assignTag(file_id: string): Observable<any> {
-    throwError('Assign Tag to entitnity is not yet implemented');
-    return;
-  }
-
-  removeTag(file_id: string): Observable<any> {
-    throwError('Assign Tag to entitnity is not yet implemented');
-    return;
   }
 }

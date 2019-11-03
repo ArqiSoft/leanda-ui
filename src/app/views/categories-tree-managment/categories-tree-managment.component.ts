@@ -135,7 +135,7 @@ export class CategoriesTreeManagmentComponent implements OnInit {
 
   removeTree() {
     this.service.deleteTree(
-      this.service.categoryList[0].id,
+      this.service.categoryList[0]._id,
       this.service.categoryList[0].version,
     );
   }

@@ -19,7 +19,7 @@ import { environment } from 'environments/environment';
 import { Subscription } from 'rxjs';
 
 import { BlobsApiService } from '../../core/services/api/blobs-api.service';
-import { CategoriesApiService } from '../../core/services/api/categories-api.service';
+import { CategoryTreeApiService } from '../../core/services/api/category-tree-api.service';
 import { EntitiesApiService } from '../../core/services/api/entities-api.service';
 import { FoldersApiService } from '../../core/services/api/folders-api.service';
 import { ImagesApiService } from '../../core/services/api/images-api.service';
@@ -55,6 +55,7 @@ import { PropertiesInfoBoxComponent } from '../../shared/components/properties-i
 import { SharedLinksComponent } from '../../shared/components/shared-links/shared-links.component';
 import { SidebarContentService } from '../../shared/components/sidebar-content/sidebar-content.service';
 import { FileViewType } from '../../shared/models/file-view-type';
+import { CategoryEntityApiService } from 'app/core/services/api/category-entity-api.service';
 
 @Component({
   selector: 'dr-file-view',
@@ -184,7 +185,8 @@ export class FileViewComponent extends BrowserOptions
     public dialog: MatDialog,
     private componentResolver: ComponentFactoryResolver,
     private pageTitle: PageTitleService,
-    private categoriesApi: CategoriesApiService,
+    private categoryTreeApi: CategoryTreeApiService,
+    private categoryEntityApi: CategoryEntityApiService,
   ) {
     super(foldersApi, entitiesApi);
     this.breadcrumbs = [{ text: 'DRAFTS' }];
@@ -294,7 +296,7 @@ export class FileViewComponent extends BrowserOptions
       );
     }
 
-    this.getEntityCategoryTags(file_id);
+    this.getEntityCategories(file_id);
   }
 
   subscribeToSignalr() {
@@ -645,23 +647,34 @@ export class FileViewComponent extends BrowserOptions
    * Assign category tag to the entity
    */
   addCategoryTag(): void {
-    this.categoriesApi.assignTag(this.fileInfo.id);
+    this.categoryEntityApi.addTags(this.fileInfo.id, ['']);
   }
 
   /**
-   * Remove category tag assignment from the entity
+   * Remove all category tags assigned to the entity
    */
-  removeCategoryTag(): void {
-    this.categoriesApi.removeTag(this.fileInfo.id);
+  removeCategoryTags(): void {
+    this.categoryEntityApi.deleteTags(this.fileInfo.id, ['']);
   }
 
   /**
-  * Get categories to which current entity belongs
-  * @file_id GUID of the current entity
-  */
-  private getEntityCategoryTags(file_id: any) {
-    this.categoriesApi
-      .getFileTreeNodes(file_id)
-      .subscribe(treeNodes => (this.categories = treeNodes), error => console.error(error));
+   * Remove category tag from entity
+   * @param tagId Category tag GUID
+   */
+  removeCategoryTag(tagId: string): void {
+    this.categoryEntityApi.deleteTag(this.fileInfo.id, tagId);
+  }
+
+  /**
+   * Get categories to which current entity belongs
+   * @file_id GUID of the current entity
+   */
+  private getEntityCategories(file_id: any) {
+    this.categoryEntityApi
+      .getTags(file_id)
+      .subscribe(
+        tags => (this.categories = tags),
+        error => console.error(error),
+      );
   }
 }

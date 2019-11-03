@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CategoriesApiService } from 'app/core/services/api/categories-api.service';
+import { CategoryTreeApiService } from 'app/core/services/api/category-tree-api.service';
 import { UsersApiService } from 'app/core/services/api/users-api.service';
 import { NotificationsService } from 'app/core/services/notifications/notifications.service';
 import { Category } from 'app/shared/components/categories-tree/models/category';
@@ -13,7 +13,6 @@ import { BehaviorSubject, Observable, combineLatest, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { CategoryTreeInfo } from './CategoryTreeInfo';
-import { HttpHeaders } from '@angular/common/http';
 
 type Tree = CategoryNode[];
 
@@ -48,7 +47,7 @@ export class CategoriesTreeManagmentService {
   }
 
   constructor(
-    private api: CategoriesApiService,
+    private api: CategoryTreeApiService,
     private userApi: UsersApiService,
     private notification: NotificationsService,
   ) {
@@ -66,7 +65,7 @@ export class CategoriesTreeManagmentService {
       // if categories list is not empty - retrieving first category as default
       // TBD: change when `Leanda` will support multiple categories functionality
       if (categories !== null && categories.length !== 0) {
-        this.getCategoryTree(this.categoryList[0].id);
+        this.getCategoryTree(this.categoryList[0]._id);
       } else if (categories.length === 0) {
         this.dataChange.next([]);
       } else {
@@ -142,7 +141,7 @@ export class CategoriesTreeManagmentService {
   removeNode(deletedNode: CategoryNode) {
     this.api
       .deleteTreeNode(
-        this.categoryList[0].id,
+        this.categoryList[0]._id,
         deletedNode,
         this.categoryList[0].version,
       )
@@ -159,7 +158,7 @@ export class CategoriesTreeManagmentService {
     if (parent.children) {
       this.api
         .deleteTreeNode(
-          this.categoryList[0].id,
+          this.categoryList[0]._id,
           deletedNode,
           this.categoryList[0].version,
         )
@@ -185,7 +184,7 @@ export class CategoriesTreeManagmentService {
    */
   updateTree(): void {
     // this.api.updateTree(this.currentCategory, this.tree);
-    this.api.updateTree(this.categoryList[0].id, this.tree).subscribe();
+    this.api.updateTree(this.categoryList[0]._id, this.tree).subscribe();
   }
 
   /**
@@ -195,7 +194,7 @@ export class CategoriesTreeManagmentService {
    * @param nodes category tree new nodes
    */
   updateTreeNode(node: CategoryNode): Observable<string> {
-    return this.api.updateTreeNode(this.categoryList[0].id, node);
+    return this.api.updateTreeNode(this.categoryList[0]._id, node);
   }
 
   /**
