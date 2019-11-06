@@ -10,23 +10,22 @@ import { CategoryTreeApiService } from '../../../core/services/api/category-tree
 import { NodesApiService } from '../../../core/services/api/nodes-api.service';
 import { BrowserDataBaseService } from '../../../core/services/browser-services/browser-data-base.service';
 import { BrowserDataService } from '../../../core/services/browser-services/browser-data.service';
-import { EEntityFilter, ICounter } from '../../../shared/models/entity-filter';
+import { CategoryService } from '../../../core/services/categories/categories.service';
+import { EEntityFilter, ICounter } from '../../models/entity-filter';
 import { EntityCountsService } from '../entity-counts/entity-counts.service';
 import { SidebarContentService } from '../sidebar-content/sidebar-content.service';
 
-import { CategoriesService } from './categories.service';
-import { Category } from './models/category';
 import { CategoryNode, CategoryTree } from './models/category-node';
 
 @Component({
-  selector: 'dr-categories-tree',
-  templateUrl: './categories-tree.component.html',
-  styleUrls: ['./categories-tree.component.scss'],
+  selector: 'dr-category-tree',
+  templateUrl: './category-tree.component.html',
+  styleUrls: ['./category-tree.component.scss'],
   providers: [
     { provide: BrowserDataBaseService, useClass: BrowserDataService },
   ],
 })
-export class CategoriesTreeComponent implements OnInit, OnDestroy {
+export class CategoryTreeComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject();
   treeControl = new NestedTreeControl<CategoryNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<CategoryNode>();
@@ -40,7 +39,7 @@ export class CategoriesTreeComponent implements OnInit, OnDestroy {
   constructor(
     public sidebarContent: SidebarContentService,
     public dataService: BrowserDataBaseService,
-    public service: CategoriesService,
+    private service: CategoryService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private api: CategoryTreeApiService,
@@ -48,12 +47,12 @@ export class CategoriesTreeComponent implements OnInit, OnDestroy {
     private nodesApi: NodesApiService,
   ) {}
 
-  private get categories(): Category[] {
-    return this.service.categories;
+  private get categories(): CategoryTree[] {
+    return this.service.treeList;
   }
 
   ngOnInit(): void {
-    this.service.selectedCategoryAsync
+    this.service.selectedNodeAsync
       .pipe(takeUntil(this.destroy$))
       .subscribe(node => (this.selectedNode = node));
     this.service.activeTreeAsync
@@ -84,15 +83,15 @@ export class CategoriesTreeComponent implements OnInit, OnDestroy {
     !!node.children && node.children.length > 0
 
   selectCategory(node: CategoryNode): void {
-    this.service.selectedCategory = node;
+    this.service.selectedNode = node;
     this.filterByCategory();
   }
 
   displayAllFiles(): void {
-    this.service.selectedCategory = <CategoryNode>{ _id: '' };
+    this.service.selectedNode = <CategoryNode>{ id: '' };
     this.entityCounterService.activeFilter = this.currentFilter =
       EEntityFilter.ALL;
-    this.selectedNode = { title: 'None', _id: '' };
+    this.selectedNode = { title: 'None', id: '' };
     this.router.navigate(['./'], {
       relativeTo: this.activatedRoute,
     });
@@ -124,7 +123,7 @@ export class CategoriesTreeComponent implements OnInit, OnDestroy {
   }
 
   private filterByCategory(): Promise<boolean> {
-    this.service.selectedCategory = this.selectedNode;
+    this.service.selectedNode = this.selectedNode;
     // GET /api/categoryentities/categories/{categoryid}
     return this.router.navigate(['./'], {
       // Filter parameter has to be set once API is ready
@@ -138,12 +137,12 @@ export class CategoriesTreeComponent implements OnInit, OnDestroy {
   private getCategories(): void {
     this.dataService.browserLoading = true;
     this.api
-      .getCategories()
+      .getTreeList()
       .pipe(
-        map((list: Category[]) => (this.service.categories = list)),
-        tap(() => this.getTree(this.categories[0]._id)),
+        map((list: CategoryTree[]) => (this.service.treeList = list)),
+        tap(() => this.getTree(this.categories[0].id)),
         catchError((err: any) => {
-          this.service.categories = [];
+          this.service.treeList = [];
           this.dataService.browserLoading = false;
           return throwError(err);
         }),
@@ -159,8 +158,11 @@ export class CategoriesTreeComponent implements OnInit, OnDestroy {
       .getTree(id)
       .subscribe(
         (tree: CategoryTree) =>
-          (this.dataSource.data = this.service.activeTree = tree.nodes),
-        (err: any) => console.error(err),
+        {
+          this.service.activeTree = tree.nodes;
+          this.dataSource.data = tree.nodes;
+        },
+        (err: any) => console.error(`Coudn't retrieve tree with id - ${id}`),
       );
   }
 }

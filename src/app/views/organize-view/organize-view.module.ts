@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
 import { MatIconModule, MatTooltipModule } from '@angular/material';
-import { CategoriesTreeModule } from 'app/shared/components/categories-tree/categories-tree.module';
+import { CategoriesTreeModule } from 'app/shared/components/categories-tree/category-tree.module';
 import { EntityCountsModule } from 'app/shared/components/entity-counts/entity-counts.module';
 import { ExportDialogModule } from 'app/shared/components/export-dialog/export-dialog.module';
 import { FolderActionsModule } from 'app/shared/components/folder-actions/folder-actions.module';
@@ -11,7 +11,6 @@ import { OrganizeBrowserModule } from 'app/shared/components/organize-browser/or
 import { OrganizeToolbarModule } from 'app/shared/components/organize-toolbar/organize-toolbar.module';
 import { SidebarContentModule } from 'app/shared/components/sidebar-content/sidebar-content.module';
 import { SharedModule } from 'app/shared/shared.module';
-
 
 import { OrganizeViewRoutingModule } from './organize-view-routing.module';
 import { OrganizeViewComponent } from './organize-view.component';

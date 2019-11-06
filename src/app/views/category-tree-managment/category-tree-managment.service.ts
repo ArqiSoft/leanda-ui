@@ -1,16 +1,20 @@
 import { Injectable } from '@angular/core';
-import { CategoryTreeApiService } from 'app/core/services/api/category-tree-api.service';
-import { UsersApiService } from 'app/core/services/api/users-api.service';
-import { NotificationsService } from 'app/core/services/notifications/notifications.service';
-import { Category } from 'app/shared/components/categories-tree/models/category';
-import { CategoryNode } from 'app/shared/components/categories-tree/models/category-node';
-import { NotificationType } from 'app/shared/components/notifications/events.model';
+import { BehaviorSubject, Observable, combineLatest, throwError } from 'rxjs';
+import { catchError, delay, map, tap } from 'rxjs/operators';
+
+import { CategoryTreeApiService } from '../../core/services/api/category-tree-api.service';
+import { UsersApiService } from '../../core/services/api/users-api.service';
+import { CategoryService } from '../../core/services/categories/categories.service';
+import { NotificationsService } from '../../core/services/notifications/notifications.service';
+import {
+  CategoryNode,
+  CategoryTree,
+} from '../../shared/components/categories-tree/models/category-node';
+import { NotificationType } from '../../shared/components/notifications/events.model';
 import {
   NotificationItem,
   NotificationMessage,
-} from 'app/shared/components/notifications/notifications.model';
-import { BehaviorSubject, Observable, combineLatest, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+} from '../../shared/components/notifications/notifications.model';
 
 import { CategoryTreeInfo } from './CategoryTreeInfo';
 
@@ -19,7 +23,7 @@ type Tree = CategoryNode[];
 @Injectable({
   providedIn: 'root',
 })
-export class CategoriesTreeManagmentService {
+export class CategoryTreeManagmentService {
   /**
    * TODO: implement multiple categories managment
    * -> replace all use of all `category[0]` with appropriate logic for managing multiple categories
@@ -27,27 +31,28 @@ export class CategoriesTreeManagmentService {
 
   dataChange = new BehaviorSubject<CategoryNode[]>([]);
 
-  private _category = new BehaviorSubject<Category>(null);
-  private _categoryList = new BehaviorSubject<Category[]>([]);
+  private _category = new BehaviorSubject<CategoryTree>(null);
+  private _categoryList = new BehaviorSubject<CategoryTree[]>([]);
 
   get tree(): Tree {
     return this.dataChange.value;
   }
 
-  get categoryList(): Category[] {
+  get categoryList(): CategoryTree[] {
     return this._categoryList.value;
   }
 
-  get category(): Category {
+  get category(): CategoryTree {
     return this._category.value;
   }
 
-  set category(category: Category) {
+  set category(category: CategoryTree) {
     this._category.next(category);
   }
 
   constructor(
     private api: CategoryTreeApiService,
+    private service: CategoryService,
     private userApi: UsersApiService,
     private notification: NotificationsService,
   ) {
@@ -59,13 +64,13 @@ export class CategoriesTreeManagmentService {
    */
   initialize() {
     // retriving list of avalible categories
-    this.getCategories().subscribe((categories: Category[]) => {
+    this.getTreeList().subscribe((categories: CategoryTree[]) => {
       // notyfing `categories` subject
       this._categoryList.next(categories);
       // if categories list is not empty - retrieving first category as default
       // TBD: change when `Leanda` will support multiple categories functionality
       if (categories !== null && categories.length !== 0) {
-        this.getCategoryTree(this.categoryList[0]._id);
+        this.getCategoryTree(this.categoryList[0].id);
       } else if (categories.length === 0) {
         this.dataChange.next([]);
       } else {
@@ -120,6 +125,7 @@ export class CategoriesTreeManagmentService {
           ),
           false,
         ),
+        error => throwError(`Couldn't update tree with category - ${title}`),
       );
     }
 
@@ -141,7 +147,7 @@ export class CategoriesTreeManagmentService {
   removeNode(deletedNode: CategoryNode) {
     this.api
       .deleteTreeNode(
-        this.categoryList[0]._id,
+        this.categoryList[0].id,
         deletedNode,
         this.categoryList[0].version,
       )
@@ -158,7 +164,7 @@ export class CategoriesTreeManagmentService {
     if (parent.children) {
       this.api
         .deleteTreeNode(
-          this.categoryList[0]._id,
+          this.categoryList[0].id,
           deletedNode,
           this.categoryList[0].version,
         )
@@ -184,7 +190,10 @@ export class CategoriesTreeManagmentService {
    */
   updateTree(): void {
     // this.api.updateTree(this.currentCategory, this.tree);
-    this.api.updateTree(this.categoryList[0]._id, this.tree).subscribe();
+    this.api
+      .updateTree(this.categoryList[0].id, this.tree)
+      // get updated tree with new ids and notifies service
+      .subscribe(() => this.getCategoryTree(this.categoryList[0].id));
   }
 
   /**
@@ -194,7 +203,7 @@ export class CategoriesTreeManagmentService {
    * @param nodes category tree new nodes
    */
   updateTreeNode(node: CategoryNode): Observable<string> {
-    return this.api.updateTreeNode(this.categoryList[0]._id, node);
+    return this.api.updateTreeNode(this.categoryList[0].id, node);
   }
 
   /**
@@ -202,13 +211,22 @@ export class CategoriesTreeManagmentService {
    * @param tree is a new CategoryNode array
    */
   createTree(tree: CategoryNode[]): void {
-    this.api.createTree(tree).subscribe(category_id =>
-      this.getCategories()
-        .pipe(tap(() => this.getCategoryTree(category_id)))
-        .subscribe(categories => this._categoryList.next(categories)),
+    this.api.createTree(tree).subscribe(
+      category_id =>
+        this.getTreeList()
+          .pipe(tap(() => this.getCategoryTree(category_id)))
+          .subscribe(
+            categories => this._categoryList.next(categories),
+            error => throwError(`Couldn't retrieve list of available trees`),
+          ),
+      error => throwError(`Couldn't create tree`),
     );
   }
-
+  /**
+   * Method that retrieves data about current tree
+   * @param createdBy User GUID
+   * @param updatedBy User GUID
+   */
   treeInfo(createdBy: string, updatedBy: string): Observable<CategoryTreeInfo> {
     return combineLatest([
       this.userApi.getUserInfo(createdBy),
@@ -229,16 +247,21 @@ export class CategoriesTreeManagmentService {
       }),
     );
   }
-
+  /**
+   * Method to retireve `CategoryTree` tree by parameter
+   * @param id Tree GUID
+   */
   private getCategoryTree(id: string): void {
-    this.api
-      .getTree(id)
-      .subscribe(tree =>
-        this.dataChange.next(tree.nodes !== null ? tree.nodes : []),
-      );
+    this.api.getTree(id).pipe(delay(500)).subscribe(
+      tree => {
+        this.service.activeTree = tree.nodes  ? tree.nodes : [];
+        this.dataChange.next(tree.nodes !== null ? tree.nodes : []);
+      },
+      error => throwError(`Couldn't retrieve tree with id ${id}`),
+    );
   }
-
-  private getCategories(): Observable<Category[]> {
-    return this.api.getCategories();
+  /** Method to retrieve from api list of available trees */
+  private getTreeList(): Observable<CategoryTree[]> {
+    return this.api.getTreeList();
   }
 }

@@ -3,7 +3,7 @@
   matTooltipPosition="right"
   matTooltip="{{ entitiyFilter?.title }}"
   class="filter-box justify-content-between"
-  [class.selected]="currentFilter === 'all' && selectedNode?._id === ''"
+  [class.selected]="currentFilter === 'all' && selectedNode?.id === ''"
   [matTooltipDisabled]="!sidebarContent.sidebarCollapsed"
   (click)="displayAllFiles()"
 >
@@ -75,7 +75,7 @@
       </div>
     </ng-container>
     <ng-container *ngSwitchCase="false">
-      <ng-container *ngIf="!service.categories.length; else treeList">
+      <ng-container *ngIf="!categories.length; else treeList">
         <p class="browser-no-items">No categories yet</p>
       </ng-container>
     </ng-container>
@@ -90,7 +90,7 @@
         class="mat-tree-node c-pointer pr-2"
         matTreeNodeToggle
         matRipple
-        [class.selected]="selectedNode?._id === node._id"
+        [class.selected]="selectedNode?.id === node.id"
         (click)="selectCategory(node)"
       >
         <button mat-icon-button disabled></button>
@@ -104,7 +104,7 @@
           class="mat-tree-node c-pointer pr-2"
           matTreeNodeToggle
           matRipple
-          [class.selected]="selectedNode?._id === node._id"
+          [class.selected]="selectedNode?.id === node.id"
           (click)="selectCategory(node)"
         >
           <button mat-icon-button [attr.aria-label]="'toggle ' + node.title">

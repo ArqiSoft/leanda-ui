@@ -39,7 +39,7 @@ import {
 import { NotificationsService } from '../../core/services/notifications/notifications.service';
 import { PageTitleService } from '../../core/services/page-title/page-title.service';
 import { SignalrService } from '../../core/services/signalr/signalr.service';
-import { CategoriesService } from '../../shared/components/categories-tree/categories.service';
+import { CategoryService } from '../../core/services/categories/categories.service';
 import { ExportDialogComponent } from '../../shared/components/export-dialog/export-dialog.component';
 import { CreateFolderComponent } from '../../shared/components/folder-actions/create-folder/create-folder.component';
 import { DeleteFolderComponent } from '../../shared/components/folder-actions/delete-folder/delete-folder.component';
@@ -173,7 +173,7 @@ export class OrganizeViewComponent extends BrowserOptions
     private pageTitle: PageTitleService,
     private notificationsApi: NotificationsApiService,
     private contextMenuService: ContextMenuService,
-    private categoryService: CategoriesService,
+    private categoryService: CategoryService,
     private sidebarService: SidebarContentService,
   ) {
     super(foldersApi, entitiesApi);
@@ -489,7 +489,7 @@ export class OrganizeViewComponent extends BrowserOptions
           this.dataService.breadcrumbs = [
             { text: 'DRAFTS', width: null, link: '/organize/drafts' },
             {
-              text: `CATEGORY: ${this.categoryService.selectedCategory.title}`,
+              text: `CATEGORY: ${this.categoryService.selectedNode.title}`,
               width: null,
               link: '/organize/drafts',
             },

@@ -265,7 +265,7 @@
         </div>
 
         <div
-          *ngIf="categories.length !== 0"
+          *ngIf="categories?.length !== 0"
           (mouseenter)="showPopover('showCategoriesPovover')"
           (mouseleave)="hidePopover('showCategoriesPovover')"
         >
@@ -319,8 +319,9 @@
         </dd>
         <dt *ngIf="fileInfo.totalRecords">Records</dt>
         <dd *ngIf="fileInfo.totalRecords">{{ fileInfo.totalRecords }}</dd>
-        <dt *ngIf="categories?.length !== 0">Categories</dt>
-        <dd>
+        <dt>Categories</dt>
+        <dd><dr-category-selection></dr-category-selection></dd>
+        <dd *ngIf="categories?.length !== 0">
           <mat-chip-list aria-label="Categories">
             <mat-chip
               *ngFor="let category of categories"
@@ -333,7 +334,7 @@
       </dl>
     </div>
 
-    <div *ngIf="!sidebarContent.sidebarCollapsed" class="properties-ul">
+    <!-- <div *ngIf="!sidebarContent.sidebarCollapsed" class="properties-ul">
       <ul class="list-group">
         <li
           *ngFor="let item of listProperties"
@@ -350,10 +351,10 @@
           <span class="text-truncate"> {{ item.name }}</span>
         </li>
       </ul>
-    </div>
+    </div> -->
 
     <mat-chip-list
-      *ngIf="sidebarContent.sidebarCollapsed && categories.length !== 0"
+      *ngIf="sidebarContent.sidebarCollapsed && categories?.length !== 0"
       class="chips-popover"
       aria-label="Categories"
       (mouseenter)="showPopover('showCategoriesPovover')"

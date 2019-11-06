@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Category } from 'app/shared/components/categories-tree/models/category';
 import { environment } from 'environments/environment';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import {
   CategoryNode,
@@ -15,8 +14,8 @@ import {
 export class CategoryTreeApiService {
   constructor(private http: HttpClient) {}
 
-  getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${environment.apiUrl}/categorytrees/tree`);
+  getTreeList(): Observable<CategoryTree[]> {
+    return this.http.get<CategoryTree[]>(`${environment.apiUrl}/categorytrees/tree`);
   }
 
   createTree(node: CategoryNode[]): Observable<string> {
@@ -48,14 +47,14 @@ export class CategoryTreeApiService {
 
   updateTreeNode(id: string, node: CategoryNode): Observable<any> {
     return this.http.put<any>(
-      `${environment.apiUrl}/categorytrees/tree/${id}/${node._id}`,
+      `${environment.apiUrl}/categorytrees/tree/${id}/${node.id}`,
       node,
     );
   }
 
   deleteTreeNode(id: string, node: CategoryNode, version: number) {
     return this.http.delete<boolean>(
-      `${environment.apiUrl}/categorytrees/tree/${id}/${node._id}?$version=${version}`,
+      `${environment.apiUrl}/categorytrees/tree/${id}/${node.id}?$version=${version}`,
     );
   }
 }

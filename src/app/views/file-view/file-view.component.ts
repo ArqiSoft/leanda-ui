@@ -57,6 +57,7 @@ import { SidebarContentService } from '../../shared/components/sidebar-content/s
 import { FileViewType } from '../../shared/models/file-view-type';
 import { CategoryEntityApiService } from 'app/core/services/api/category-entity-api.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
+import { CategoryService } from 'app/core/services/categories/categories.service';
 
 @Component({
   selector: 'dr-file-view',
@@ -81,17 +82,12 @@ export class FileViewComponent extends BrowserOptions
   @Input() isPublicParent: boolean;
   toolBarButtons = [ToolbarButtonType.tile, ToolbarButtonType.table];
 
-  fileActions: {
+  fileActions: Array<{
     title: string;
     active: boolean;
     viewType: FileViewType;
-  }[] = [];
-  categories: CategoryNode[] = [
-    { title: `Lorem ` },
-    { title: `Consequuntur` },
-    { title: `praesentium!` },
-    { title: `Consequuntur praesentium!` },
-  ];
+  }> = [];
+  categories: CategoryNode[] = [];
   currentFileViewComponent = null;
 
   infoBoxes: Object[] = [];
@@ -188,6 +184,7 @@ export class FileViewComponent extends BrowserOptions
     private pageTitle: PageTitleService,
     private categoryTreeApi: CategoryTreeApiService,
     private categoryEntityApi: CategoryEntityApiService,
+    private categoryService: CategoryService,
   ) {
     super(foldersApi, entitiesApi);
     this.breadcrumbs = [{ text: 'DRAFTS' }];
@@ -658,7 +655,7 @@ export class FileViewComponent extends BrowserOptions
     this.categoryEntityApi.deleteTags(this.fileInfo.id, ['']);
   }
 
-   /**
+  /**
    * Remove category tag from entitiy
    * @param category category (tag*) which has to be removed
    */
@@ -667,7 +664,9 @@ export class FileViewComponent extends BrowserOptions
 
     if (index >= 0) {
       this.categories.splice(index, 1);
-      this.categoryEntityApi.deleteTag(this.fileInfo.id, category._id).subscribe();
+      this.categoryEntityApi
+        .deleteTag(this.fileInfo.id, category.id)
+        .subscribe();
     }
   }
 
@@ -679,7 +678,10 @@ export class FileViewComponent extends BrowserOptions
     this.categoryEntityApi
       .getTags(file_id)
       .subscribe(
-        tags => (this.categories = tags),
+        (tags: string[]) =>
+          (this.categories = this.categoryService.activeTree.filter(
+            (category: CategoryNode) => tags.includes(category.id),
+          )),
         error => console.error(error),
       );
   }

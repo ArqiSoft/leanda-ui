@@ -10,11 +10,11 @@ export interface CategoryTree {
   updatedBy: string;
   updatedDateTime: string;
   version: number;
-  nodes: CategoryNode[];
+  nodes?: CategoryNode[];
 }
 
 export class CategoryNode {
-  _id?: string;
+  id?: string;
   title: string;
   children?: CategoryNode[];
 }

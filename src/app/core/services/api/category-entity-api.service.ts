@@ -41,8 +41,8 @@ export class CategoryEntityApiService {
     );
   }
 
-  getTags(file_id: string): Observable<any> {
-    return this.http.get(
+  getTags(file_id: string): Observable<string[]> {
+    return this.http.get<string[]>(
       `${environment.apiUrl}/categoryentities/entities/${file_id}/categories`,
     );
   }

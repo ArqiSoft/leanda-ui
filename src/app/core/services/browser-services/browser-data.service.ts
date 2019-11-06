@@ -1,5 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Params, Router, convertToParamMap } from '@angular/router';
+import { CategoryService } from 'app/core/services/categories/categories.service';
 import {
   NodeEvent,
   SignalREvent,
@@ -15,11 +16,11 @@ import {
   Observable,
   Subscription,
   asapScheduler,
-  throwError as observableThrowError,
   throwError,
 } from 'rxjs';
 import { catchError, map, observeOn } from 'rxjs/operators';
 
+import { CategoryEntityApiService } from '../api/category-entity-api.service';
 import { FoldersApiService } from '../api/folders-api.service';
 import { NodesApiService } from '../api/nodes-api.service';
 import { SearchResultsApiService } from '../api/search-results-api.service';
@@ -29,8 +30,8 @@ import { SignalrService } from '../signalr/signalr.service';
 
 import { BrowserDataBaseService } from './browser-data-base.service';
 import { PaginatorManagerService } from './paginator-manager.service';
-import { CategoryEntityApiService } from '../api/category-entity-api.service';
-import { CategoriesService } from 'app/shared/components/categories-tree/categories.service';
+
+
 
 export interface IBrowserEvent {
   event: MouseEvent;
@@ -52,7 +53,7 @@ export class BrowserDataService extends BrowserDataBaseService {
     protected usersApi: UsersApiService,
     protected searchResultsApi: SearchResultsApiService,
     protected categoryEntityApi: CategoryEntityApiService,
-    protected categoriesService: CategoriesService,
+    protected categoriesService: CategoryService,
   ) {
     super();
   }
@@ -143,7 +144,7 @@ export class BrowserDataService extends BrowserDataBaseService {
             this.paginator.setPaginatorData(data.count);
             this.browserLoading = false;
           },
-          error => {
+          () => {
             this.browserLoading = false;
           },
         );
@@ -154,7 +155,7 @@ export class BrowserDataService extends BrowserDataBaseService {
             this.paginator.setPaginatorData(data.count);
             this.browserLoading = false;
           },
-          error => {
+          () => {
             this.browserLoading = false;
           },
         );
@@ -173,13 +174,13 @@ export class BrowserDataService extends BrowserDataBaseService {
           },
         );
       } else {
-        this.getItems(mergedParams, this.currentItem.type).subscribe(
+        this.getItems(mergedParams).subscribe(
           data => {
             this.data = data;
             this.paginator.setPaginatorData(data.count);
             this.browserLoading = false;
           },
-          error => {
+          () => {
             this.browserLoading = false;
           },
         );
@@ -210,7 +211,7 @@ export class BrowserDataService extends BrowserDataBaseService {
 
   updateItem(inputEvent: SignalREvent) {
     if (inputEvent.isDeleteRemoveAction()) {
-      const { inList, updatedItem } = this.getLocalItemByID(inputEvent.Id);
+      const { updatedItem } = this.getLocalItemByID(inputEvent.Id);
 
       const index = this.data.items.indexOf(updatedItem);
       if (index >= 0) {
@@ -290,7 +291,7 @@ export class BrowserDataService extends BrowserDataBaseService {
     }
   }
 
-  getItems(params: Params, nodeType?: string): Observable<any> {
+  getItems(params: Params): Observable<any> {
     return this.foldersApi
       .getFolderContentWithParams(this.currentItem.id, params)
       .pipe(map((folderContent: any) => this.parseResponse(folderContent)));
@@ -323,7 +324,7 @@ export class BrowserDataService extends BrowserDataBaseService {
 
   getEntitiesWithTag(params: Params): Observable<any> {
     return this.categoryEntityApi
-      .getEntityWithTag(this.categoriesService.selectedCategory._id, params)
+      .getEntityWithTag(this.categoriesService.selectedNode.id, params)
       .pipe(
         map((folderContent: any) => {
           const itemsArray = folderContent.data.map(
@@ -388,8 +389,8 @@ export class BrowserDataService extends BrowserDataBaseService {
       map(data => {
         return new BrowserDataItem(data.body as BrowserDataItem);
       }),
-      catchError(error => {
-        return observableThrowError(null);
+      catchError(() => {
+        return throwError(null);
       }),
     );
   }

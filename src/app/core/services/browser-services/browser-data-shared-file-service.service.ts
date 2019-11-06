@@ -1,9 +1,11 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Params, Router } from '@angular/router';
+import { CategoryService } from 'app/core/services/categories/categories.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { BrowserDataItem } from '../../../shared/components/organize-browser/browser-types';
+import { CategoryEntityApiService } from '../api/category-entity-api.service';
 import { FilesApiService } from '../api/files-api.service';
 import { FoldersApiService } from '../api/folders-api.service';
 import { NodesApiService } from '../api/nodes-api.service';
@@ -14,8 +16,6 @@ import { SignalrService } from '../signalr/signalr.service';
 
 import { BrowserDataService } from './browser-data.service';
 import { PaginatorManagerService } from './paginator-manager.service';
-import { CategoriesService } from 'app/shared/components/categories-tree/categories.service';
-import { CategoryEntityApiService } from '../api/category-entity-api.service';
 
 @Injectable()
 export class BrowserDataSharedFileServiceService extends BrowserDataService {
@@ -31,7 +31,7 @@ export class BrowserDataSharedFileServiceService extends BrowserDataService {
     protected usersApi: UsersApiService,
     protected searchResultsApi: SearchResultsApiService,
     protected categoryEntityApi: CategoryEntityApiService,
-    protected categorySerivce: CategoriesService,
+    protected categorySerivce: CategoryService,
   ) {
     super(
       nodesApi,
