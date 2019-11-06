@@ -6,7 +6,7 @@ import { SidebarContentService } from 'app/shared/components/sidebar-content/sid
 
 import { ActionViewService } from '../shared/components/full-screen-dialogs/action-view.service';
 
-import { CategoryService } from './services/categories/categories.service';
+import { CategoryService } from './services/category/category.service';
 import { BlobsApiService } from './services/api/blobs-api.service';
 import { CategoryEntityApiService } from './services/api/category-entity-api.service';
 import { CategoryTreeApiService } from './services/api/category-tree-api.service';

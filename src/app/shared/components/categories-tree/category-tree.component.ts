@@ -10,7 +10,7 @@ import { CategoryTreeApiService } from '../../../core/services/api/category-tree
 import { NodesApiService } from '../../../core/services/api/nodes-api.service';
 import { BrowserDataBaseService } from '../../../core/services/browser-services/browser-data-base.service';
 import { BrowserDataService } from '../../../core/services/browser-services/browser-data.service';
-import { CategoryService } from '../../../core/services/categories/categories.service';
+import { CategoryService } from '../../../core/services/category/category.service';
 import { EEntityFilter, ICounter } from '../../models/entity-filter';
 import { EntityCountsService } from '../entity-counts/entity-counts.service';
 import { SidebarContentService } from '../sidebar-content/sidebar-content.service';

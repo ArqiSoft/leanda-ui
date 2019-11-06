@@ -20,6 +20,7 @@ export class CategoryNode {
 }
 
 export class CategoryFlatNode {
+  id: string;
   title: string;
   level: number;
   isExpandable: boolean;

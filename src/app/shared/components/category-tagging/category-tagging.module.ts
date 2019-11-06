@@ -3,13 +3,14 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatAutocompleteModule,
+  MatChipsModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
 } from '@angular/material';
 import { SharedModule } from 'app/shared/shared.module';
 
-import { CategorySelectionComponent } from './category-selection.component';
+import { CategoryTaggingComponent } from './category-tagging.component';
 
 const matModules = [
   MatAutocompleteModule,
@@ -17,11 +18,13 @@ const matModules = [
   MatFormFieldModule,
   MatInputModule,
   MatIconModule,
+  MatChipsModule,
   ReactiveFormsModule,
 ];
 
 @NgModule({
-  declarations: [CategorySelectionComponent],
+  declarations: [CategoryTaggingComponent],
+  exports: [CategoryTaggingComponent],
   imports: [CommonModule, SharedModule, ...matModules],
 })
-export class CategorySelectionModule {}
+export class CategoryTaggingModule {}

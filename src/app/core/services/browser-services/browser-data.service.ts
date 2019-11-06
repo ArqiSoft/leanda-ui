@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Params, Router, convertToParamMap } from '@angular/router';
-import { CategoryService } from 'app/core/services/categories/categories.service';
+import { CategoryService } from 'app/core/services/category/category.service';
 import {
   NodeEvent,
   SignalREvent,

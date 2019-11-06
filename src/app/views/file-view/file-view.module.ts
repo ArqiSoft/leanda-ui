@@ -6,7 +6,7 @@ import {
 } from '@angular/material';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterModule, Routes } from '@angular/router';
-import { CategorySelectionModule } from 'app/shared/components/category-selection/category-selection.module';
+import { CategoryTaggingModule } from 'app/shared/components/category-tagging/category-tagging.module';
 
 import { AuthService } from '../../core/services/auth/auth.service';
 import { BrowserDataBaseService } from '../../core/services/browser-services/browser-data-base.service';
@@ -62,7 +62,7 @@ const modules = [
   MatRippleModule,
   MatChipsModule,
   MatIconModule,
-  CategorySelectionModule,
+  CategoryTaggingModule,
 ];
 
 @NgModule({

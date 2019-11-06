@@ -320,7 +320,9 @@
         <dt *ngIf="fileInfo.totalRecords">Records</dt>
         <dd *ngIf="fileInfo.totalRecords">{{ fileInfo.totalRecords }}</dd>
         <dt>Categories</dt>
-        <dd><dr-category-selection></dr-category-selection></dd>
+        <!-- Entity Tags Autocomplete -->
+        <!-- <dd><dr-category-tagging></dr-category-tagging></dd> -->
+      <button mat-button (click)="">Assign Category</button>
         <dd *ngIf="categories?.length !== 0">
           <mat-chip-list aria-label="Categories">
             <mat-chip

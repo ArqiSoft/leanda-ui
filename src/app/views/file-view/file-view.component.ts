@@ -57,7 +57,7 @@ import { SidebarContentService } from '../../shared/components/sidebar-content/s
 import { FileViewType } from '../../shared/models/file-view-type';
 import { CategoryEntityApiService } from 'app/core/services/api/category-entity-api.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
-import { CategoryService } from 'app/core/services/categories/categories.service';
+import { CategoryService } from 'app/core/services/category/category.service';
 
 @Component({
   selector: 'dr-file-view',

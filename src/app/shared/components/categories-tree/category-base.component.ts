@@ -58,6 +58,7 @@ export class CategoryTreeBaseComponent implements OnInit {
         ? existingNode
         : new CategoryFlatNode();
 
+    flatNode.id = node.id;
     flatNode.title = node.title;
     flatNode.level = level;
     flatNode.isExpandable = !!node.children;

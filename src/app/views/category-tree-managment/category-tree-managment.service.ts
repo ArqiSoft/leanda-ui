@@ -4,7 +4,7 @@ import { catchError, delay, map, tap } from 'rxjs/operators';
 
 import { CategoryTreeApiService } from '../../core/services/api/category-tree-api.service';
 import { UsersApiService } from '../../core/services/api/users-api.service';
-import { CategoryService } from '../../core/services/categories/categories.service';
+import { CategoryService } from '../../core/services/category/category.service';
 import { NotificationsService } from '../../core/services/notifications/notifications.service';
 import {
   CategoryNode,
