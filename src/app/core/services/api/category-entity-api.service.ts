@@ -48,15 +48,9 @@ export class CategoryEntityApiService {
   }
 
   addTags(file_id: string, categoriesIdList: string[]): Observable<any> {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body: { ...categoriesIdList },
-    };
     return this.http.post(
       `${environment.apiUrl}/categoryentities/entities/${file_id}/categories`,
-      options,
+      [...categoriesIdList],
     );
   }
 
