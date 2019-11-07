@@ -23,7 +23,7 @@ export class CategoryFlatNode {
   id: string;
   title: string;
   level: number;
-  isExpandable: boolean;
+  expandable: boolean;
   isEditEnabled: boolean;
   isButtonsVisible: boolean;
 }

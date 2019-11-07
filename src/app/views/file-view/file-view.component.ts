@@ -13,10 +13,14 @@ import {
   ViewChildren,
   ViewContainerRef,
 } from '@angular/core';
+import { MatAutocompleteSelectedEvent } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
+import { CategoryEntityApiService } from 'app/core/services/api/category-entity-api.service';
+import { CategoryService } from 'app/core/services/category/category.service';
+import { CategoryAssignDialogComponent } from 'app/shared/components/categories-tree/category-assign-dialog/category-assign-dialog.component';
 import { environment } from 'environments/environment';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { BlobsApiService } from '../../core/services/api/blobs-api.service';
 import { CategoryTreeApiService } from '../../core/services/api/category-tree-api.service';
@@ -28,7 +32,7 @@ import { IBrowserEvent } from '../../core/services/browser-services/browser-data
 import { PaginatorManagerService } from '../../core/services/browser-services/paginator-manager.service';
 import { PageTitleService } from '../../core/services/page-title/page-title.service';
 import { SignalrService } from '../../core/services/signalr/signalr.service';
-import { CategoryNode } from '../../shared/components/categories-tree/models/category-node';
+import { CategoryNode, CategoryTree } from '../../shared/components/categories-tree/models/category-node';
 import { ExportDialogComponent } from '../../shared/components/export-dialog/export-dialog.component';
 import { CifPreviewComponent } from '../../shared/components/file-views/cif-preview/cif-preview.component';
 import { CSVPreviewComponent } from '../../shared/components/file-views/csv-preview/csv-preview.component';
@@ -55,9 +59,7 @@ import { PropertiesInfoBoxComponent } from '../../shared/components/properties-i
 import { SharedLinksComponent } from '../../shared/components/shared-links/shared-links.component';
 import { SidebarContentService } from '../../shared/components/sidebar-content/sidebar-content.service';
 import { FileViewType } from '../../shared/models/file-view-type';
-import { CategoryEntityApiService } from 'app/core/services/api/category-entity-api.service';
-import { MatAutocompleteSelectedEvent } from '@angular/material';
-import { CategoryService } from 'app/core/services/category/category.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'dr-file-view',
@@ -295,6 +297,9 @@ export class FileViewComponent extends BrowserOptions
     }
 
     this.getEntityCategories(file_id);
+
+    this.getTreeList()
+    .subscribe(treeList => this.getTree(treeList[0].id));
   }
 
   subscribeToSignalr() {
@@ -668,6 +673,27 @@ export class FileViewComponent extends BrowserOptions
         .deleteTag(this.fileInfo.id, category.id)
         .subscribe();
     }
+  }
+
+  openAssignTagDialog(): void {
+    this.dialog.open(CategoryAssignDialogComponent, {
+      width: '500px',
+      height: '528px',
+      data: {
+        fileInfo: this.fileInfo,
+        assignedCategories: this.categories,
+      },
+    });
+  }
+
+  getTreeList(): Observable<CategoryTree[]> {
+    return this.categoryTreeApi.getTreeList();
+  }
+
+  getTree(id: string): void {
+    this.categoryTreeApi
+      .getTree(id)
+      .subscribe(tree => (this.categoryService.activeTree = this.categories = tree.nodes));
   }
 
   /**

@@ -52,10 +52,10 @@ export class CategoryTreeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.service.selectedNodeAsync
+    this.service.selectedNode$
       .pipe(takeUntil(this.destroy$))
       .subscribe(node => (this.selectedNode = node));
-    this.service.activeTreeAsync
+    this.service.activeTree$
       .pipe(takeUntil(this.destroy$))
       .subscribe(tree => (this.dataSource.data = tree));
 

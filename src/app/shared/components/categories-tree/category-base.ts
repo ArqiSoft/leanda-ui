@@ -10,7 +10,7 @@ import {
   CategoryTree,
 } from './models/category-node';
 
-export class CategoryTreeBaseComponent implements OnInit {
+export class CategoryTreeBase implements OnInit {
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap = new Map<CategoryFlatNode, CategoryNode>();
 
@@ -35,11 +35,11 @@ export class CategoryTreeBaseComponent implements OnInit {
 
   getLevel = (node: CategoryFlatNode) => node.level;
 
-  isExpandable = (node: CategoryFlatNode) => node.isExpandable;
+  isExpandable = (node: CategoryFlatNode) => node.expandable;
 
   getChildren = (node: CategoryNode): CategoryNode[] => node.children;
 
-  hasChild = (_: number, _nodeData: CategoryFlatNode) => _nodeData.isExpandable;
+  hasChild = (_: number, _nodeData: CategoryFlatNode) => _nodeData.expandable;
 
   hasNoContent = (_: number, _nodeData: CategoryFlatNode) =>
     _nodeData.title === ''
@@ -61,7 +61,7 @@ export class CategoryTreeBaseComponent implements OnInit {
     flatNode.id = node.id;
     flatNode.title = node.title;
     flatNode.level = level;
-    flatNode.isExpandable = !!node.children;
+    flatNode.expandable = !!node.children;
     flatNode.isEditEnabled = false;
     flatNode.isButtonsVisible = false;
 

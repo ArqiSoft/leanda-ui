@@ -138,7 +138,7 @@ export class OrganizeViewComponent extends BrowserOptions
   private routeEventsSubscription: Subscription;
 
   get categoriesTree(): Observable<CategoryNode[]> {
-    return this.categoryService.activeTreeAsync;
+    return this.categoryService.activeTree$;
   }
 
   get currentView() {

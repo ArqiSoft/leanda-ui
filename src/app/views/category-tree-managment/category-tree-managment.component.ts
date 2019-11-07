@@ -2,7 +2,7 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, OnInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 
-import { CategoryTreeBaseComponent } from '../../shared/components/categories-tree/category-base.component';
+import { CategoryTreeBase } from '../../shared/components/categories-tree/category-base';
 import {
   CategoryFlatNode,
   CategoryNode,
@@ -15,7 +15,7 @@ import { CategoryTreeManagmentService } from './category-tree-managment.service'
   templateUrl: './category-tree-managment.component.html',
   styleUrls: ['./category-tree-managment.component.scss'],
 })
-export class CategoryTreeManagmentComponent extends CategoryTreeBaseComponent
+export class CategoryTreeManagmentComponent extends CategoryTreeBase
   implements OnInit {
   constructor(private service: CategoryTreeManagmentService) {
     super();

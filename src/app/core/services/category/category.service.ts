@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatTreeFlattener } from '@angular/material';
-import { CategoryTreeBaseComponent } from 'app/shared/components/categories-tree/category-base.component';
+import { CategoryTreeBase } from 'app/shared/components/categories-tree/category-base';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import {
@@ -12,7 +12,7 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class CategoryService extends CategoryTreeBaseComponent {
+export class CategoryService extends CategoryTreeBase {
   private _selectedCategory: BehaviorSubject<
     CategoryNode
   > = new BehaviorSubject({ id: '', title: 'NONE' });
@@ -33,7 +33,7 @@ export class CategoryService extends CategoryTreeBaseComponent {
   get activeTree(): CategoryNode[] {
     return this._tree.value;
   }
-  get activeTreeAsync(): Observable<CategoryNode[]> {
+  get activeTree$(): Observable<CategoryNode[]> {
     return this._tree.asObservable();
   }
   set activeTree(value: CategoryNode[]) {
@@ -43,7 +43,7 @@ export class CategoryService extends CategoryTreeBaseComponent {
   get selectedNode(): CategoryNode {
     return this._selectedCategory.value;
   }
-  get selectedNodeAsync(): Observable<CategoryNode> {
+  get selectedNode$(): Observable<CategoryNode> {
     return this._selectedCategory.asObservable();
   }
   set selectedNode(value: CategoryNode) {
