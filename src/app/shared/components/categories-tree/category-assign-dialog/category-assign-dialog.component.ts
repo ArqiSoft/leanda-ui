@@ -12,8 +12,8 @@ import { CategoryEntityApiService } from 'app/core/services/api/category-entity-
 import { CategoryTreeApiService } from 'app/core/services/api/category-tree-api.service';
 import { CategoryService } from 'app/core/services/category/category.service';
 import { NotificationsService } from 'app/core/services/notifications/notifications.service';
-import { Subject, throwError, Observable } from 'rxjs';
-import { catchError, map, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { NotificationType } from '../../notifications/events.model';
 import {
@@ -51,14 +51,15 @@ export class CategoryAssignDialogComponent extends CategoryTreeBase
   );
 
   constructor(
+    private api: CategoryTreeApiService,
     private service: CategoryService,
     private toastService: NotificationsService,
     private entityApi: CategoryEntityApiService,
     public dialogRef: MatDialogRef<CategoryAssignDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      fileInfo: BrowserDataItem;
-      assignedCategories: CategoryNode[];
+      fileInfo: BrowserDataItem,
+      assignedCategories: CategoryNode[],
     },
   ) {
     super();
@@ -76,34 +77,17 @@ export class CategoryAssignDialogComponent extends CategoryTreeBase
       this.treeControl,
       this.treeFlattener,
     );
-
-    service.activeTree$.subscribe(tree => {
-      this.dataSource.data = tree;
-    });
   }
 
   ngOnInit(): void {
     this.dataSource.data = this.data.assignedCategories;
+
     this.service.activeTree$.subscribe(tree => (this.dataSource.data = tree));
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
   }
-
-  checkAssignedTags(): void {
-    const assignedTags = this.treeControl.dataNodes.filter(flatNode =>
-      this.dataSource.data.some(node => node.id === flatNode.id),
-    );
-
-    
-    assignedTags.forEach(flatNode => {
-      // this.descendantsAllSelected(flatNode)
-      //   ? this.categoryLeafNodeSelectionToggle(flatNode)
-      //   : this.categoryNodeSelectionToggle(flatNode);
-    });
-  }
-
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: CategoryFlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);

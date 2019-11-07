@@ -323,10 +323,10 @@
         <!-- Entity Tags Autocomplete -->
         <!-- <dd><dr-category-tagging></dr-category-tagging></dd> -->
       <button mat-button (click)="openAssignTagDialog()">Assign Category</button>
-        <dd *ngIf="categories?.length !== 0">
+        <dd *ngIf="categoryTags?.length !== 0">
           <mat-chip-list aria-label="Categories">
             <mat-chip
-              *ngFor="let category of categories"
+              *ngFor="let category of categoryTags"
               (removed)="remove(category)"
               >{{ category?.title }}
               <mat-icon matChipRemove>cancel</mat-icon>
@@ -356,14 +356,14 @@
     </div> -->
 
     <mat-chip-list
-      *ngIf="sidebarContent.sidebarCollapsed && categories?.length !== 0"
+      *ngIf="sidebarContent.sidebarCollapsed && categoryFlatTags?.length !== 0"
       class="chips-popover"
       aria-label="Categories"
       (mouseenter)="showPopover('showCategoriesPovover')"
       (mouseleave)="hidePopover('showCategoriesPovover')"
       [ngClass]="{ show: showCategoriesPovover }"
     >
-      <mat-chip *ngFor="let category of categories">{{
+      <mat-chip *ngFor="let category of categoryFlatTags">{{
         category?.title
       }}</mat-chip>
     </mat-chip-list>

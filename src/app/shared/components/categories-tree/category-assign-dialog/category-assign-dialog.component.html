@@ -5,7 +5,7 @@
     <mat-icon>cancel</mat-icon>
   </button>
   <div mat-dialog-content>
-    <ng-container *ngIf="!data.assignedCategories.length; else tree">
+    <ng-container *ngIf="data.assignedCategories.length === 0; else tree">
       <p class="browser-no-items">No categories yet</p>
     </ng-container>
   </div>
@@ -29,9 +29,8 @@
         class="checklist-leaf-node"
         [checked]="checklistSelection.isSelected(node)"
         (change)="categoryLeafNodeSelectionToggle(node)"
+        >{{ node.title }}</mat-checkbox
       >
-        {{ node.title }}
-      </mat-checkbox>
     </mat-tree-node>
 
     <mat-tree-node
@@ -39,11 +38,9 @@
       matTreeNodePadding
     >
       <button
-        mat-button
         mat-icon-button
         matTreeNodeToggle
-        [attr.aria-label]="'toggle ' + node.title"
-        [disabled]="!hasChild(null, node)"
+        [attr.aria-label]="'toggle ' + node.filename"
       >
         <mat-icon class="mat-icon-rtl-mirror">
           {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
@@ -53,9 +50,8 @@
         [checked]="descendantsAllSelected(node)"
         [indeterminate]="descendantsPartiallySelected(node)"
         (change)="categoryNodeSelectionToggle(node)"
+        >{{ node.title }}</mat-checkbox
       >
-        {{ node.title }}
-      </mat-checkbox>
     </mat-tree-node>
   </mat-tree>
 </ng-template>

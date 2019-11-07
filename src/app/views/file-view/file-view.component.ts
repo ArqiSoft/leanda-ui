@@ -32,7 +32,11 @@ import { IBrowserEvent } from '../../core/services/browser-services/browser-data
 import { PaginatorManagerService } from '../../core/services/browser-services/paginator-manager.service';
 import { PageTitleService } from '../../core/services/page-title/page-title.service';
 import { SignalrService } from '../../core/services/signalr/signalr.service';
-import { CategoryNode, CategoryTree } from '../../shared/components/categories-tree/models/category-node';
+import {
+  CategoryNode,
+  CategoryTree,
+  CategoryFlatNode,
+} from '../../shared/components/categories-tree/models/category-node';
 import { ExportDialogComponent } from '../../shared/components/export-dialog/export-dialog.component';
 import { CifPreviewComponent } from '../../shared/components/file-views/cif-preview/cif-preview.component';
 import { CSVPreviewComponent } from '../../shared/components/file-views/csv-preview/csv-preview.component';
@@ -59,7 +63,6 @@ import { PropertiesInfoBoxComponent } from '../../shared/components/properties-i
 import { SharedLinksComponent } from '../../shared/components/shared-links/shared-links.component';
 import { SidebarContentService } from '../../shared/components/sidebar-content/sidebar-content.service';
 import { FileViewType } from '../../shared/models/file-view-type';
-import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'dr-file-view',
@@ -89,6 +92,7 @@ export class FileViewComponent extends BrowserOptions
     active: boolean;
     viewType: FileViewType;
   }> = [];
+  categoryTags: CategoryFlatNode[] = [];
   categories: CategoryNode[] = [];
   currentFileViewComponent = null;
 
@@ -296,10 +300,12 @@ export class FileViewComponent extends BrowserOptions
       );
     }
 
-    this.getEntityCategories(file_id);
-
-    this.getTreeList()
-    .subscribe(treeList => this.getTree(treeList[0].id));
+    this.getTreeList().subscribe(treeList => {
+      this.getTree(treeList[0].id).subscribe(tree => {
+        this.categoryService.activeTree = this.categories = tree.nodes;
+        this.getEntityCategories(file_id);
+      });
+    });
   }
 
   subscribeToSignalr() {
@@ -664,11 +670,11 @@ export class FileViewComponent extends BrowserOptions
    * Remove category tag from entitiy
    * @param category category (tag*) which has to be removed
    */
-  remove(category: CategoryNode): void {
-    const index = this.categories.indexOf(category);
+  remove(category: CategoryFlatNode): void {
+    const index = this.categoryTags.indexOf(category);
 
     if (index >= 0) {
-      this.categories.splice(index, 1);
+      this.categoryTags.splice(index, 1);
       this.categoryEntityApi
         .deleteTag(this.fileInfo.id, category.id)
         .subscribe();
@@ -690,10 +696,8 @@ export class FileViewComponent extends BrowserOptions
     return this.categoryTreeApi.getTreeList();
   }
 
-  getTree(id: string): void {
-    this.categoryTreeApi
-      .getTree(id)
-      .subscribe(tree => (this.categoryService.activeTree = this.categories = tree.nodes));
+  getTree(id: string): Observable<CategoryTree> {
+    return this.categoryTreeApi.getTree(id);
   }
 
   /**
@@ -705,8 +709,8 @@ export class FileViewComponent extends BrowserOptions
       .getTags(file_id)
       .subscribe(
         (tags: string[]) =>
-          (this.categories = this.categoryService.activeTree.filter(
-            (category: CategoryNode) => tags.includes(category.id),
+          (this.categoryTags = this.categoryService.flatTree.filter(
+            (node: CategoryFlatNode) => tags ? tags.some(tag => node.id === tag) : null,
           )),
         error => console.error(error),
       );
