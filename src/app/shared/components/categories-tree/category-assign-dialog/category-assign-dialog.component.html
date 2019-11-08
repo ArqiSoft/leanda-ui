@@ -37,13 +37,19 @@
           {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
       </button>
-      <mat-checkbox
-        [checked]="checklistSelection.isSelected(node)"
-        [disabled]="checkHasBeenAssigned(node)"
-        (change)="categoryLeafNodeSelectionToggle(node)"
-      >
+      <div class="checkbox">
+        <mat-checkbox
+          class="pt-2"
+          [ngClass]="{'selected': (checklistSelection.isSelected(node) || checkHasBeenAssigned(node))}"
+          [checked]="checklistSelection.isSelected(node) || checkHasBeenAssigned(node)"
+          [disabled]="checkHasBeenAssigned(node)"
+          (change)="categoryLeafNodeSelectionToggle(node)"
+        >
+        </mat-checkbox>
+      </div>
+      <div>
         {{ node.title }}
-      </mat-checkbox>
+      </div>
     </mat-tree-node>
   </mat-tree>
 </ng-template>
