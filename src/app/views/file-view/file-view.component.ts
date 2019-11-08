@@ -13,14 +13,13 @@ import {
   ViewChildren,
   ViewContainerRef,
 } from '@angular/core';
-import { MatAutocompleteSelectedEvent } from '@angular/material';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { CategoryEntityApiService } from 'app/core/services/api/category-entity-api.service';
 import { CategoryService } from 'app/core/services/category/category.service';
 import { CategoryAssignDialogComponent } from 'app/shared/components/categories-tree/category-assign-dialog/category-assign-dialog.component';
 import { environment } from 'environments/environment';
-import { Subscription, Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { BlobsApiService } from '../../core/services/api/blobs-api.service';
 import { CategoryTreeApiService } from '../../core/services/api/category-tree-api.service';
@@ -33,9 +32,9 @@ import { PaginatorManagerService } from '../../core/services/browser-services/pa
 import { PageTitleService } from '../../core/services/page-title/page-title.service';
 import { SignalrService } from '../../core/services/signalr/signalr.service';
 import {
+  CategoryFlatNode,
   CategoryNode,
   CategoryTree,
-  CategoryFlatNode,
 } from '../../shared/components/categories-tree/models/category-node';
 import { ExportDialogComponent } from '../../shared/components/export-dialog/export-dialog.component';
 import { CifPreviewComponent } from '../../shared/components/file-views/cif-preview/cif-preview.component';
@@ -63,6 +62,7 @@ import { PropertiesInfoBoxComponent } from '../../shared/components/properties-i
 import { SharedLinksComponent } from '../../shared/components/shared-links/shared-links.component';
 import { SidebarContentService } from '../../shared/components/sidebar-content/sidebar-content.service';
 import { FileViewType } from '../../shared/models/file-view-type';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'dr-file-view',
@@ -176,16 +176,16 @@ export class FileViewComponent extends BrowserOptions
   constructor(
     public foldersApi: FoldersApiService,
     public entitiesApi: EntitiesApiService,
+    public ffService: InfoBoxFactoryService,
+    public sidebarContent: SidebarContentService,
+    public dialog: MatDialog,
     private imagesApi: ImagesApiService,
     private blobsApi: BlobsApiService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    public ffService: InfoBoxFactoryService,
     private signalr: SignalrService,
-    public sidebarContent: SidebarContentService,
     private dataService: BrowserDataBaseService,
     private paginator: PaginatorManagerService,
-    public dialog: MatDialog,
     private componentResolver: ComponentFactoryResolver,
     private pageTitle: PageTitleService,
     private categoryTreeApi: CategoryTreeApiService,
@@ -305,6 +305,15 @@ export class FileViewComponent extends BrowserOptions
         this.categoryService.activeTree = this.categories = tree.nodes;
         this.getEntityCategories(file_id);
       });
+    });
+
+    this.dialog.afterOpened.subscribe(() => {
+      const dialogRef = this.dialog.openDialogs[0];
+      dialogRef
+        .afterClosed()
+        .pipe(delay(1000))
+        // show loading spinner for Category Tags (chips)
+        .subscribe(() => this.getEntityCategories(this.fileInfo.id));
     });
   }
 
@@ -688,8 +697,10 @@ export class FileViewComponent extends BrowserOptions
       data: {
         fileInfo: this.fileInfo,
         assignedCategories: this.categories,
+        selectedCategories: this.categoryTags,
       },
     });
+    console.log(this.dialog.openDialogs);
   }
 
   getTreeList(): Observable<CategoryTree[]> {
@@ -710,7 +721,8 @@ export class FileViewComponent extends BrowserOptions
       .subscribe(
         (tags: string[]) =>
           (this.categoryTags = this.categoryService.flatTree.filter(
-            (node: CategoryFlatNode) => tags ? tags.some(tag => node.id === tag) : null,
+            (node: CategoryFlatNode) =>
+              tags ? tags.some(tag => node.id === tag) : null,
           )),
         error => console.error(error),
       );

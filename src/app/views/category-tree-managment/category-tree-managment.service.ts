@@ -90,7 +90,7 @@ export class CategoryTreeManagmentService {
       this.dataChange.next(this.tree);
     } else {
       parent.children = [];
-      parent.children.push({ title: name, children: [] } as CategoryNode);
+      parent.children.push({ title: name } as CategoryNode);
       this.dataChange.next(this.tree);
     }
   }
@@ -113,18 +113,19 @@ export class CategoryTreeManagmentService {
   updateItem(node: CategoryNode, title: string) {
     // update node in databse separatly from tree if it has assigned ID
     if (Object.keys(node).includes('id')) {
-      this.updateTreeNode(node).subscribe(() =>
-        this.notification.showToastNotification(
-          new NotificationItem(
-            null,
-            NotificationMessage.CreateCommonMessage(
-              NotificationType.Info,
-              'Node Update',
-              'Node has been succefully updated',
+      this.updateTreeNode(node).subscribe(
+        () =>
+          this.notification.showToastNotification(
+            new NotificationItem(
+              null,
+              NotificationMessage.CreateCommonMessage(
+                NotificationType.Info,
+                'Node Update',
+                'Node has been succefully updated',
+              ),
             ),
+            false,
           ),
-          false,
-        ),
         error => throwError(`Couldn't update tree with category - ${title}`),
       );
     }
@@ -192,9 +193,16 @@ export class CategoryTreeManagmentService {
     // this.api.updateTree(this.currentCategory, this.tree);
     this.api
       .updateTree(this.categoryList[0].id, this.tree)
-      .pipe(delay(300))
+      .pipe(delay(500))
       // get updated tree with new ids and notifies service
       .subscribe(() => this.getCategoryTree(this.categoryList[0].id));
+  }
+
+  /**
+   * Set collapse state for new tree 
+   */
+  setCollapseState(): void {
+    this.tree
   }
 
   /**
@@ -215,6 +223,7 @@ export class CategoryTreeManagmentService {
     this.api.createTree(tree).subscribe(
       category_id =>
         this.getTreeList()
+          .pipe(delay(1000))
           .pipe(tap(() => this.getCategoryTree(category_id)))
           .subscribe(
             categories => this._categoryList.next(categories),
@@ -253,13 +262,16 @@ export class CategoryTreeManagmentService {
    * @param id Tree GUID
    */
   private getCategoryTree(id: string): void {
-    this.api.getTree(id).pipe(delay(500)).subscribe(
-      tree => {
-        this.service.activeTree = tree.nodes  ? tree.nodes : [];
-        this.dataChange.next(tree.nodes !== null ? tree.nodes : []);
-      },
-      error => throwError(`Couldn't retrieve tree with id ${id}`),
-    );
+    this.api
+      .getTree(id)
+      .pipe(delay(500))
+      .subscribe(
+        tree => {
+          this.service.activeTree = tree.nodes ? tree.nodes : [];
+          this.dataChange.next(tree.nodes !== null ? tree.nodes : []);
+        },
+        error => throwError(`Couldn't retrieve tree with id ${id}`),
+      );
   }
   /** Method to retrieve from api list of available trees */
   private getTreeList(): Observable<CategoryTree[]> {

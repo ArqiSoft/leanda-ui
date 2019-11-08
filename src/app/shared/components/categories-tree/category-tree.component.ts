@@ -33,7 +33,7 @@ export class CategoryTreeComponent implements OnInit, OnDestroy {
   lastShownPopoverName: string;
   lastShownPopoverTimeoutId: any;
 
-  selectedNode: CategoryNode = { title: 'None' };
+  selectedNode: CategoryNode = { id: '', title: 'None' };
   currentFilter: EEntityFilter = undefined;
 
   constructor(

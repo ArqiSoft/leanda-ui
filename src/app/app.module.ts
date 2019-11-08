@@ -30,9 +30,7 @@ const dialogs = [
   RenameFolderComponent,
 ];
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -47,13 +45,9 @@ const dialogs = [
     CategoryAssignDialogModule,
   ],
   // because of dynamic generated components (all are dialogs)
-  entryComponents: [
-    ...dialogs,
-  ],
+  entryComponents: [...dialogs],
   providers: [MoveFolderComponent],
   bootstrap: [AppComponent],
-  schemas: [
-
-  ],
+  schemas: [],
 })
-export class AppModule { }
+export class AppModule {}

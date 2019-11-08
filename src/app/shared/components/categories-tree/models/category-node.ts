@@ -14,7 +14,7 @@ export interface CategoryTree {
 }
 
 export class CategoryNode {
-  id?: string;
+  id: string;
   title: string;
   children?: CategoryNode[];
 }
@@ -24,6 +24,6 @@ export class CategoryFlatNode {
   title: string;
   level: number;
   expandable: boolean;
-  isEditEnabled: boolean;
-  isButtonsVisible: boolean;
+  isEditEnabled?: boolean;
+  isButtonsVisible?: boolean;
 }

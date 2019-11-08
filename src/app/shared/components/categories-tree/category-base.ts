@@ -54,7 +54,7 @@ export class CategoryTreeBase implements OnInit {
   transformer = (node: CategoryNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
     const flatNode =
-      existingNode && existingNode.title === node.title
+      existingNode && existingNode.id === node.id
         ? existingNode
         : new CategoryFlatNode();
 

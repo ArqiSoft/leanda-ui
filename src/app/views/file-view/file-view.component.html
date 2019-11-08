@@ -319,10 +319,12 @@
         </dd>
         <dt *ngIf="fileInfo.totalRecords">Records</dt>
         <dd *ngIf="fileInfo.totalRecords">{{ fileInfo.totalRecords }}</dd>
-        <dt>Categories</dt>
+        <dt class="d-inline category">Categories</dt>
         <!-- Entity Tags Autocomplete -->
         <!-- <dd><dr-category-tagging></dr-category-tagging></dd> -->
-      <button mat-button (click)="openAssignTagDialog()">Assign Category</button>
+        <button mat-button mat-stroked-button class="float-right" (click)="openAssignTagDialog()">
+          Assign Category
+        </button>
         <dd *ngIf="categoryTags?.length !== 0">
           <mat-chip-list aria-label="Categories">
             <mat-chip
@@ -356,16 +358,16 @@
     </div> -->
 
     <mat-chip-list
-      *ngIf="sidebarContent.sidebarCollapsed && categoryFlatTags?.length !== 0"
+      *ngIf="sidebarContent.sidebarCollapsed && categoryTags?.length !== 0"
       class="chips-popover"
       aria-label="Categories"
       (mouseenter)="showPopover('showCategoriesPovover')"
       (mouseleave)="hidePopover('showCategoriesPovover')"
       [ngClass]="{ show: showCategoriesPovover }"
     >
-      <mat-chip *ngFor="let category of categoryFlatTags">{{
-        category?.title
-      }}</mat-chip>
+      <mat-chip *ngFor="let category of categoryTags">
+        {{ category?.title }}
+      </mat-chip>
     </mat-chip-list>
 
     <ng-container *ngFor="let action of fileActions">
