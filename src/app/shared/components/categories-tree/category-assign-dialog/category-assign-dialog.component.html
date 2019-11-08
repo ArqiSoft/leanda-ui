@@ -10,7 +10,13 @@
     </ng-container>
   </div>
   <div mat-dialog-actions class="flex-row-reverse">
-    <button mat-button mat-primary matDialogClose [color]="'primary'" (click)="save()">
+    <button
+      mat-button
+      mat-primary
+      matDialogClose
+      [color]="'primary'"
+      (click)="save()"
+    >
       Save
     </button>
   </div>
@@ -19,26 +25,7 @@
 <!-- Category tree template -->
 <ng-template #tree>
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-    <mat-tree-node
-      *matTreeNodeDef="let node"
-      matTreeNodeToggle
-      matTreeNodePadding
-    >
-      <button mat-icon-button disabled></button>
-      <mat-checkbox
-        class="checklist-leaf-node"
-        [checked]="checklistSelection.isSelected(node)"
-        [disabled]="checkHasBeenAssigned(node)"
-        (change)="categoryLeafNodeSelectionToggle(node)"
-      >
-        {{ node.title }}
-      </mat-checkbox>
-    </mat-tree-node>
-
-    <mat-tree-node
-      *matTreeNodeDef="let node; when: hasChild"
-      matTreeNodePadding
-    >
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
       <button
         mat-button
         mat-icon-button
@@ -50,12 +37,11 @@
           {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
       </button>
-      <mat-checkbox 
+      <mat-checkbox
         [checked]="checklistSelection.isSelected(node)"
         [disabled]="checkHasBeenAssigned(node)"
-        (change)="categoryNodeSelectionToggle(node)"
-        >
-        <!-- [indeterminate]="descendantsPartiallySelected(node)" -->
+        (change)="categoryLeafNodeSelectionToggle(node)"
+      >
         {{ node.title }}
       </mat-checkbox>
     </mat-tree-node>

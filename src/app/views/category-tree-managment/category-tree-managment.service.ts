@@ -192,7 +192,7 @@ export class CategoryTreeManagmentService {
   updateTree(): void {
     // this.api.updateTree(this.currentCategory, this.tree);
     this.api
-      .updateTree(this.categoryList[0].id, this.tree)
+      .updateTree(this.categoryList[0].id, this.tree, this.categoryList[0].version)
       .pipe(delay(500))
       // get updated tree with new ids and notifies service
       .subscribe(() => this.getCategoryTree(this.categoryList[0].id));

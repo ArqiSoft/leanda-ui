@@ -70,7 +70,7 @@ export class CategoryEntityApiService {
     const paramsUrl = params ? this.joinParams(params) : '';
     return this.http
       .get(
-        `${environment.apiUrl}/categoryentities/entities/${categoryId}/categories${paramsUrl}`,
+        `${environment.apiUrl}/categoryentities/categories/${categoryId}${paramsUrl}`,
         { observe: 'response' },
       )
       .pipe(

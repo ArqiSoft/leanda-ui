@@ -38,9 +38,9 @@ export class CategoryTreeApiService {
     );
   }
 
-  updateTree(id: string, node: CategoryNode[]): Observable<boolean> {
+  updateTree(id: string, node: CategoryNode[], version: number): Observable<boolean> {
     return this.http.put<boolean>(
-      `${environment.apiUrl}/categorytrees/tree/${id}`,
+      `${environment.apiUrl}/categorytrees/tree/${id}?$version=${version}`,
       node,
     );
   }

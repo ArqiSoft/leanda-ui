@@ -22,7 +22,6 @@ import {
   CategoryFlatNode,
   CategoryTree,
 } from '../models/category-node';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'dr-category-assign-dialog',
@@ -104,9 +103,6 @@ export class CategoryAssignDialogComponent extends CategoryTreeBase
     }
     const descendants = this.treeControl.getDescendants(node);
     // Selects all child when parent is selected
-    // this.checklistSelection.isSelected(node)
-    //   ? this.checklistSelection.select(...descendants)
-    //   : this.checklistSelection.deselect(...descendants);
 
     // Force update for the parent
     descendants.every(child => this.checklistSelection.isSelected(child));
@@ -125,25 +121,10 @@ export class CategoryAssignDialogComponent extends CategoryTreeBase
   checkAllParentsSelection(node: CategoryFlatNode): void {
     let parent: CategoryFlatNode | null = this.getParentNode(node);
     while (parent) {
-      this.checkRootNodeSelection(parent);
       parent = this.getParentNode(parent);
     }
   }
 
-  /** Check root node checked state and change it accordingly */
-  checkRootNodeSelection(node: CategoryFlatNode): void {
-    const nodeSelected = this.checklistSelection.isSelected(node);
-    const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.every(child =>
-      this.checklistSelection.isSelected(child),
-    );
-    if (nodeSelected && !descAllSelected) {
-      this.checklistSelection.deselect(node);
-    }
-    //  else if (!nodeSelected && descAllSelected) {
-    //   this.checklistSelection.select(node);
-    // }
-  }
   /** Assign selected `CategoryNode` list to the entity */
   save(): void {
     const nodeIDList: string[] = this.checklistSelection.selected.map(
