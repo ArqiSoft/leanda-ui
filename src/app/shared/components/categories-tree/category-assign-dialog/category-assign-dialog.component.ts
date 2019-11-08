@@ -125,6 +125,23 @@ export class CategoryAssignDialogComponent extends CategoryTreeBase
     }
   }
 
+  getCategoryFullPath(node: CategoryFlatNode): string {
+    const path: string[] = [];
+    let parent: CategoryFlatNode | null = this.getParentNode(node);
+    while (parent) {
+      if (parent !== null) {
+        path.push(parent.title);
+      }
+      parent = this.getParentNode(parent);
+      if (parent === null) {
+        path.push(node.title);
+      }
+    }
+    const fullPath = `${path.join(' / ')}`;
+
+    return fullPath;
+  }
+
   /** Assign selected `CategoryNode` list to the entity */
   save(): void {
     const nodeIDList: string[] = this.checklistSelection.selected.map(

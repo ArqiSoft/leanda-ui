@@ -40,14 +40,21 @@
       <div class="checkbox">
         <mat-checkbox
           class="pt-2"
-          [ngClass]="{'selected': (checklistSelection.isSelected(node) || checkHasBeenAssigned(node))}"
-          [checked]="checklistSelection.isSelected(node) || checkHasBeenAssigned(node)"
+          [ngClass]="{
+            selected:
+              checklistSelection.isSelected(node) || checkHasBeenAssigned(node)
+          }"
+          [checked]="
+            checklistSelection.isSelected(node) || checkHasBeenAssigned(node)
+          "
           [disabled]="checkHasBeenAssigned(node)"
           (change)="categoryLeafNodeSelectionToggle(node)"
         >
         </mat-checkbox>
       </div>
-      <div>
+      <div
+        [matTooltip]="node.level === 0 ? node.title : getCategoryFullPath(node)"
+      >
         {{ node.title }}
       </div>
     </mat-tree-node>

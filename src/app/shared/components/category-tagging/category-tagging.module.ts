@@ -7,6 +7,7 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatTooltipModule,
 } from '@angular/material';
 import { SharedModule } from 'app/shared/shared.module';
 
@@ -19,6 +20,7 @@ const matModules = [
   MatInputModule,
   MatIconModule,
   MatChipsModule,
+  MatTooltipModule,
   ReactiveFormsModule,
 ];
 
