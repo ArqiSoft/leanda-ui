@@ -1,9 +1,11 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Params, Router } from '@angular/router';
+import { CategoryService } from 'app/core/services/category/category.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { BrowserDataItem } from '../../../shared/components/organize-browser/browser-types';
+import { CategoryEntityApiService } from '../api/category-entity-api.service';
 import { FilesApiService } from '../api/files-api.service';
 import { FoldersApiService } from '../api/folders-api.service';
 import { NodesApiService } from '../api/nodes-api.service';
@@ -28,8 +30,22 @@ export class BrowserDataSharedFileServiceService extends BrowserDataService {
     private filesApi: FilesApiService,
     protected usersApi: UsersApiService,
     protected searchResultsApi: SearchResultsApiService,
+    protected categoryEntityApi: CategoryEntityApiService,
+    protected categorySerivce: CategoryService,
   ) {
-    super(nodesApi, foldersApi, auth, router, signalr, ngZone, paginator, usersApi, searchResultsApi);
+    super(
+      nodesApi,
+      foldersApi,
+      auth,
+      router,
+      signalr,
+      ngZone,
+      paginator,
+      usersApi,
+      searchResultsApi,
+      categoryEntityApi,
+      categorySerivce,
+    );
   }
 
   setActiveNode(id: string = null): Observable<BrowserDataItem> {
@@ -37,7 +53,9 @@ export class BrowserDataSharedFileServiceService extends BrowserDataService {
       map((item: any) => {
         this.currentItem = new BrowserDataItem(item.body);
         if (this.currentItem.ownedBy) {
-          this.currentItem.userInfo = this.usersApi.getUserInfo(this.currentItem.ownedBy);
+          this.currentItem.userInfo = this.usersApi.getUserInfo(
+            this.currentItem.ownedBy,
+          );
         }
         return this.currentItem;
       }),
@@ -50,38 +68,44 @@ export class BrowserDataSharedFileServiceService extends BrowserDataService {
         // inputParams['type'] = 'record';
         const fileId = params.id;
         if (parentType === 'Model') {
-          this.filesApi.getRecordsWithParams(fileId, inputParams).subscribe(x => {
-            x.count = x.page.totalCount;
-            x.items.map((z: any) => {
-              z.link = `/${z.type}/${z.id}`;
+          this.filesApi
+            .getRecordsWithParams(fileId, inputParams)
+            .subscribe(x => {
+              x.count = x.page.totalCount;
+              x.items.map((z: any) => {
+                z.link = `/${z.type}/${z.id}`;
+              });
+              x.items = x.items.map((z: any) => {
+                const newItem = new BrowserDataItem(z);
+                newItem.userInfo = this.usersApi.getUserInfo(newItem.ownedBy);
+                return newItem;
+              });
+              observer.next(x);
             });
-            x.items = x.items.map((z: any) => {
-              const newItem = new BrowserDataItem(z);
-              newItem.userInfo = this.usersApi.getUserInfo(newItem.ownedBy);
-              return newItem;
-            });
-            observer.next(x);
-          });
         } else {
-          this.filesApi.getRecordsWithParams(fileId, inputParams).subscribe(x => {
-            x.count = x.page.totalCount;
-            x.items.map((z: any) => {
-              z.name = z.id;
-              z.link = `/record/${z.id}`;
+          this.filesApi
+            .getRecordsWithParams(fileId, inputParams)
+            .subscribe(x => {
+              x.count = x.page.totalCount;
+              x.items.map((z: any) => {
+                z.name = z.id;
+                z.link = `/record/${z.id}`;
+              });
+              x.items = x.items.map((z: any) => {
+                const newItem = new BrowserDataItem(z);
+                newItem.userInfo = this.usersApi.getUserInfo(newItem.ownedBy);
+                return newItem;
+              });
+              observer.next(x);
             });
-            x.items = x.items.map((z: any) => {
-              const newItem = new BrowserDataItem(z);
-              newItem.userInfo = this.usersApi.getUserInfo(newItem.ownedBy);
-              return newItem;
-            });
-            observer.next(x);
-          });
         }
       });
     });
   }
 
-  protected generateBreadCrumbs(breadcrumbsList: { Id: string; Name: string }[]) {
+  protected generateBreadCrumbs(
+    breadcrumbsList: { Id: string; Name: string }[],
+  ) {
     const breadcrumbs = [];
     if (breadcrumbsList.length > 0) {
       for (let i = breadcrumbsList.length - 1; i >= 0; i--) {
@@ -107,11 +131,18 @@ export class BrowserDataSharedFileServiceService extends BrowserDataService {
         link: `/${this.currentItem.type}/${this.currentItem.id}`,
       });
     }
-    const data: { share: boolean; shareParent: boolean } = this.myActivateRouter.snapshot.data;
+    const data: { share: boolean; shareParent: boolean } = this.myActivateRouter
+      .snapshot.data;
     if (data.share && data.shareParent) {
-      this.breadcrumbs = breadcrumbs.slice(breadcrumbs.length - 2, breadcrumbs.length);
+      this.breadcrumbs = breadcrumbs.slice(
+        breadcrumbs.length - 2,
+        breadcrumbs.length,
+      );
     } else if (data.share && data.shareParent) {
-      this.breadcrumbs = breadcrumbs.slice(breadcrumbs.length - 1, breadcrumbs.length);
+      this.breadcrumbs = breadcrumbs.slice(
+        breadcrumbs.length - 1,
+        breadcrumbs.length,
+      );
     }
   }
 }

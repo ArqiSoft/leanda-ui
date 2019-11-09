@@ -1,0 +1,273 @@
+<!-- Toast Notifications -->
+<dr-splash-notification></dr-splash-notification>
+
+<!-- Tree Managment -->
+<div class="container-fluid">
+  <h3>Categories</h3>
+  <div class="row">
+    <!-- Left column -->
+    <div [ngClass]="{ 'col-8': !isTreeEmpty(), 'col-6': isTreeEmpty() }">
+      <div class="card" [ngSwitch]="isTreeEmpty() && hasCategories()">
+        <ng-container *ngSwitchCase="true">
+          <ng-container *ngTemplateOutlet="emptyTree"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="false">
+          <ng-container *ngTemplateOutlet="tree"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <mat-spinner></mat-spinner>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div [ngClass]="{ 'col-4': !isTreeEmpty(), 'col-6': isTreeEmpty() }">
+      <!-- Category Info -->
+      <div *ngIf="!isTreeEmpty()" class="card h-50">
+        <h4>Category Info</h4>
+        <ul>
+          <li>Created by: {{ treeInfo?.createdBy }}</li>
+          <li>Created date: {{ treeInfo?.createdDateTime | date: 'short' }}</li>
+          <li>Updated by: {{ treeInfo?.updatedBy }}</li>
+          <li>Updated date: {{ treeInfo?.updatedDateTime | date: 'short' }}</li>
+        </ul>
+      </div>
+      <!-- Tree Managment Rules -->
+      <div class="card" [ngClass]="{ 'h-49 mt-2': !isTreeEmpty() }">
+        <h4>Hints & Rules</h4>
+        <ul>
+          <li>Tree can consisnt of multiple <strong>Nodes</strong></li>
+          <li>Tree node can be flat or nested</li>
+          <li>Flat node has only one property - <strong>Title</strong></li>
+          <li>
+            Nested node may have two properties - <strong>Title</strong> and
+            <strong>Children</strong>
+          </li>
+          <li>Children nodes can be flat or nested</li>
+          <li>Node title may not exceed <strong>30</strong> symbols</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 
+  * Empty category tree template.
+  * Asks to enter first in the category node name.
+  * Category name field support TBD
+ -->
+<ng-template #emptyTree>
+  <p class="text-info m-0">
+    There are no categories assigned to the user.
+  </p>
+  <p class="text-info">
+    Please enter new node name.
+  </p>
+  <mat-form-field>
+    <input
+      #initNodeTitle
+      matInput
+      type="text"
+      placeholder="Title..."
+      maxlength="30"
+      [(ngModel)]="initNodeTitle.value"
+    />
+    <button
+      matSuffix
+      mat-icon-button
+      aria-label="Clear"
+      [disabled]="initNodeTitle.value === ''"
+      (click)="initNodeTitle.value = ''"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <button
+    mat-raised-button
+    class="btn btn-primary text-white"
+    (click)="createTree(initNodeTitle.value)"
+    [disabled]="initNodeTitle.value === ''"
+  >
+    Save
+  </button>
+</ng-template>
+
+<!-- Category tree template -->
+<ng-template #tree>
+  <!-- Button
+    * Adds new node on main level
+  -->
+  <button
+    id="addMainNode"
+    mat-button
+    mat-icon-button
+    (click)="addNewMainNode()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <!-- 
+      * Existing node with title and with/without children
+     -->
+    <mat-tree-node
+      *matTreeNodeDef="let node"
+      matTreeNodePadding
+      class="existing-node"
+    >
+      <!-- Button
+        * Toggles node collapse state
+      -->
+      <button
+        mat-button
+        mat-icon-button
+        matTreeNodeToggle
+        [attr.aria-label]="'toggle ' + node.title"
+        [disabled]="!hasChild(null, node)"
+      >
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+        </mat-icon>
+      </button>
+
+      <!-- Container
+        * Draws 'nodeTemp' which contains node title and actions buttons 
+      -->
+      <ng-container
+        *ngTemplateOutlet="nodeTemp; context: { node: node }"
+      ></ng-container>
+    </mat-tree-node>
+
+    <!-- 
+      * New node without title and without children
+     -->
+    <mat-tree-node
+      *matTreeNodeDef="let node; when: hasNoContent"
+      matTreeNodePadding
+    >
+      <!-- Collapse button -->
+      <!-- <button mat-icon-button disabled></button> -->
+      <mat-form-field class="pl-3">
+        <input
+          #newNodeTitle
+          matInput
+          type="text"
+          maxlength="30"
+          placeholder="Title..."
+          [(ngModel)]="newNodeTitle.value"
+        />
+        <button
+          mat-button
+          [disabled]="newNodeTitle.value === ''"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="newNodeTitle.value = ''"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <button
+        mat-button
+        class="node-icon-button mx-0-1"
+        [hidden]="treeHasOneMainNode() && getLevel(node) === 0"
+        (click)="removeNode(node)"
+      >
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button
+        mat-button
+        mat-raised-button
+        class="mx-0-1"
+        (click)="saveNode(node, newNodeTitle.value)"
+      >
+        Save
+      </button>
+    </mat-tree-node>
+  </mat-tree>
+</ng-template>
+
+<!-- Node template -->
+<ng-template #nodeTemp let-node="node">
+  <!-- Switch between templates of "edit" and "display" mode-->
+  <ng-container [ngSwitch]="node.isEditEnabled">
+    <!-- Edit node mode layout-->
+    <ng-container *ngSwitchCase="true">
+      <ng-container
+        *ngTemplateOutlet="editNodeTemp; context: { node: node }"
+      ></ng-container>
+    </ng-container>
+
+    <!-- Reguular node layout -->
+    <ng-container *ngSwitchCase="false">
+      <!-- Node Title -->
+      <div class="pr-3">{{ node.title }}</div>
+      <!-- Add new sub-node -->
+      <button
+        mat-button
+        class="node-icon-button mx-0-1 vsc-button"
+        (click)="addNewNode(node)"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+      <!-- Remove current node -->
+      <button
+        mat-button
+        class="node-icon-button mx-0-1 vsc-button"
+        (click)="removeNode(node)"
+        [disabled]="treeHasOneMainNode() && node.level === 0"
+      >
+        <mat-icon>remove</mat-icon>
+      </button>
+    </ng-container>
+  </ng-container>
+
+  <!-- Toggles Node Edit Mode -->
+  <button
+    mat-button
+    class="node-icon-button mx-0-1"
+    (click)="node.isEditEnabled = !node.isEditEnabled"
+    [ngClass]="{
+      'mat-raised-button': node.isEditEnabled,
+      'vsc-button': !node.isEditEnabled
+    }"
+    [color]="node.isEditEnabled ? 'primary' : null"
+  >
+    <mat-icon
+      class="icon-large align-bottom"
+      [color]="!node.isEditEnabled ? 'primary' : null"
+      >edit</mat-icon
+    >
+  </button>
+</ng-template>
+
+<!-- Edit node template -->
+<ng-template #editNodeTemp let-node="node">
+  <mat-form-field>
+    <input
+      #newTitle
+      matInput
+      type="text"
+      maxlength="30"
+      placeholder="Title..."
+      [(ngModel)]="newTitle.value"
+    />
+    <button
+      matSuffix
+      mat-icon-button
+      aria-label="Clear"
+      [disabled]="newTitle.value === ''"
+      (click)="newTitle.value = ''"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <button
+    mat-button
+    mat-raised-button
+    class="flex-last mx-1"
+    (click)="saveNode(node, newTitle.value)"
+  >
+    Save
+  </button>
+</ng-template>

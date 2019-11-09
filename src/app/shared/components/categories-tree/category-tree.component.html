@@ -8,11 +8,20 @@
   (click)="displayAllFiles()"
 >
   <div class="d-flex">
-    <img class="mr-2" src="/img/svg/entity-counters/{{ entitiyFilter?.key }}.svg" />
-    <span *ngIf="!sidebarContent.sidebarCollapsed" class="filter-box--text text-capitalize">{{ entitiyFilter?.title }}</span>
+    <img
+      class="mr-2"
+      src="/img/svg/entity-counters/{{ entitiyFilter?.key }}.svg"
+    />
+    <span
+      *ngIf="!sidebarContent.sidebarCollapsed"
+      class="filter-box--text text-capitalize"
+      >{{ entitiyFilter?.title }}</span
+    >
   </div>
   <div
-    class="filter-box--counter e2e-entity-{{ entitiyFilter?.key }}-amount badge badge-default badge-pill"
+    class="filter-box--counter e2e-entity-{{
+      entitiyFilter?.key
+    }}-amount badge badge-default badge-pill"
     [ngClass]="{ collapsed: sidebarContent.sidebarCollapsed }"
   >
     {{ entitiyFilter?.count }}
@@ -25,8 +34,17 @@
 </ng-container>
 
 <ng-template #collapsed>
-  <div matRipple matTooltipPosition="right" matTooltip="Categories" class="filter-box justify-content-between">
-    <div class="d-flex" (mouseenter)="showPopover('showCategoriesPovover')" (mouseleave)="hidePopover('showCategoriesPovover')">
+  <div
+    matRipple
+    matTooltipPosition="right"
+    matTooltip="Categories"
+    class="filter-box justify-content-between"
+  >
+    <div
+      class="d-flex"
+      (mouseenter)="showPopover('showCategoriesPovover')"
+      (mouseleave)="hidePopover('showCategoriesPovover')"
+    >
       <img mat-icon-button class="mr-2" src="/img/svg/category.svg" />
     </div>
   </div>
@@ -48,11 +66,16 @@
   <ng-container [ngSwitch]="dataService.browserLoading">
     <ng-container *ngSwitchCase="true">
       <div class="browser-loader">
-        <img src="img/svg/browser-loader.svg" no-inline height="16" width="16" />
+        <img
+          src="img/svg/browser-loader.svg"
+          no-inline
+          height="16"
+          width="16"
+        />
       </div>
     </ng-container>
     <ng-container *ngSwitchCase="false">
-      <ng-container *ngIf="!service.categories.length; else treeList">
+      <ng-container *ngIf="!categories.length; else treeList">
         <p class="browser-no-items">No categories yet</p>
       </ng-container>
     </ng-container>
@@ -67,7 +90,7 @@
         class="mat-tree-node c-pointer pr-2"
         matTreeNodeToggle
         matRipple
-        [ngClass]="{ selected: selectedNode?.id === node.id }"
+        [class.selected]="selectedNode?.id === node.id"
         (click)="selectCategory(node)"
       >
         <button mat-icon-button disabled></button>
@@ -81,12 +104,14 @@
           class="mat-tree-node c-pointer pr-2"
           matTreeNodeToggle
           matRipple
-          [ngClass]="{ selected: selectedNode?.id === node.id }"
+          [class.selected]="selectedNode?.id === node.id"
           (click)="selectCategory(node)"
         >
           <button mat-icon-button [attr.aria-label]="'toggle ' + node.title">
             <mat-icon class="mat-icon-rtl-mirror">
-              {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+              {{
+                treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'
+              }}
             </mat-icon>
           </button>
           {{ node.title }}

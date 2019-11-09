@@ -13,15 +13,16 @@ import {
   ViewChildren,
   ViewContainerRef,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
-import { CategoriesApiService } from 'app/core/services/api/categories-api.service';
-import { CategoriesService } from 'app/shared/components/categories-tree/categories.service';
-import { CategoryNode } from 'app/shared/components/categories-tree/models/category-node';
+import { CategoryEntityApiService } from 'app/core/services/api/category-entity-api.service';
+import { CategoryService } from 'app/core/services/category/category.service';
+import { CategoryAssignDialogComponent } from 'app/shared/components/categories-tree/category-assign-dialog/category-assign-dialog.component';
 import { environment } from 'environments/environment';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { BlobsApiService } from '../../core/services/api/blobs-api.service';
+import { CategoryTreeApiService } from '../../core/services/api/category-tree-api.service';
 import { EntitiesApiService } from '../../core/services/api/entities-api.service';
 import { FoldersApiService } from '../../core/services/api/folders-api.service';
 import { ImagesApiService } from '../../core/services/api/images-api.service';
@@ -30,6 +31,11 @@ import { IBrowserEvent } from '../../core/services/browser-services/browser-data
 import { PaginatorManagerService } from '../../core/services/browser-services/paginator-manager.service';
 import { PageTitleService } from '../../core/services/page-title/page-title.service';
 import { SignalrService } from '../../core/services/signalr/signalr.service';
+import {
+  CategoryFlatNode,
+  CategoryNode,
+  CategoryTree,
+} from '../../shared/components/categories-tree/models/category-node';
 import { ExportDialogComponent } from '../../shared/components/export-dialog/export-dialog.component';
 import { CifPreviewComponent } from '../../shared/components/file-views/cif-preview/cif-preview.component';
 import { CSVPreviewComponent } from '../../shared/components/file-views/csv-preview/csv-preview.component';
@@ -43,13 +49,20 @@ import { SpectraJsmolPreviewComponent } from '../../shared/components/file-views
 import { FilterField } from '../../shared/components/filter-bar/filter-bar.model';
 import { GenericMetadataPreviewComponent } from '../../shared/components/generic-metadata-preview/generic-metadata-preview.component';
 import { InfoBoxFactoryService } from '../../shared/components/info-box/info-box-factory.service';
-import { BrowserDataItem, BrowserOptions, FileType, NodeType, SubType } from '../../shared/components/organize-browser/browser-types';
+import {
+  BrowserDataItem,
+  BrowserOptions,
+  FileType,
+  NodeType,
+  SubType,
+} from '../../shared/components/organize-browser/browser-types';
 import { OrganizeBrowserComponent } from '../../shared/components/organize-browser/organize-browser.component';
 import { ToolbarButtonType } from '../../shared/components/organize-toolbar/organize-toolbar.model';
 import { PropertiesInfoBoxComponent } from '../../shared/components/properties-info-box/properties-info-box.component';
 import { SharedLinksComponent } from '../../shared/components/shared-links/shared-links.component';
 import { SidebarContentService } from '../../shared/components/sidebar-content/sidebar-content.service';
 import { FileViewType } from '../../shared/models/file-view-type';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'dr-file-view',
@@ -68,18 +81,19 @@ import { FileViewType } from '../../shared/models/file-view-type';
     GenericMetadataPreviewComponent,
   ],
 })
-export class FileViewComponent extends BrowserOptions implements OnInit, AfterContentInit, OnDestroy {
+export class FileViewComponent extends BrowserOptions
+  implements OnInit, AfterContentInit, OnDestroy {
   @Input() isPublic: boolean;
   @Input() isPublicParent: boolean;
   toolBarButtons = [ToolbarButtonType.tile, ToolbarButtonType.table];
 
-  fileActions: { title: string; active: boolean; viewType: FileViewType }[] = [];
-  categories: CategoryNode[] = [
-    { title: `Lorem ` },
-    { title: `Consequuntur` },
-    { title: `praesentium!` },
-    { title: `Consequuntur praesentium!` },
-  ];
+  fileActions: Array<{
+    title: string;
+    active: boolean;
+    viewType: FileViewType;
+  }> = [];
+  categoryTags: CategoryFlatNode[] = [];
+  categories: CategoryNode[] = [];
   currentFileViewComponent = null;
 
   infoBoxes: Object[] = [];
@@ -109,11 +123,14 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
   private browserEventSubscription: Subscription = null;
 
   @ViewChild('fileNameInput', { static: false }) fileNameInput: ElementRef;
-  @ViewChild('copyFilenameTooltip', { static: false }) copyFilenameTooltip: ElementRef;
+  @ViewChild('copyFilenameTooltip', { static: false })
+  copyFilenameTooltip: ElementRef;
   @ViewChild('fileViewContainer', { read: ViewContainerRef, static: true })
   fileViewContainer: ViewContainerRef;
 
-  @ViewChildren('propertiesInfoBox') propertiesInfoBoxComponents: QueryList<PropertiesInfoBoxComponent>;
+  @ViewChildren('propertiesInfoBox') propertiesInfoBoxComponents: QueryList<
+    PropertiesInfoBoxComponent
+  >;
   @ViewChild('infoBoxContainer', { static: false }) infoBoxContainer: any;
 
   private signalRSubscription: Subscription = null;
@@ -144,7 +161,11 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
   }
 
   get recordsType() {
-    if (!this.dataService.data || !this.dataService.data.items || !this.dataService.data.items.length) {
+    if (
+      !this.dataService.data ||
+      !this.dataService.data.items ||
+      !this.dataService.data.items.length
+    ) {
       return null;
     }
     return this.dataService.data.items[0].subType;
@@ -155,19 +176,21 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
   constructor(
     public foldersApi: FoldersApiService,
     public entitiesApi: EntitiesApiService,
+    public ffService: InfoBoxFactoryService,
+    public sidebarContent: SidebarContentService,
+    public dialog: MatDialog,
     private imagesApi: ImagesApiService,
     private blobsApi: BlobsApiService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    public ffService: InfoBoxFactoryService,
     private signalr: SignalrService,
-    public sidebarContent: SidebarContentService,
     private dataService: BrowserDataBaseService,
     private paginator: PaginatorManagerService,
-    public dialog: MatDialog,
     private componentResolver: ComponentFactoryResolver,
     private pageTitle: PageTitleService,
-    private categoriesApi: CategoriesApiService,
+    private categoryTreeApi: CategoryTreeApiService,
+    private categoryEntityApi: CategoryEntityApiService,
+    private categoryService: CategoryService,
   ) {
     super(foldersApi, entitiesApi);
     this.breadcrumbs = [{ text: 'DRAFTS' }];
@@ -194,10 +217,12 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
     // added this beacause cannot provide activate route to service
     this.dataService.myActivateRouter = this.activatedRoute;
 
-    this.activatedRoute.data.subscribe((data: { share: boolean; shareParent: boolean }) => {
-      this.isPublic = data.share;
-      this.isPublicParent = data.shareParent;
-    });
+    this.activatedRoute.data.subscribe(
+      (data: { share: boolean; shareParent: boolean }) => {
+        this.isPublic = data.share;
+        this.isPublicParent = data.shareParent;
+      },
+    );
 
     const file_id = this.activatedRoute.snapshot.params['id'];
 
@@ -227,10 +252,15 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
         await this.dataService.refreshData();
 
         this.fileInfo = this.dataService.currentItem;
-        this.isShared = this.fileInfo.accessPermissions ? this.fileInfo.accessPermissions.isPublic : false;
+        this.isShared = this.fileInfo.accessPermissions
+          ? this.fileInfo.accessPermissions.isPublic
+          : false;
         this.pageTitle.title = this.fileInfo.name;
         this.initView();
-        this.changeFileView(this.getFileViewComponent(this.fileInfo), this.fileInfo);
+        this.changeFileView(
+          this.getFileViewComponent(this.fileInfo),
+          this.fileInfo,
+        );
 
         if (this.isShared) {
           this.sharedToolTip = 'Change Sharing Settings';
@@ -259,20 +289,32 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
     });
 
     if (!this.browserEventSubscription) {
-      this.browserEventSubscription = this.dataService.browserEvents.subscribe((eventData: IBrowserEvent) => {
-        if (eventData.event.type === 'dblclick') {
-          this.itemDbClick(eventData.event, eventData.item);
-        } else if (eventData.event.type === 'click') {
-          this.itemClick(eventData.event, eventData.item);
-        }
-      });
+      this.browserEventSubscription = this.dataService.browserEvents.subscribe(
+        (eventData: IBrowserEvent) => {
+          if (eventData.event.type === 'dblclick') {
+            this.itemDbClick(eventData.event, eventData.item);
+          } else if (eventData.event.type === 'click') {
+            this.itemClick(eventData.event, eventData.item);
+          }
+        },
+      );
     }
-    /**
-     * Gets categories to which current file belongs
-     */
-    this.categoriesApi
-      .getFileTreeNodes(file_id)
-      .subscribe(treeNodes => (this.categories = treeNodes), (error => console.error(error)));
+
+    this.getTreeList().subscribe(treeList => {
+      this.getTree(treeList[0].id).subscribe(tree => {
+        this.categoryService.activeTree = this.categories = tree.nodes;
+        this.getEntityCategories(file_id);
+      });
+    });
+
+    this.dialog.afterOpened.subscribe(() => {
+      const dialogRef = this.dialog.openDialogs[0];
+      dialogRef
+        .afterClosed()
+        .pipe(delay(1000))
+        // show loading spinner for Category Tags (chips)
+        .subscribe(() => this.getEntityCategories(this.fileInfo.id));
+    });
   }
 
   subscribeToSignalr() {
@@ -339,7 +381,10 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
       this.isMicroscopy = true;
     }
 
-    if (this.fileInfo.fileType() === FileType.other || this.fileInfo.fileType() === FileType.image) {
+    if (
+      this.fileInfo.fileType() === FileType.other ||
+      this.fileInfo.fileType() === FileType.image
+    ) {
       this.showImagePreview = true;
     }
 
@@ -392,7 +437,9 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
         ' .mpg .mpeg .mp4 .txt .rtf .csv .tsv .xml .html .htm' +
         ' .mol .sdf .cdx .rxn .rdf .jdx .dx .cif .nd2 .lsm .ims .lif .czi';
       if (knownTypes.indexOf(` .${fileType}`) < 0) {
-        return item.type === 'Record' ? '/img/svg/file-types/record.svg' : '/img/svg/tile/file.svg';
+        return item.type === 'Record'
+          ? '/img/svg/file-types/record.svg'
+          : '/img/svg/tile/file.svg';
       } else if (fileType) {
         return `/img/svg/file-types/${fileType}.svg`;
       } else {
@@ -402,7 +449,9 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
       return null;
     }
 
-    const image = item.images.filter((x: { scale: string }) => x.scale === 'Vector' || x.scale === 'Medium')[0];
+    const image = item.images.filter(
+      (x: { scale: string }) => x.scale === 'Vector' || x.scale === 'Medium',
+    )[0];
     return this.imagesApi.getImageUrlNew(image, item);
   }
 
@@ -425,7 +474,10 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
   }
 
   onToolbarButtonClick(buttonTypeClick: ToolbarButtonType) {
-    if (buttonTypeClick === ToolbarButtonType.tile || buttonTypeClick === ToolbarButtonType.table) {
+    if (
+      buttonTypeClick === ToolbarButtonType.tile ||
+      buttonTypeClick === ToolbarButtonType.table
+    ) {
       if (this.currentFileViewContainerInstance.toolBarEvent) {
         this.currentFileViewContainerInstance.toolBarEvent(buttonTypeClick);
       }
@@ -470,7 +522,10 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
   }
 
   showPopover(popoverName: string) {
-    if (this.lastShownPopoverName === popoverName && this.lastShownPopoverTimeoutId) {
+    if (
+      this.lastShownPopoverName === popoverName &&
+      this.lastShownPopoverTimeoutId
+    ) {
       clearTimeout(this.lastShownPopoverTimeoutId);
       this.lastShownPopoverTimeoutId = null;
     }
@@ -493,13 +548,20 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
   getFileViewComponent(dataItem: BrowserDataItem): Type<any> {
     if (this.currentTab === FileViewType.Preview) {
       if (dataItem.getNodeType() === NodeType.File) {
-        if (dataItem.getSubType() === SubType.Image || dataItem.getSubType() === SubType.Records) {
+        if (
+          dataItem.getSubType() === SubType.Image ||
+          dataItem.getSubType() === SubType.Records
+        ) {
           if (
-            (this.fileInfo.getFileExtension() === 'jdx' || this.fileInfo.getFileExtension() === 'dx') &&
+            (this.fileInfo.getFileExtension() === 'jdx' ||
+              this.fileInfo.getFileExtension() === 'dx') &&
             environment.capabilities.spectrum
           ) {
             return SpectraJsmolPreviewComponent;
-          } else if (this.fileInfo.getFileExtension() === 'cif' && environment.capabilities.crystal) {
+          } else if (
+            this.fileInfo.getFileExtension() === 'cif' &&
+            environment.capabilities.crystal
+          ) {
             return CifPreviewComponent;
           } else {
             if (environment.capabilities.image) {
@@ -509,15 +571,25 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
             }
           }
         } else if (
-          (dataItem.getSubType() === SubType.Pdf || dataItem.getSubType() === SubType.WebPage) &&
+          (dataItem.getSubType() === SubType.Pdf ||
+            dataItem.getSubType() === SubType.WebPage) &&
           (environment.capabilities.webPage || environment.capabilities.pdf)
         ) {
           return PdfFileViewComponent;
-        } else if (dataItem.getSubType() === SubType.Tabular && environment.capabilities.datasets) {
+        } else if (
+          dataItem.getSubType() === SubType.Tabular &&
+          environment.capabilities.datasets
+        ) {
           return CSVPreviewComponent;
-        } else if (dataItem.getSubType() === SubType.Office && environment.capabilities.office) {
+        } else if (
+          dataItem.getSubType() === SubType.Office &&
+          environment.capabilities.office
+        ) {
           return OfficePreviewComponent;
-        } else if (dataItem.getSubType() === SubType.Microscopy && environment.capabilities.microscopy) {
+        } else if (
+          dataItem.getSubType() === SubType.Microscopy &&
+          environment.capabilities.microscopy
+        ) {
           return ImageFileViewComponent;
         }
       } else if (dataItem.getNodeType() === NodeType.Model) {
@@ -528,7 +600,10 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
     } else if (this.currentTab === FileViewType.Models) {
       return SavFileViewComponent;
     } else if (this.currentTab === FileViewType.Bio_Metadata) {
-      if (dataItem.getSubType() === SubType.Microscopy && environment.capabilities.microscopy) {
+      if (
+        dataItem.getSubType() === SubType.Microscopy &&
+        environment.capabilities.microscopy
+      ) {
         return MicroscopyViewComponent;
       }
     } else if (this.currentTab === FileViewType.Generic_Metadata) {
@@ -538,13 +613,20 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
     }
   }
 
-  changeFileView(viewComponent: Type<any>, fileForVisualisation: BrowserDataItem) {
+  changeFileView(
+    viewComponent: Type<any>,
+    fileForVisualisation: BrowserDataItem,
+  ) {
     if (viewComponent === null) {
       return;
     }
 
-    const cmpFactory = this.componentResolver.resolveComponentFactory(viewComponent);
-    const component: ComponentRef<IFilePreviewComponent> = this.fileViewContainer.createComponent(cmpFactory) as ComponentRef<
+    const cmpFactory = this.componentResolver.resolveComponentFactory(
+      viewComponent,
+    );
+    const component: ComponentRef<
+      IFilePreviewComponent
+    > = this.fileViewContainer.createComponent(cmpFactory) as ComponentRef<
       IFilePreviewComponent
     >;
 
@@ -558,10 +640,13 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
     this.currentFileViewComponent = component;
   }
 
-  changeView(tab: FileViewType) {
+  changeView(tab: FileViewType): void {
     if (!(!this.fileInfo.images && tab === FileViewType.Preview)) {
       this.currentTab = tab;
-      this.changeFileView(this.getFileViewComponent(this.fileInfo), this.fileInfo);
+      this.changeFileView(
+        this.getFileViewComponent(this.fileInfo),
+        this.fileInfo,
+      );
     }
   }
 
@@ -574,5 +659,72 @@ export class FileViewComponent extends BrowserOptions implements OnInit, AfterCo
     //   const infoBoxHeader = infoBoxContainer.querySelector(`[name=${item.name}]`) as HTMLElement;
     //   infoBoxContainer.scrollTo(0, infoBoxHeader.offsetTop - 50);
     // });
+  }
+
+  /**
+   * Assign category tag to the entity
+   */
+  addCategoryTag(): void {
+    this.categoryEntityApi.addTags(this.fileInfo.id, ['']);
+  }
+
+  /**
+   * Remove all category tags assigned to the entity
+   */
+  removeCategoryTags(): void {
+    this.categoryEntityApi.deleteTags(this.fileInfo.id, ['']);
+  }
+
+  /**
+   * Remove category tag from entitiy
+   * @param category category (tag*) which has to be removed
+   */
+  remove(category: CategoryFlatNode): void {
+    const index = this.categoryTags.indexOf(category);
+
+    if (index >= 0) {
+      this.categoryTags.splice(index, 1);
+      this.categoryEntityApi
+        .deleteTag(this.fileInfo.id, category.id)
+        .subscribe();
+    }
+  }
+
+  openAssignTagDialog(): void {
+    this.dialog.open(CategoryAssignDialogComponent, {
+      width: '500px',
+      height: '528px',
+      data: {
+        fileInfo: this.fileInfo,
+        assignedCategories: this.categories,
+        selectedCategories: this.categoryTags,
+      },
+    });
+    console.log(this.dialog.openDialogs);
+  }
+
+  getTreeList(): Observable<CategoryTree[]> {
+    return this.categoryTreeApi.getTreeList();
+  }
+
+  getTree(id: string): Observable<CategoryTree> {
+    return this.categoryTreeApi.getTree(id);
+  }
+
+  /**
+   * Get categories to which current entity belongs
+   * @file_id GUID of the current entity
+   */
+  private getEntityCategories(file_id: any): void {
+    this.categoryEntityApi
+      .getTags(file_id)
+      .subscribe(
+        (tags: string[]) =>
+          (this.categoryTags = this.categoryService.flatTree.filter(
+            (node: CategoryFlatNode) =>
+              tags ? tags.some(tag => node.id === tag) : null,
+          )),
+        error => console.error(error),
+      );
   }
 }

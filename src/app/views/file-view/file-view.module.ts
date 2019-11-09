@@ -1,7 +1,12 @@
 import { NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
-import { MatRippleModule, MatChipsModule } from '@angular/material';
+import {
+  MatChipsModule,
+  MatIconModule,
+  MatRippleModule,
+} from '@angular/material';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterModule, Routes } from '@angular/router';
+import { CategoryTaggingModule } from 'app/shared/components/category-tagging/category-tagging.module';
 
 import { AuthService } from '../../core/services/auth/auth.service';
 import { BrowserDataBaseService } from '../../core/services/browser-services/browser-data-base.service';
@@ -21,7 +26,6 @@ import { SidebarContentModule } from '../../shared/components/sidebar-content/si
 import { SharedModule } from '../../shared/shared.module';
 
 import { FileViewComponent } from './file-view.component';
-
 export let dataServiceFactory = (
   auth: AuthService,
   sharedProvider: BrowserDataSharedFileServiceService,
@@ -57,6 +61,8 @@ const modules = [
   MatDialogModule,
   MatRippleModule,
   MatChipsModule,
+  MatIconModule,
+  CategoryTaggingModule,
 ];
 
 @NgModule({
@@ -68,7 +74,11 @@ const modules = [
     {
       provide: BrowserDataBaseService,
       useFactory: dataServiceFactory,
-      deps: [AuthService, BrowserDataSharedFileServiceService, BrowserDataFileService],
+      deps: [
+        AuthService,
+        BrowserDataSharedFileServiceService,
+        BrowserDataFileService,
+      ],
     },
     BrowserDataSharedFileServiceService,
     BrowserDataFileService,

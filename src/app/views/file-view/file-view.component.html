@@ -1,5 +1,7 @@
 <dr-sidebar-content>
-  <sidebar [ngClass]="{ collapsed: sidebarContent.sidebarCollapsed, public: isPublic }">
+  <sidebar
+    [ngClass]="{ collapsed: sidebarContent.sidebarCollapsed, public: isPublic }"
+  >
     <div class="file-buttons">
       <a
         *ngIf="!sidebarContent.sidebarCollapsed && !isPublic"
@@ -24,7 +26,11 @@
         <img src="/img/svg/material/ic_link_black_24px.svg" />
       </button>
       <div
-        *ngIf="!sidebarContent.sidebarCollapsed && !isPublic && ['mol', 'sdf', 'cdx'].indexOf(fileExtension) >= 0"
+        *ngIf="
+          !sidebarContent.sidebarCollapsed &&
+          !isPublic &&
+          ['mol', 'sdf', 'cdx'].indexOf(fileExtension) >= 0
+        "
         class="d-inline-block"
       >
         <button
@@ -57,7 +63,13 @@
         [ngClass]="{ show: showDownloadPopover }"
         class="download-popover"
       >
-        <a mat-icon-button matTooltip="Download" matTooltipPosition="right" (click)="downloadEntity()" download="{{ fileInfo?.name }}">
+        <a
+          mat-icon-button
+          matTooltip="Download"
+          matTooltipPosition="right"
+          (click)="downloadEntity()"
+          download="{{ fileInfo?.name }}"
+        >
           <img src="/img/svg/material/ic_file_download_black_24px.svg" />
         </a>
         <button
@@ -70,7 +82,10 @@
         >
           <img src="/img/svg/material/ic_link_black_24px.svg" />
         </button>
-        <div *ngIf="['mol', 'sdf', 'cdx'].indexOf(fileExtension) >= 0" class="d-flex">
+        <div
+          *ngIf="['mol', 'sdf', 'cdx'].indexOf(fileExtension) >= 0"
+          class="d-flex"
+        >
           <button
             *ngIf="fileExtension !== 'csv'"
             mat-icon-button
@@ -127,9 +142,13 @@
           <dt>Created Date</dt>
           <dd *ngIf="fileInfo">{{ fileInfo.Created() | date: 'shortDate' }}</dd>
           <dt>Owner</dt>
-          <dd *ngIf="fileInfo.userInfo | async as userInfo">{{ userInfo?.displayName }}</dd>
+          <dd *ngIf="fileInfo.userInfo | async as userInfo">
+            {{ userInfo?.displayName }}
+          </dd>
           <dt *ngIf="fileInfo && fileInfo.totalRecords">Records</dt>
-          <dd *ngIf="fileInfo && fileInfo.totalRecords">{{ fileInfo.totalRecords }}</dd>
+          <dd *ngIf="fileInfo && fileInfo.totalRecords">
+            {{ fileInfo.totalRecords }}
+          </dd>
         </dl>
         <ng-container *ngFor="let action of fileActions">
           <div *ngIf="action.active" class="properties-ul">
@@ -140,9 +159,17 @@
                 (click)="changeView(action.viewType)"
                 [ngClass]="{ active: currentTab == action.viewType }"
               >
-                <img src="/img/svg/file-types/{{ fileType }}.svg" class="file-src-img" no-inline />
-                <ng-container *ngIf="action.viewType === tab.Records; else elseTemplate">
-                  <span class="text-truncate"> {{ recordsType }} {{ action.title }}</span>
+                <img
+                  src="/img/svg/file-types/{{ fileType }}.svg"
+                  class="file-src-img"
+                  no-inline
+                />
+                <ng-container
+                  *ngIf="action.viewType === tab.Records; else elseTemplate"
+                >
+                  <span class="text-truncate">
+                    {{ recordsType }} {{ action.title }}</span
+                  >
                 </ng-container>
                 <ng-template #elseTemplate>
                   <span class="text-truncate"> {{ action.title }}</span>
@@ -186,13 +213,21 @@
       </div>
 
       <div *ngIf="sidebarContent.sidebarCollapsed" class="collapsed-buttons">
-        <div *ngIf="!isPublic" (mouseenter)="showPopover('showDownloadPopover')" (mouseleave)="hidePopover('showDownloadPopover')">
+        <div
+          *ngIf="!isPublic"
+          (mouseenter)="showPopover('showDownloadPopover')"
+          (mouseleave)="hidePopover('showDownloadPopover')"
+        >
           <a mat-icon-button>
             <img src="/img/svg/export-file.svg" />
           </a>
         </div>
 
-        <div *ngIf="!isPublic" (mouseenter)="showPopover('showSocialsPopover')" (mouseleave)="hidePopover('showSocialsPopover')">
+        <div
+          *ngIf="!isPublic"
+          (mouseenter)="showPopover('showSocialsPopover')"
+          (mouseleave)="hidePopover('showSocialsPopover')"
+        >
           <button mat-icon-button>
             <img src="/img/svg/material/ic_share_black_24px.svg" />
           </button>
@@ -230,7 +265,7 @@
         </div>
 
         <div
-          *ngIf="categories.length !== 0"
+          *ngIf="categories?.length !== 0"
           (mouseenter)="showPopover('showCategoriesPovover')"
           (mouseleave)="hidePopover('showCategoriesPovover')"
         >
@@ -246,16 +281,32 @@
         <div [class.active]="currentTab === tab.Preview">
           <div
             *ngIf="getImageURL(fileInfo) && !JsSpectraPreview"
-            [class.default-thumbnail]="fileInfo && (!fileInfo.images || !fileInfo.images.length)"
+            [class.default-thumbnail]="
+              fileInfo && (!fileInfo.images || !fileInfo.images.length)
+            "
           >
-            <img class="e2e-middle-preview preview-img" (click)="changeView(tab.Preview)" [src]="getImageURL(fileInfo)" no-inline />
+            <img
+              class="e2e-middle-preview preview-img"
+              (click)="changeView(tab.Preview)"
+              [src]="getImageURL(fileInfo)"
+              no-inline
+            />
           </div>
-          <dr-spectra-jsmol-preview *ngIf="JsSpectraPreview" [fileItem]="fileInfo" (click)="changeView(tab.Preview)">
+          <dr-spectra-jsmol-preview
+            *ngIf="JsSpectraPreview"
+            [fileItem]="fileInfo"
+            (click)="changeView(tab.Preview)"
+          >
           </dr-spectra-jsmol-preview>
         </div>
       </div>
       <h5 class="text-muted d-inline-block">File</h5>
-      <img *ngIf="fileInfo?.loading && !fileProcessed" class="structure-loader" src="/img/svg/loaders/loader-flask.svg" no-inline />
+      <img
+        *ngIf="fileInfo?.loading && !fileProcessed"
+        class="structure-loader"
+        src="/img/svg/loaders/loader-flask.svg"
+        no-inline
+      />
     </div>
 
     <div *ngIf="!sidebarContent.sidebarCollapsed" class="tab-records">
@@ -263,19 +314,31 @@
         <dt>Created Date</dt>
         <dd>{{ fileInfo.Created() | date: 'shortDate' }}</dd>
         <dt *ngIf="fileInfo.userInfo">Owner</dt>
-        <dd *ngIf="fileInfo.userInfo | async as userInfo">{{ userInfo?.displayName }}</dd>
+        <dd *ngIf="fileInfo.userInfo | async as userInfo">
+          {{ userInfo?.displayName }}
+        </dd>
         <dt *ngIf="fileInfo.totalRecords">Records</dt>
         <dd *ngIf="fileInfo.totalRecords">{{ fileInfo.totalRecords }}</dd>
-        <dt *ngIf="categories?.length !== 0">Categories</dt>
-        <dd>
+        <dt class="d-inline category">Categories</dt>
+        <!-- Entity Tags Autocomplete -->
+        <!-- <dd><dr-category-tagging></dr-category-tagging></dd> -->
+        <button mat-button mat-stroked-button class="float-right" (click)="openAssignTagDialog()">
+          Assign Categories
+        </button>
+        <dd *ngIf="categoryTags?.length !== 0">
           <mat-chip-list aria-label="Categories">
-            <mat-chip *ngFor="let category of categories">{{ category?.title }}</mat-chip>
+            <mat-chip
+              *ngFor="let category of categoryTags"
+              (removed)="remove(category)"
+              >{{ category?.title }}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
           </mat-chip-list>
         </dd>
       </dl>
     </div>
 
-    <div *ngIf="!sidebarContent.sidebarCollapsed" class="properties-ul">
+    <!-- <div *ngIf="!sidebarContent.sidebarCollapsed" class="properties-ul">
       <ul class="list-group">
         <li
           *ngFor="let item of listProperties"
@@ -284,25 +347,34 @@
           [ngClass]="{ active: currentTab == item.viewType }"
           matRipple
         >
-          <img src="/img/file-src/intrinsic.ico" class="file-src-img" no-inline />
+          <img
+            src="/img/file-src/intrinsic.ico"
+            class="file-src-img"
+            no-inline
+          />
           <span class="text-truncate"> {{ item.name }}</span>
         </li>
       </ul>
-    </div>
+    </div> -->
 
     <mat-chip-list
-      *ngIf="sidebarContent.sidebarCollapsed && categories.length !== 0"
+      *ngIf="sidebarContent.sidebarCollapsed && categoryTags?.length !== 0"
       class="chips-popover"
       aria-label="Categories"
       (mouseenter)="showPopover('showCategoriesPovover')"
       (mouseleave)="hidePopover('showCategoriesPovover')"
       [ngClass]="{ show: showCategoriesPovover }"
     >
-      <mat-chip *ngFor="let category of categories">{{ category?.title }}</mat-chip>
+      <mat-chip *ngFor="let category of categoryTags">
+        {{ category?.title }}
+      </mat-chip>
     </mat-chip-list>
 
     <ng-container *ngFor="let action of fileActions">
-      <div *ngIf="!sidebarContent.sidebarCollapsed && action.active" class="properties-ul">
+      <div
+        *ngIf="!sidebarContent.sidebarCollapsed && action.active"
+        class="properties-ul"
+      >
         <ul class="list-group">
           <li
             matRipple
@@ -310,9 +382,17 @@
             (click)="changeView(action.viewType)"
             [ngClass]="{ active: currentTab == action.viewType }"
           >
-            <img src="/img/svg/file-types/{{ fileType }}.svg" class="file-src-img" no-inline />
-            <ng-container *ngIf="action.viewType === tab.Records; else elseTemplate">
-              <span class="text-truncate"> {{ recordsType }} {{ action.title }}</span>
+            <img
+              src="/img/svg/file-types/{{ fileType }}.svg"
+              class="file-src-img"
+              no-inline
+            />
+            <ng-container
+              *ngIf="action.viewType === tab.Records; else elseTemplate"
+            >
+              <span class="text-truncate">
+                {{ recordsType }} {{ action.title }}</span
+              >
             </ng-container>
             <ng-template #elseTemplate>
               <span class="text-truncate"> {{ action.title }}</span>
@@ -334,13 +414,20 @@
     >
     </dr-organize-toolbar>
 
-    <dr-filter-bar [filterFieldsList]="filterListFields" (filterChanged)="onApplyFilter($event)" *ngIf="showFilter"> </dr-filter-bar>
+    <dr-filter-bar
+      [filterFieldsList]="filterListFields"
+      (filterChanged)="onApplyFilter($event)"
+      *ngIf="showFilter"
+    >
+    </dr-filter-bar>
     <div class="overflow-auto">
       <div #fileViewContainer></div>
     </div>
     <div [hidden]="currentTab !== tab.Properties">
       <ng-container *ngFor="let item of infoBoxes">
-        <dr-organize-info-box-factory [componentData]="item"></dr-organize-info-box-factory>
+        <dr-organize-info-box-factory
+          [componentData]="item"
+        ></dr-organize-info-box-factory>
       </ng-container>
     </div>
   </content>

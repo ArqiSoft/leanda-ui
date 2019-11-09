@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // rm
 import { RouterModule } from '@angular/router';
@@ -29,11 +29,18 @@ import { HttpInterceptorService } from './services/Interceptor/http-interceptor.
     ContextMenuModule.forRoot({
       autoFocus: true,
       // useBootstrap4: true,
-    })],
+    }),
+  ],
   exports: [],
   declarations: [],
-  providers: [...ServicesList,
-              { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-              { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true }],
+  providers: [
+    ...ServicesList,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptorService,
+      multi: true,
+    },
+  ],
 })
-export class CoreModule { }
+export class CoreModule {}
