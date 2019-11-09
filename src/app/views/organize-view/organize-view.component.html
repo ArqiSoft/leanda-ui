@@ -17,9 +17,9 @@
   <sidebar>
     <ng-contaner [ngSwitch]="currentSidebarTab">
       <ng-container *ngSwitchCase="sidebarTab.CATEGORIES">
-        <dr-categories-tree>
+        <dr-category-tree>
           <ng-container *ngTemplateOutlet="tabsTemp"></ng-container>
-        </dr-categories-tree>
+        </dr-category-tree>
       </ng-container>
       <ng-container *ngSwitchDefault>
         <dr-entity-counts>

@@ -10,19 +10,20 @@ export interface CategoryTree {
   updatedBy: string;
   updatedDateTime: string;
   version: number;
-  nodes: CategoryNode[];
+  nodes?: CategoryNode[];
 }
 
 export class CategoryNode {
-  id?: string;
+  id: string;
   title: string;
   children?: CategoryNode[];
 }
 
 export class CategoryFlatNode {
+  id: string;
   title: string;
   level: number;
-  isExpandable: boolean;
-  isEditEnabled: boolean;
-  isButtonsVisible: boolean;
+  expandable: boolean;
+  isEditEnabled?: boolean;
+  isButtonsVisible?: boolean;
 }

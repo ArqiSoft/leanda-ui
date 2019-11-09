@@ -1,18 +1,15 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FoldersApiService } from 'app/core/services/api/folders-api.service';
-import { NodesApiService } from 'app/core/services/api/nodes-api.service';
-import { AuthService } from 'app/core/services/auth/auth.service';
-import { ItemImagePreviewService } from 'app/core/services/item-preview-image-service/item-image-preview.service';
-import { ValidateFolderName} from 'app/core/services/validation/validation.service';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-// import {
-//   MachineLearningTrainComponent
-// } from '../../full-screen-dialogs/machine-learning/machine-learning-train/machine-learning-train.component';
+import { FoldersApiService } from '../../../../core/services/api/folders-api.service';
+import { NodesApiService } from '../../../../core/services/api/nodes-api.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
+import { ItemImagePreviewService } from '../../../../core/services/item-preview-image-service/item-image-preview.service';
 import { SignalrService } from '../../../../core/services/signalr/signalr.service';
+import { ValidateFolderName} from '../../../../core/services/validation/validation.service';
 import { SignalREvent } from '../../notifications/events.model';
 import { BrowserData, BrowserDataItem, BrowserOptions } from '../../organize-browser/browser-types';
 

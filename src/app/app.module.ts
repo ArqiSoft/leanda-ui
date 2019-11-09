@@ -13,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { NavbarModule } from './core/navbar/navbar.module';
+import { CategoryAssignDialogModule } from './shared/components/categories-tree/category-assign-dialog/category-assign-dialog.module';
 import { CreateFolderComponent } from './shared/components/folder-actions/create-folder/create-folder.component';
 import { DeleteFolderComponent } from './shared/components/folder-actions/delete-folder/delete-folder.component';
 import { MoveFolderComponent } from './shared/components/folder-actions/move-folder/move-folder.component';
@@ -29,9 +30,7 @@ const dialogs = [
   RenameFolderComponent,
 ];
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -43,15 +42,12 @@ const dialogs = [
     ExportDialogModule,
     FolderActionsModule,
     ImportWebPageModule,
+    CategoryAssignDialogModule,
   ],
   // because of dynamic generated components (all are dialogs)
-  entryComponents: [
-    ...dialogs,
-  ],
+  entryComponents: [...dialogs],
   providers: [MoveFolderComponent],
   bootstrap: [AppComponent],
-  schemas: [
-
-  ],
+  schemas: [],
 })
-export class AppModule { }
+export class AppModule {}

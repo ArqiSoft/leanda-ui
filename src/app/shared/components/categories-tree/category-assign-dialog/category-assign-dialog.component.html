@@ -1,0 +1,62 @@
+<div class="container d-flex flex-column h-100">
+  <h1 mat-dialog-title>Categories</h1>
+  <button mat-button (click)="onCloseClick()"></button>
+  <button mat-button mat-icon-button matDialogClose class="close">
+    <mat-icon>cancel</mat-icon>
+  </button>
+  <div mat-dialog-content>
+    <ng-container *ngIf="!data.assignedCategories.length; else tree">
+      <p class="browser-no-items">No categories yet</p>
+    </ng-container>
+  </div>
+  <div mat-dialog-actions class="flex-row-reverse">
+    <button
+      mat-button
+      mat-primary
+      matDialogClose
+      [color]="'primary'"
+      (click)="save()"
+    >
+      Save
+    </button>
+  </div>
+</div>
+
+<!-- Category tree template -->
+<ng-template #tree>
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+      <button
+        mat-button
+        mat-icon-button
+        matTreeNodeToggle
+        [attr.aria-label]="'toggle ' + node.title"
+        [disabled]="!hasChild(null, node)"
+      >
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+        </mat-icon>
+      </button>
+      <div class="checkbox">
+        <mat-checkbox
+          class="pt-2"
+          [ngClass]="{
+            selected:
+              checklistSelection.isSelected(node) || checkHasBeenAssigned(node)
+          }"
+          [checked]="
+            checklistSelection.isSelected(node) || checkHasBeenAssigned(node)
+          "
+          [disabled]="checkHasBeenAssigned(node)"
+          (change)="categoryLeafNodeSelectionToggle(node)"
+        >
+        </mat-checkbox>
+      </div>
+      <div
+        [matTooltip]="node.level === 0 ? node.title : getCategoryFullPath(node)"
+      >
+        {{ node.title }}
+      </div>
+    </mat-tree-node>
+  </mat-tree>
+</ng-template>
