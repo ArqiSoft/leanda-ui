@@ -84,7 +84,7 @@
       </span>
     </ng-container>
     <div
-      *ngIf="currentSidebarTab === sidebarTab.CATEGORIES"
+      *ngIf="currentSidebarTab === sidebarTab.CATEGORIES && isUserAdmin()"
       class="float-right"
       matTooltip="Tree Managment"
     >

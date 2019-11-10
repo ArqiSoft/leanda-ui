@@ -36,10 +36,10 @@ import {
   IQuickFilter,
   QuickFilterService,
 } from '../../core/services/browser-services/quick-filter.service';
+import { CategoryService } from '../../core/services/category/category.service';
 import { NotificationsService } from '../../core/services/notifications/notifications.service';
 import { PageTitleService } from '../../core/services/page-title/page-title.service';
 import { SignalrService } from '../../core/services/signalr/signalr.service';
-import { CategoryService } from '../../core/services/category/category.service';
 import { ExportDialogComponent } from '../../shared/components/export-dialog/export-dialog.component';
 import { CreateFolderComponent } from '../../shared/components/folder-actions/create-folder/create-folder.component';
 import { DeleteFolderComponent } from '../../shared/components/folder-actions/delete-folder/delete-folder.component';
@@ -365,6 +365,14 @@ export class OrganizeViewComponent extends BrowserOptions
     this.signalr.organizeUpdate.subscribe((x: SignalREvent) => {
       this.updateSubject.next(x);
     });
+  }
+
+  isUserAdmin = (): boolean => {
+    if (this.auth.user && this.auth.user.profile['user_role']) {
+      return this.auth.user.profile.user_role.includes('leanda-admin');
+    } else {
+      return false;
+    }
   }
 
   ngOnInit() {

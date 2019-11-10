@@ -6,7 +6,7 @@
 export const environment = {
   name: 'LOCAL',
   production: false,
-  identityServerUrl: 'http://id.leanda.io/auth/realms/OSDR',
+  identityServerUrl: 'https://id.leanda.io/auth/realms/OSDR',
   // apiUrl: 'http://localhost:28610/api',
   apiUrl: 'http://localhost:28611/api',
   // apiUrl: 'https://api.dev.your-company.com/core/v1/api',
