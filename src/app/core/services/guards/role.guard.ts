@@ -23,9 +23,8 @@ export class RoleGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-      if (this.auth.user && this.auth.user['roles']) {
-        this.auth.user['roles'].includes(next.data.roles);
-        return true;
+      if (this.auth.user && this.auth.user.profile['user_role']) {
+        return this.auth.user.profile.user_role.includes(next.data.roles);
       } else {
         return false;
       }
