@@ -646,6 +646,7 @@ export class OrganizeViewComponent extends BrowserOptions
   openMoveItemDialog(): void {
     const dialogRef = this.dialog.open(MoveFolderComponent, {
       width: '500px',
+      height: '528px',
       data: {
         startFolder: this.dataService.currentItem
           ? this.dataService.parentItem

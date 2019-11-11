@@ -200,6 +200,7 @@ export class MachineLearningPredictComponent implements OnInit, OnDestroy {
   openMoveItemDialog(): void {
     const dialogRef = this.dialog.open(MoveFolderComponent, {
       width: '500px',
+      height: '528px',
       data: {
         startFolder: this.parentItem,
         movedItems: [this.currentItem],

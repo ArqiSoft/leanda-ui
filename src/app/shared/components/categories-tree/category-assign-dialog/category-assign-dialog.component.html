@@ -2,13 +2,17 @@
   <h1 mat-dialog-title>Categories</h1>
   <button mat-button (click)="onCloseClick()"></button>
   <button mat-button mat-icon-button matDialogClose class="close">
-    <mat-icon>cancel</mat-icon>
+    <mat-icon>close</mat-icon>
   </button>
+
+
   <div mat-dialog-content>
     <ng-container *ngIf="!data.assignedCategories.length; else tree">
       <p class="browser-no-items">No categories yet</p>
     </ng-container>
   </div>
+
+
   <div mat-dialog-actions class="flex-row-reverse">
     <button
       mat-button
