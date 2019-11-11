@@ -1,6 +1,8 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
+import { Observable } from 'rxjs';
 
 import { CategoryTreeBase } from '../../shared/components/categories-tree/category-base';
 import {
@@ -17,7 +19,13 @@ import { CategoryTreeManagmentService } from './category-tree-management.service
 })
 export class CategoryTreeManagmentComponent extends CategoryTreeBase
   implements OnInit {
-  constructor(private service: CategoryTreeManagmentService) {
+
+  readonly isLoading: Observable<boolean> = this.service.isLoading.asObservable();
+
+  constructor(
+    private service: CategoryTreeManagmentService,
+    private location: Location,
+  ) {
     super();
     this.treeFlattener = new MatTreeFlattener(
       this.transformer,
@@ -106,5 +114,9 @@ export class CategoryTreeManagmentComponent extends CategoryTreeBase
       this.service.categoryList[0].id,
       this.service.categoryList[0].version,
     );
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }
