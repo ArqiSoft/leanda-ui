@@ -15,7 +15,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NotificationsModule } from '../../shared/components/notifications/notifications.module';
 import { SharedModule } from '../../shared/shared.module';
 
-import { CategoryTreeManagmentComponent } from './category-tree-managment.component';
+import { CategoryTreeManagmentComponent } from './category-tree-management.component';
 
 const routes: Routes = [
   { path: '', component: CategoryTreeManagmentComponent },
