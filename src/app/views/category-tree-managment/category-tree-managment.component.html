@@ -125,7 +125,7 @@
         [attr.aria-label]="'toggle ' + node.title"
         [disabled]="!hasChild(null, node)"
       >
-        <mat-icon class="mat-icon-rtl-mirror">
+        <mat-icon class="mat-icon-rtl-mirror" [hidden]="!hasChild(null, node)">
           {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
       </button>
