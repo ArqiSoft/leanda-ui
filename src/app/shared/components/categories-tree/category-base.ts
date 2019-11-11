@@ -2,7 +2,7 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { OnInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 
-import { CategoryTreeInfo } from '../../../views/category-tree-managment/CategoryTreeInfo';
+import { CategoryTreeInfo } from '../../../views/category-tree-management/CategoryTreeInfo';
 
 import {
   CategoryFlatNode,

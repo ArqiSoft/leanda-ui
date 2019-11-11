@@ -1,4 +1,5 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 
@@ -8,16 +9,19 @@ import {
   CategoryNode,
 } from '../../shared/components/categories-tree/models/category-node';
 
-import { CategoryTreeManagmentService } from './category-tree-managment.service';
+import { CategoryTreeManagmentService } from './category-tree-management.service';
 
 @Component({
-  selector: 'dr-category-tree-managment',
-  templateUrl: './category-tree-managment.component.html',
-  styleUrls: ['./category-tree-managment.component.scss'],
+  selector: 'dr-category-tree-management',
+  templateUrl: './category-tree-management.component.html',
+  styleUrls: ['./category-tree-management.component.scss'],
 })
 export class CategoryTreeManagmentComponent extends CategoryTreeBase
   implements OnInit {
-  constructor(private service: CategoryTreeManagmentService) {
+  constructor(
+    private service: CategoryTreeManagmentService,
+    private location: Location,
+  ) {
     super();
     this.treeFlattener = new MatTreeFlattener(
       this.transformer,
@@ -106,5 +110,9 @@ export class CategoryTreeManagmentComponent extends CategoryTreeBase
       this.service.categoryList[0].id,
       this.service.categoryList[0].version,
     );
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }
