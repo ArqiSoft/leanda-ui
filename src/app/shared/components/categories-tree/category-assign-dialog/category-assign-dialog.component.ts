@@ -20,6 +20,7 @@ import { BrowserDataItem } from '../../organize-browser/browser-types';
 import { CategoryTreeBase } from '../category-base';
 import {
   CategoryFlatNode,
+  CategoryNode,
   CategoryTree,
 } from '../models/category-node';
 
@@ -65,13 +66,20 @@ export class CategoryAssignDialogComponent extends CategoryTreeBase
       this.treeControl,
       this.treeFlattener,
     );
-    this.dataSource.data = this.data.assignedCategories;
+    this.dataSource.data = this.data.assignedCategories as CategoryNode[];
   }
 
   ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.destroy$.next();
+  }
+
+  disableSave(): boolean {
+    const assignedTags = this.treeFlattener.flattenNodes(this.data.selectedCategories);
+    const unAssignedCategories = this.treeFlattener.flattenNodes(this.data.assignedCategories).filter(scNode => !assignedTags.includes(scNode));
+    const nodeIDList: string[] = this.checklistSelection.selected.map(flatNode => this.flatNodeMap.get(flatNode).id);
+    return unAssignedCategories.filter(unNode => nodeIDList.includes(unNode.id)).length === 0;
   }
 
   checkHasBeenAssigned(node: CategoryFlatNode): boolean {

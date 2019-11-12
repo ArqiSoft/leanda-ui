@@ -1,6 +1,6 @@
-@import 'assets/fonts/open-sans/_open-sans.scss';
-@import './md-theme.scss';
-@import 'assets/sass/_master.scss';
+@import "assets/fonts/open-sans/_open-sans.scss";
+@import "./md-theme.scss";
+@import "assets/sass/_master.scss";
 html,
 body {
   height: 100%;
@@ -20,7 +20,7 @@ a {
 }
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   // background: $bg-image no-repeat center center fixed;
@@ -65,14 +65,14 @@ body {
 
 .btn-primary:active,
 .btn-primary.active,
-.show>.btn-primary.dropdown-toggle {
+.show > .btn-primary.dropdown-toggle {
   background-color: darken($color-accent, 20%);
   border-color: darken($color-accent, 25%);
 }
 
 .btn:focus,
 .btn.focus {
-  box-shadow: 0 0 0 2px transparentize(desaturate($color-accent, 80%), .5);
+  box-shadow: 0 0 0 2px transparentize(desaturate($color-accent, 80%), 0.5);
 }
 
 /*modal*/
@@ -111,7 +111,7 @@ body {
 /*checkboxes*/
 
 .checkbox-style {
-  &>input {
+  & > input {
     opacity: 0;
   }
   .checkbox-box-style {
@@ -122,7 +122,7 @@ body {
     height: 20px;
     border-radius: 2px;
   }
-  &>input:checked~.checkbox-box-style {
+  & > input:checked ~ .checkbox-box-style {
     background: darken($bg-color, 15%);
     &:after {
       left: 7px;
@@ -132,11 +132,11 @@ body {
       border: solid black;
       border-width: 0 2px 2px 0;
       transform: rotate(45deg);
-      content: '';
+      content: "";
       position: absolute;
     }
   }
-  &>input:disabled~.checkbox-box-style {
+  & > input:disabled ~ .checkbox-box-style {
     background: gainsboro;
     cursor: not-allowed;
   }
@@ -174,7 +174,7 @@ a.dropdown-item {
     fill: rgba(0, 0, 0, 0.5);
   }
   .mat-menu-item.disabled {
-    opacity: .5;
+    opacity: 0.5;
     pointer-events: none;
   }
 }
@@ -190,12 +190,13 @@ a.dropdown-item {
 }
 
 .modal-content {
-  box-shadow: 0 11px 15px -7px rgba(0, 0, 0, .2), 0 24px 38px 3px rgba(0, 0, 0, .14), 0 9px 46px 8px rgba(0, 0, 0, .12);
+  box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.2), 0 24px 38px 3px rgba(0, 0, 0, 0.14),
+    0 9px 46px 8px rgba(0, 0, 0, 0.12);
   border-radius: 2px;
   border: none;
 }
 
-.modal-header>button.close {
+.modal-header > button.close {
   display: none;
 }
 
@@ -222,7 +223,7 @@ modal-container {
 }
 
 .modal.fade .modal-dialog {
-  transform: translate(0, 10%) scale(.9, .9);
+  transform: translate(0, 10%) scale(0.9, 0.9);
   transition-duration: 0.1s;
 }
 
@@ -252,16 +253,16 @@ dr-ml-train-dialog {
 }
 
 button.dialog-close {
-  transition: all .2s;
+  transition: all 0.2s;
   width: 30px;
   height: 30px;
   line-height: 0 !important;
   position: absolute;
   right: 0;
   margin: -20px -10px 0 0;
-  opacity: .4;
+  opacity: 0.4;
   &:hover {
-    opacity: .8;
+    opacity: 0.8;
   }
   mat-icon {
     width: 12px;
@@ -287,4 +288,10 @@ dr-move-folder {
 
 .flex-grow-fill {
   flex-grow: 1;
+}
+
+.text-overflow-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }

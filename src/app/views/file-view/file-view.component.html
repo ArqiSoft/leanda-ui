@@ -204,7 +204,8 @@
         <mat-chip *ngFor="let category of categoryTags" (removed)="remove(category)">{{ category?.title }}
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
-        <mat-chip class="c-pointer" (click)="openAssignTagDialog()">
+        <mat-chip class="c-pointer mat-chip mat-chip-with-avatar pl-1 pr-1" (click)="openAssignTagDialog()"
+          [selected]=true>
           <mat-icon>
             add
           </mat-icon>

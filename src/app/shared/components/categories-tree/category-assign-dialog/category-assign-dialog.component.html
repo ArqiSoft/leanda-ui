@@ -14,14 +14,9 @@
 
 
   <div mat-dialog-actions class="flex-row-reverse">
-    <button
-      mat-button
-      mat-primary
-      matDialogClose
-      [color]="'primary'"
-      (click)="save()"
-    >
-      Save
+    <!-- disable if no new selected -->
+    <button mat-button mat-primary matDialogClose [color]="'primary'" (click)="save()" [disabled]="disableSave()">
+      Add Categories
     </button>
   </div>
 </div>
@@ -29,38 +24,22 @@
 <!-- Category tree template -->
 <ng-template #tree>
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-        <button
-        mat-button
-        mat-icon-button
-        matTreeNodeToggle
-        [attr.aria-label]="'toggle ' + node.title"
-        [disabled]="!hasChild(null, node)"
-      >
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [attr.hasChildren]="hasChild(null, node)"
+      [attr.mainNode]="node.level === 0">
+      <button mat-button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.title"
+        [disabled]="!hasChild(null, node)">
         <mat-icon class="mat-icon-rtl-mirror" [hidden]="!hasChild(null, node)">
           {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
       </button>
-      <div class="checkbox">
-        <mat-checkbox
-          class="pt-2"
-          [ngClass]="{
-            selected:
-              checklistSelection.isSelected(node) || checkHasBeenAssigned(node)
-          }"
-          [checked]="
-            checklistSelection.isSelected(node) || checkHasBeenAssigned(node)
-          "
-          [disabled]="checkHasBeenAssigned(node)"
-          (change)="categoryLeafNodeSelectionToggle(node)"
-        >
-        </mat-checkbox>
-      </div>
-      <div
-        [matTooltip]="node.level === 0 ? node.title : getCategoryFullPath(node)"
-      >
+      <div class="text-overflow-ellipsis" [matTooltip]="node.level === 0 ? node.title : getCategoryFullPath(node)">
         {{ node.title }}
       </div>
+      <mat-checkbox class="pl-3 pr-3 pt-2"
+        [ngClass]="{ selected: checklistSelection.isSelected(node) || checkHasBeenAssigned(node)}"
+        [checked]="checklistSelection.isSelected(node) || checkHasBeenAssigned(node)"
+        [disabled]="checkHasBeenAssigned(node)" (change)="categoryLeafNodeSelectionToggle(node)">
+      </mat-checkbox>
     </mat-tree-node>
   </mat-tree>
 </ng-template>
