@@ -9,7 +9,7 @@ $padding: .5rem;
 }
 
 :host {
-  /deep/ .popover {
+  ::ng-deep .popover {
     min-width: 200px;
   }
 }

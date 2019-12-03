@@ -18,7 +18,7 @@ $tile-footer-height: 2rem;
     }
   }
   $lastI: 0;
-  @for $i from 1 through 4096/$width-offset {
+  @for $i from 1 through ceil(4096 / $width-offset) {
     @media only screen and (max-width: #{$width-min + $i * $width-offset}) and (min-width: #{$width-min + ($i - 1) * $width-offset + 1}) {
       .tile {
         width: #{100% / ($i + 1)};
