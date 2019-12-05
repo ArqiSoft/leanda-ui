@@ -78,7 +78,7 @@ import {
   ESidebarTab,
   ISidebarTab,
 } from './organize-view.model';
-import { CategoryNode } from 'app/shared/components/categories-tree/models/category-node';
+import { CategoryNode, CategoryTree } from 'app/shared/components/categories-tree/models/category-node';
 
 @Component({
   selector: 'dr-organize-view',
@@ -117,7 +117,7 @@ export class OrganizeViewComponent extends BrowserOptions
   folderContextMenuManager: ActionMenuItemsManager = new ActionMenuItemsManager();
   disabledMenu = false;
   sidebarTab: any = ESidebarTab;
-  currentSidebarTab: ESidebarTab;
+  currentSidebarTab = ESidebarTab.FILTERS;
 
   tabs: ISidebarTab[] = [
     {
@@ -137,8 +137,8 @@ export class OrganizeViewComponent extends BrowserOptions
   private idUrlParameter: string;
   private routeEventsSubscription: Subscription;
 
-  get categoriesTree(): Observable<CategoryNode[]> {
-    return this.categoryService.activeTree$;
+  get categoriesTree(): Observable<CategoryTree> {
+    return this.categoryService.tree$;
   }
 
   get currentView() {

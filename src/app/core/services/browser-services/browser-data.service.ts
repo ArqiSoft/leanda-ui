@@ -163,16 +163,20 @@ export class BrowserDataService extends BrowserDataBaseService {
          *  `mergeParams['$categories']` fnc
          */
       } else if (mergedParams['$category']) {
-        this.getEntitiesWithTag(mergedParams).subscribe(
-          (data: BrowserData) => {
-            this.data = data;
-            this.paginator.setPaginatorData(data.count);
-            this.browserLoading = false;
-          },
-          () => {
-            this.browserLoading = false;
-          },
-        );
+        if (this.categoriesService.selectedNode && this.categoriesService.selectedNode.id) {
+          this.getEntitiesWithTag(mergedParams).subscribe(
+            (data: BrowserData) => {
+              this.data = data;
+              this.paginator.setPaginatorData(data.count);
+              this.browserLoading = false;
+            },
+            () => {
+              this.browserLoading = false;
+            },
+          );
+        } else {
+          this.router.navigate(['organize/drafts']);
+        }
       } else {
         this.getItems(mergedParams).subscribe(
           data => {

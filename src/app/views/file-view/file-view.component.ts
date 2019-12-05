@@ -20,6 +20,7 @@ import { CategoryService } from 'app/core/services/category/category.service';
 import { CategoryAssignDialogComponent } from 'app/shared/components/categories-tree/category-assign-dialog/category-assign-dialog.component';
 import { environment } from 'environments/environment';
 import { Observable, Subscription } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 import { BlobsApiService } from '../../core/services/api/blobs-api.service';
 import { CategoryTreeApiService } from '../../core/services/api/category-tree-api.service';
@@ -62,7 +63,6 @@ import { PropertiesInfoBoxComponent } from '../../shared/components/properties-i
 import { SharedLinksComponent } from '../../shared/components/shared-links/shared-links.component';
 import { SidebarContentService } from '../../shared/components/sidebar-content/sidebar-content.service';
 import { FileViewType } from '../../shared/models/file-view-type';
-import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'dr-file-view',
@@ -302,7 +302,8 @@ export class FileViewComponent extends BrowserOptions
 
     this.getTreeList().subscribe(treeList => {
       this.getTree(treeList[0].id).subscribe(tree => {
-        this.categoryService.activeTree = this.categories = tree.nodes;
+        this.categoryService.tree = tree;
+        this.categories = tree.nodes;
         this.getEntityCategories(file_id);
       });
     });

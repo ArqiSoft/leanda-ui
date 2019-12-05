@@ -33,8 +33,6 @@ export class CategoryAssignDialogComponent extends CategoryTreeBase
   implements OnInit, OnDestroy {
   private destroy$ = new Subject<any>();
 
-  categories = Array<CategoryTree>();
-
   /** The selection for checklist */
   checklistSelection = new SelectionModel<CategoryFlatNode>(
     true /* multiple */,
@@ -69,7 +67,7 @@ export class CategoryAssignDialogComponent extends CategoryTreeBase
     this.dataSource.data = this.data.assignedCategories as CategoryNode[];
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngOnDestroy(): void {
     this.destroy$.next();

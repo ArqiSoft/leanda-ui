@@ -23,7 +23,7 @@ export class CategoryTreeBase implements OnInit {
 
   dataSource: MatTreeFlatDataSource<CategoryNode, CategoryFlatNode>;
 
-  categories: CategoryTree[];
+  treeList: CategoryTree[];
 
   treeInfo: CategoryTreeInfo;
 
@@ -44,7 +44,7 @@ export class CategoryTreeBase implements OnInit {
   hasNoContent = (_: number, _nodeData: CategoryFlatNode) =>
     _nodeData.title === ''
 
-  hasCategories = () => this.categories.length !== null;
+  hasTrees = () => this.treeList.length !== null;
 
   treeHasOneMainNode = () => this.dataSource.data.length === 1;
 

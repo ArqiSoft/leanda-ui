@@ -13,14 +13,12 @@ import {
   providedIn: 'root',
 })
 export class CategoryService extends CategoryTreeBase {
-  private _selectedCategory: BehaviorSubject<
-    CategoryNode
-  > = new BehaviorSubject({ id: '', title: 'NONE' });
-  private _tree: BehaviorSubject<CategoryNode[]> = new BehaviorSubject([]);
+  private _selectedNode: BehaviorSubject<CategoryNode> = new BehaviorSubject({ id: '', title: 'NONE' });
+  private _tree: BehaviorSubject<CategoryTree> = new BehaviorSubject(null);
   private _treeList: BehaviorSubject<CategoryTree[]> = new BehaviorSubject([]);
 
   get flatTree(): CategoryFlatNode[] {
-    return this.treeFlattener.flattenNodes(this.activeTree);
+    return this.treeFlattener.flattenNodes(this.tree.nodes);
   }
 
   get treeList(): CategoryTree[] {
@@ -30,24 +28,24 @@ export class CategoryService extends CategoryTreeBase {
     this._treeList.next(value);
   }
 
-  get activeTree(): CategoryNode[] {
+  get tree(): CategoryTree {
     return this._tree.value;
   }
-  get activeTree$(): Observable<CategoryNode[]> {
+  get tree$(): Observable<CategoryTree> {
     return this._tree.asObservable();
   }
-  set activeTree(value: CategoryNode[]) {
+  set tree(value: CategoryTree) {
     this._tree.next(value);
   }
 
   get selectedNode(): CategoryNode {
-    return this._selectedCategory.value;
+    return this._selectedNode.value;
   }
   get selectedNode$(): Observable<CategoryNode> {
-    return this._selectedCategory.asObservable();
+    return this._selectedNode.asObservable();
   }
   set selectedNode(value: CategoryNode) {
-    this._selectedCategory.next(value);
+    this._selectedNode.next(value);
   }
 
   constructor() {

@@ -45,9 +45,9 @@ export class CategoryTreeComponent implements OnInit, OnDestroy {
     private api: CategoryTreeApiService,
     private entityCounterService: EntityCountsService,
     private nodesApi: NodesApiService,
-  ) {}
+  ) { }
 
-  private get categories(): CategoryTree[] {
+  get categories(): CategoryTree[] {
     return this.service.treeList;
   }
 
@@ -55,9 +55,9 @@ export class CategoryTreeComponent implements OnInit, OnDestroy {
     this.service.selectedNode$
       .pipe(takeUntil(this.destroy$))
       .subscribe(node => (this.selectedNode = node));
-    this.service.activeTree$
+    this.service.tree$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(tree => (this.dataSource.data = tree));
+      .subscribe(tree => (this.dataSource.data = tree.nodes));
 
     this.nodesApi
       .getNodeWithFilter({ pageNumber: 1, pageSize: 20 })
@@ -157,9 +157,8 @@ export class CategoryTreeComponent implements OnInit, OnDestroy {
     this.api
       .getTree(id)
       .subscribe(
-        (tree: CategoryTree) =>
-        {
-          this.service.activeTree = tree.nodes;
+        (tree: CategoryTree) => {
+          this.service.tree = tree;
           this.dataSource.data = tree.nodes;
         },
         (err: any) => console.error(`Coudn't retrieve tree with id - ${id}`),

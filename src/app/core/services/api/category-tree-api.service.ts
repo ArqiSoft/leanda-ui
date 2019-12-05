@@ -45,9 +45,9 @@ export class CategoryTreeApiService {
     );
   }
 
-  updateTreeNode(id: string, node: CategoryNode): Observable<any> {
+  updateTreeNode(id: string, node: CategoryNode, version: number): Observable<any> {
     return this.http.put<any>(
-      `${environment.apiUrl}/categorytrees/tree/${id}/${node.id}`,
+      `${environment.apiUrl}/categorytrees/tree/${id}/${node.id}?$version=${version}`,
       node,
     );
   }

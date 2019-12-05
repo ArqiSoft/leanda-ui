@@ -7,7 +7,7 @@
   <div class="row">
     <!-- Left column -->
     <div [ngClass]="{ 'col-8': !isTreeEmpty(), 'col-6': isTreeEmpty() }">
-      <div class="card" [ngSwitch]="isTreeEmpty() && hasCategories()">
+      <div class="card" [ngSwitch]="isTreeEmpty() && hasTrees()">
         <ng-container *ngSwitchCase="true">
           <ng-container *ngTemplateOutlet="emptyTree"></ng-container>
         </ng-container>

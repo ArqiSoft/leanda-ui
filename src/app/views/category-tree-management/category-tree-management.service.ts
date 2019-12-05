@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest, throwError } from 'rxjs';
-import { catchError, delay, map, tap } from 'rxjs/operators';
+import { catchError, delay, distinctUntilChanged, map, tap } from 'rxjs/operators';
 
 import { CategoryTreeApiService } from '../../core/services/api/category-tree-api.service';
 import { UsersApiService } from '../../core/services/api/users-api.service';
@@ -18,8 +18,6 @@ import {
 
 import { CategoryTreeInfo } from './CategoryTreeInfo';
 
-type Tree = CategoryNode[];
-
 @Injectable({
   providedIn: 'root',
 })
@@ -31,33 +29,12 @@ export class CategoryTreeManagmentService {
 
   dataChange = new BehaviorSubject<CategoryNode[]>([]);
 
-  private _category = new BehaviorSubject<CategoryTree>(null);
-  private _categoryList = new BehaviorSubject<CategoryTree[]>([]);
-
-  get tree(): Tree {
-    return this.dataChange.value;
-  }
-
-  get categoryList(): CategoryTree[] {
-    return this._categoryList.value;
-  }
-
-  get category(): CategoryTree {
-    return this._category.value;
-  }
-
-  set category(category: CategoryTree) {
-    this._category.next(category);
-  }
-
   constructor(
     private api: CategoryTreeApiService,
     private service: CategoryService,
     private userApi: UsersApiService,
     private notification: NotificationsService,
-  ) {
-    this.initialize();
-  }
+  ) { }
 
   /**
    * Initializing categories
@@ -66,11 +43,11 @@ export class CategoryTreeManagmentService {
     // retriving list of avalible categories
     this.getTreeList().subscribe((categories: CategoryTree[]) => {
       // notyfing `categories` subject
-      this._categoryList.next(categories);
+      this.service.treeList = categories;
       // if categories list is not empty - retrieving first category as default
       // TBD: change when `Leanda` will support multiple categories functionality
       if (categories !== null && categories.length !== 0) {
-        this.getCategoryTree(this.categoryList[0].id);
+        this.getCategoryTree(this.service.treeList[0].id);
       } else if (categories.length === 0) {
         this.dataChange.next([]);
       } else {
@@ -85,14 +62,11 @@ export class CategoryTreeManagmentService {
    * @param name Title of the category to be pushed as child
    */
   insertItem(parent: CategoryNode, name: string) {
-    if (parent.children) {
-      parent.children.push({ title: name } as CategoryNode);
-      this.dataChange.next(this.tree);
-    } else {
+    if (!parent.children) {
       parent.children = [];
-      parent.children.push({ title: name } as CategoryNode);
-      this.dataChange.next(this.tree);
     }
+    parent.children.push({ title: name } as CategoryNode);
+    this.dataChange.next(this.service.tree.nodes);
   }
 
   /**
@@ -101,8 +75,10 @@ export class CategoryTreeManagmentService {
    * @param name Title of the category to be pushed as child
    */
   insertMainItem() {
-    this.tree.push({ title: '' } as CategoryNode);
-    this.dataChange.next(this.tree);
+    const tree = this.service.tree;
+    tree.nodes.push({ title: '' } as CategoryNode);
+    this.service.tree = tree;
+    this.dataChange.next(this.service.tree.nodes);
   }
 
   /**
@@ -132,10 +108,10 @@ export class CategoryTreeManagmentService {
 
     // if there is no ID assigned to a node, store in memory until user update entire tree
     node.title = title;
-    this.dataChange.next(this.tree);
+    this.dataChange.next(this.service.tree.nodes);
     // update entire tree in order to get ids for cached on FE nodes and their children
     this.updateTree().subscribe(res =>
-      this.getCategoryTree(this.categoryList[0].id),
+      this.getCategoryTree(this.service.tree.id),
     );
   }
 
@@ -144,32 +120,33 @@ export class CategoryTreeManagmentService {
   }
 
   /**
-   * This method removes the first by deepnest elements of CategoryNode[]
+   * Removes the first by deepnest elements of CategoryNode[]
    * @param deletedNode the node that has to be deleted
    */
   removeNode(deletedNode: CategoryNode) {
     this.api
       .deleteTreeNode(
-        this.categoryList[0].id,
+        this.service.tree.id,
         deletedNode,
-        this.categoryList[0].version,
+        this.service.tree.version,
       )
-      .subscribe(() =>
-        this.dataChange.next(this.tree.filter(node => node !== deletedNode)),
-      );
+      .subscribe(() => {
+        this.getCategoryTree(this.service.tree.id);
+        this.dataChange.next(this.service.tree.nodes.filter(node => node !== deletedNode));
+      });
   }
 
   /**
-   * This method removes selected node by deep searching into elements of CategoryNode[]
+   * Removes selected node by deep searching into elements of CategoryNode[]
    * @param deletedNode the node that has to be deleted
    */
   removeNestedNode(parent: CategoryNode, deletedNode: CategoryNode) {
     if (parent.children) {
       this.api
         .deleteTreeNode(
-          this.categoryList[0].id,
+          this.service.tree.id,
           deletedNode,
-          this.categoryList[0].version,
+          this.service.tree.version,
         )
         .subscribe(() => {
           if (deletedNode.title === '') {
@@ -183,7 +160,8 @@ export class CategoryTreeManagmentService {
               node => node !== deletedNode,
             );
           }
-          this.dataChange.next(this.tree);
+          this.getCategoryTree(this.service.tree.id);
+          this.dataChange.next(this.service.tree.nodes);
         });
     } else {
       parent.children = parent.children
@@ -196,22 +174,12 @@ export class CategoryTreeManagmentService {
    * Updated entire tree
    */
   updateTree(): Observable<boolean> {
-    // this.api.updateTree(this.currentCategory, this.tree);
+    // this.api.updateTree(this.currentCategory, this.service.tree.nodes);
     return this.api.updateTree(
-      this.categoryList[0].id,
-      this.tree,
-      this.categoryList[0].version,
+      this.service.tree.id,
+      this.service.tree.nodes,
+      this.service.tree.version,
     );
-  }
-
-  /**
-   *
-   * @param id category id
-   * @param node category tree node id
-   * @param nodes category tree new nodes
-   */
-  updateTreeNode(node: CategoryNode): Observable<string> {
-    return this.api.updateTreeNode(this.categoryList[0].id, node);
   }
 
   /**
@@ -225,7 +193,7 @@ export class CategoryTreeManagmentService {
           .pipe(delay(1000))
           .pipe(tap(() => this.getCategoryTree(category_id)))
           .subscribe(
-            categories => this._categoryList.next(categories),
+            categories => this.service.treeList = categories,
             error => throwError(`Couldn't retrieve list of available trees`),
           ),
       error => throwError(`Couldn't create tree`),
@@ -245,8 +213,8 @@ export class CategoryTreeManagmentService {
         const treeInfo: CategoryTreeInfo = {
           createdBy: `${_createdBy.firstName} ${_createdBy.lastName}`,
           updatedBy: `${_updatedBy.firstName} ${_updatedBy.lastName}`,
-          createdDateTime: this.categoryList[0].createdDateTime,
-          updatedDateTime: this.categoryList[0].updatedDateTime,
+          createdDateTime: this.service.tree.createdDateTime,
+          updatedDateTime: this.service.tree.updatedDateTime,
         };
 
         return treeInfo;
@@ -256,6 +224,17 @@ export class CategoryTreeManagmentService {
       }),
     );
   }
+
+  /**
+   *
+   * @param id category id
+   * @param node category tree node id
+   * @param nodes category tree new nodes
+   */
+  private updateTreeNode(node: CategoryNode): Observable<string> {
+    return this.api.updateTreeNode(this.service.tree.id, node, this.service.tree.version);
+  }
+
   /**
    * Method to retireve `CategoryTree` tree by parameter
    * @param id Tree GUID
@@ -263,10 +242,13 @@ export class CategoryTreeManagmentService {
   private getCategoryTree(id: string): void {
     this.api
       .getTree(id)
-      .pipe(delay(500))
+      .pipe(distinctUntilChanged((prev, curr) => prev.version < curr.version))
       .subscribe(
         tree => {
-          this.service.activeTree = tree.nodes ? tree.nodes : [];
+          console.log(tree.version);
+          this.service.tree = tree;
+          this.updateTreeVersion(tree.version);
+          // this.service.tree.nodes = tree.nodes ? tree.nodes : [];
           this.dataChange.next(tree.nodes !== null ? tree.nodes : []);
         },
         error => throwError(`Couldn't retrieve tree with id ${id}`),
@@ -275,5 +257,16 @@ export class CategoryTreeManagmentService {
   /** Method to retrieve from api list of available trees */
   private getTreeList(): Observable<CategoryTree[]> {
     return this.api.getTreeList();
+  }
+
+  /**
+   * Updates Category First Tree Version
+   */
+  private updateTreeVersion(newVersion: number): void {
+    if (this.service.treeList.length > 0 && this.service.tree.version !== newVersion) {
+      this.service.tree.version = newVersion;
+    } else if (this.service.tree.version === newVersion) {
+      console.log('Version has not been changed');
+    }
   }
 }

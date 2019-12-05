@@ -2,6 +2,7 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
+import { CategoryService } from 'app/core/services/category/category.service';
 
 import { CategoryTreeBase } from '../../shared/components/categories-tree/category-base';
 import {
@@ -19,7 +20,8 @@ import { CategoryTreeManagmentService } from './category-tree-management.service
 export class CategoryTreeManagmentComponent extends CategoryTreeBase
   implements OnInit {
   constructor(
-    private service: CategoryTreeManagmentService,
+    private service: CategoryService,
+    private serviceManagment: CategoryTreeManagmentService,
     private location: Location,
   ) {
     super();
@@ -40,12 +42,13 @@ export class CategoryTreeManagmentComponent extends CategoryTreeBase
   }
 
   ngOnInit() {
-    this.service.dataChange.subscribe((data: CategoryNode[]) => {
+    this.serviceManagment.initialize();
+    this.serviceManagment.dataChange.subscribe((data: CategoryNode[]) => {
       this.dataSource.data = data;
-      this.categories = this.service.categoryList;
-      if (this.service.categoryList.length > 0) {
-        this.service
-          .treeInfo(this.categories[0].createdBy, this.categories[0].updatedBy)
+      this.treeList = this.service.treeList;
+      if (this.service.treeList.length > 0) {
+        this.serviceManagment
+          .treeInfo(this.treeList[0].createdBy, this.treeList[0].updatedBy)
           .subscribe(res => (this.treeInfo = res));
       }
     });
@@ -61,19 +64,19 @@ export class CategoryTreeManagmentComponent extends CategoryTreeBase
     const node = new CategoryNode();
 
     node.title = title;
-    this.service.createTree([node]);
+    this.serviceManagment.createTree([node]);
   }
 
   /** Insert new node. */
   addNewNode(node: CategoryFlatNode): void {
     const parentNode = this.flatNodeMap.get(node);
-    this.service.insertItem(parentNode, '');
+    this.serviceManagment.insertItem(parentNode, '');
     this.treeControl.expand(node);
   }
 
   /** Insert new main node. */
   addNewMainNode(node: CategoryFlatNode): void {
-    this.service.insertMainItem();
+    this.serviceManagment.insertMainItem();
     this.treeControl.expand(node);
   }
 
@@ -84,9 +87,9 @@ export class CategoryTreeManagmentComponent extends CategoryTreeBase
     const nestedNode = this.flatNodeMap.get(node);
 
     if (!parentNode) {
-      this.service.removeNode(nestedNode);
+      this.serviceManagment.removeNode(nestedNode);
     } else {
-      this.service.removeNestedNode(parentNode, nestedNode);
+      this.serviceManagment.removeNestedNode(parentNode, nestedNode);
       if (!parentNode.children || parentNode.children.length === 0) {
         parentFlatNode.isEditEnabled = false;
       }
@@ -96,19 +99,19 @@ export class CategoryTreeManagmentComponent extends CategoryTreeBase
   /** Save the node to database */
   saveNode(node: CategoryFlatNode, title: string): void {
     const nestedNode = this.flatNodeMap.get(node);
-    this.service.updateItem(nestedNode, title);
+    this.serviceManagment.updateItem(nestedNode, title);
   }
 
   /** Updates entire tree*/
   updateTree(): void {
-    this.service.updateTree();
+    this.serviceManagment.updateTree();
   }
 
   /** Remove entire tree*/
   removeTree() {
-    this.service.deleteTree(
-      this.service.categoryList[0].id,
-      this.service.categoryList[0].version,
+    this.serviceManagment.deleteTree(
+      this.service.treeList[0].id,
+      this.service.treeList[0].version,
     );
   }
 
