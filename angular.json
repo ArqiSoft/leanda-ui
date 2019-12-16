@@ -37,7 +37,7 @@
                 "output": "/"
               },
               {
-                "glob": "jenkinsBuildData.json",
+                "glob": "buildInfo.json",
                 "input": "src",
                 "output": "/"
               },
@@ -210,7 +210,7 @@
                 "output": "/"
               },
               {
-                "glob": "jenkinsBuildData.json",
+                "glob": "buildInfo.json",
                 "input": "src",
                 "output": "/"
               },

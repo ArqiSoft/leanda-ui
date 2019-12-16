@@ -1,7 +1,41 @@
-import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { environment } from 'environments/environment';
 
 @Component({
-  templateUrl: './labwiz.component.html',
-  styleUrls: ['./labwiz.component.scss'],
+  selector: 'dr-leanda-home',
+  templateUrl: './leanda.component.html',
+  styleUrls: ['./leanda.component.scss'],
 })
-export class LabwizHomeComponent {}
+export class LabwizHomeComponent implements OnInit {
+  buildTime: number;
+  buildNumber: string;
+  apiVersion: number;
+  environment: string;
+  error = false;
+  profileExists = false;
+  currentYear = new Date().getFullYear();
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.getBuildData();
+  }
+
+  getBuildData() {
+    this.http.get(`${environment.apiUrl}/version`).subscribe((x: any) => {
+      const data = x.build;
+      this.apiVersion = data.version;
+    });
+    /*
+     * Jenkins is replacing "buildInfo.json" with its own, setting build id and time
+     * For local develoment set path to './src/buildInfo.json'
+     */
+    this.http.get('./buildInfo.json').subscribe((res: any) => {
+      const data = res.buildInfo;
+      this.buildNumber = data.buildId;
+      this.buildTime = data.buildDate;
+      this.environment = data.environment;
+    });
+  }
+}

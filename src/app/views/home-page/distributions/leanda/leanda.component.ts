@@ -28,10 +28,10 @@ export class LeandaHomeComponent implements OnInit {
       this.apiVersion = data.version;
     });
     /*
-     * Jenkins is replacing "jenkinsBuildData.json" with its own, setting build id and time
-     * For local develoment set path to './src/jenkinsBuildData.json'
+     * Jenkins is replacing "buildInfo.json" with its own, setting build id and time
+     * For local develoment set path to './src/buildInfo.json'
      */
-    this.http.get('./jenkinsBuildData.json').subscribe((res: any) => {
+    this.http.get('./buildInfo.json').subscribe((res: any) => {
       const data = res.buildInfo;
       this.buildNumber = data.buildId;
       this.buildTime = data.buildDate;
