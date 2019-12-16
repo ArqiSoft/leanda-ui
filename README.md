@@ -55,14 +55,6 @@ Build (replace `deploy` with `test`, `uat`, `dev` etc)
 docker build --build-arg APP_ENV=deploy -t leanda/ui:latest .
 ```
 
-Build FVC
-
-Replace API URLS in `src/environments/environment.deploy-fvc.ts`
-
-```terminal
-npm run build-deploy-fvc
-```
-
 Run
 
 ```terminal
@@ -74,3 +66,17 @@ Use Leanda docker-compose
 ```terminal
 docker-compose -f docker-compose.leanda.services.local.yml up
 ```
+
+## Build a specific Leanda distribution. For example FVC
+
+Replace API URLS in `src/environments/environment.deploy-fvc.ts`
+
+```terminal
+npm run build-deploy-fvc
+```
+
+Currently there are 3 types of distributions:
+
+- Leanda (default, code `leanda`)
+- FVC, code `fvc`
+- LabWiz, code `labwiz`

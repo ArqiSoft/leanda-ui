@@ -3,9 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from 'environments/environment';
 
 @Component({
-  selector: 'dr-leanda-home',
-  templateUrl: './leanda.component.html',
-  styleUrls: ['./leanda.component.scss'],
+  selector: 'dr-labwiz-home',
+  templateUrl: './labwiz.component.html',
+  styleUrls: ['./labwiz.component.scss'],
 })
 export class LabwizHomeComponent implements OnInit {
   buildTime: number;
