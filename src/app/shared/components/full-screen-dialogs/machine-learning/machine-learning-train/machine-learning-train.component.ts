@@ -293,7 +293,7 @@ export class MachineLearningTrainComponent implements OnInit, AfterViewInit, OnD
   }
 
   isFolderExist(id: Guid): void {
-    this.auth.user.profile.sub === id ?
+    this.auth.user.profile.sub === id.toString() ?
       this.parameters.folderName = 'DRAFTS' :
       this.nodesApi.getRawNode(id).subscribe(() => { }, error => this.parameters.folderName = 'DRAFTS');
   }
