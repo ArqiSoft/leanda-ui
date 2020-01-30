@@ -6,15 +6,15 @@
 export const environment = {
   name: 'TEST',
   production: false,
-  identityServerUrl: 'I___IDENTITY_SERVER_URL___I',
-  apiUrl: 'I___CORE_API_URL___I',
-  blobStorageApiUrl: 'I___BLOB_STORAGE_API_URL___I',
-  imagingUrl: 'I___IMAGING_URL___I',
-  signalrUrl: 'I___SIGNALR_URL___I',
-  metadataUrl: 'I___METADATA_URL___I',
+  identityServerUrl: 'https://id.leanda.io/auth/realms/OSDR',
+  apiUrl: 'https://api-leandalabwiz.leanda.io/core-api/v1/api',
+  blobStorageApiUrl: 'https://api-leandalabwiz.leanda.io/blob/v1/api',
+  imagingUrl: 'http://api.leanda.io/imaging/v1/api',
+  signalrUrl: 'https://api-leandalabwiz.leanda.io/core-api/v1/signalr',
+  metadataUrl: 'http://api.leanda.io/metadata/v1/api',
   notificationTimeOut: 60 * 60 * 1 * 1000,
-  proxyJSMOL: 'I___PROXY_JSMOL_URL___I',
-  ketcher: 'I___KETCHER_URL___I',
+  proxyJSMOL: 'https://api.leanda.io/core-api/v1/api/proxy/jsmol',
+  ketcher: 'https://core.leanda.io/ketcher/indigo/layout',
   maxBlobUploadingFileSize: 10240 * 1024,
   capabilities: {
     chemical: true,
@@ -31,11 +31,11 @@ export const environment = {
     login: true,
     fvc: false,
     ssp: false,
-    labwiz: true
+    labwiz: true,
   },
   distribution:
   {
     code: 'labwiz',
-    title: 'LabWiz'
-  }
+    title: 'LabWiz',
+  },
 };
