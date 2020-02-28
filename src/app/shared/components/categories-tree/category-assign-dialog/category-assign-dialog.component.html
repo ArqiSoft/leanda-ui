@@ -27,7 +27,7 @@
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [attr.hasChildren]="hasChild(null, node)"
       [attr.mainNode]="node.level === 0">
       <button mat-button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.title"
-        [disabled]="!hasChild(null, node)">
+        [disabled]="  !hasChild(null, node)">
         <mat-icon class="mat-icon-rtl-mirror" [hidden]="!hasChild(null, node)">
           {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>

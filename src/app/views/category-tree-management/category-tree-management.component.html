@@ -3,15 +3,22 @@
 
 <!-- Tree Managment -->
 <div class="container-fluid">
-  <h3>Categories</h3>
+  <div class="row">
+    <div class="col-12">
+      <h3>Categories</h3>
+    </div>
+  </div>
   <div class="row">
     <!-- Left column -->
-    <div [ngClass]="{ 'col-8': !isTreeEmpty(), 'col-6': isTreeEmpty() }">
-      <div class="card" [ngSwitch]="isTreeEmpty() && hasCategories()">
-        <ng-container *ngSwitchCase="true">
+    <div
+      class="pr-2"
+      [ngClass]="{ 'col-8': !isTreeEmpty(), 'col-6': isTreeEmpty() }"
+    >
+      <div class="card" [ngSwitch]="contentStatus | async">
+        <ng-container *ngSwitchCase="status.new">
           <ng-container *ngTemplateOutlet="emptyTree"></ng-container>
         </ng-container>
-        <ng-container *ngSwitchCase="false">
+        <ng-container *ngSwitchCase="status.ready">
           <ng-container *ngTemplateOutlet="tree"></ng-container>
           <div class="d-flex flex-grow-fill"></div>
           <div class="d-flex justify-content-end">
@@ -26,9 +33,13 @@
             </button>
           </div>
         </ng-container>
-        <ng-container *ngSwitchDefault>
+        <ng-container *ngSwitchCase="status.error">
+          <h1 class="text-danger">Error</h1>
+        </ng-container>
+        <ng-container *ngSwitchCase="status.processing">
           <mat-spinner></mat-spinner>
         </ng-container>
+        <ng-container *ngSwitchDefault> </ng-container>
       </div>
     </div>
 
@@ -38,10 +49,14 @@
       <div *ngIf="!isTreeEmpty()" class="card h-50">
         <h4>Category Info</h4>
         <ul>
-          <li>Created by: {{ treeInfo?.createdBy }}</li>
-          <li>Created date: {{ treeInfo?.createdDateTime | date: 'short' }}</li>
-          <li>Updated by: {{ treeInfo?.updatedBy }}</li>
-          <li>Updated date: {{ treeInfo?.updatedDateTime | date: 'short' }}</li>
+          <li>Created by: {{ treeInfo()?.createdBy }}</li>
+          <li>
+            Created date: {{ treeInfo()?.createdDateTime | date: "short" }}
+          </li>
+          <li>Updated by: {{ treeInfo()?.updatedBy }}</li>
+          <li>
+            Updated date: {{ treeInfo()?.updatedDateTime | date: "short" }}
+          </li>
         </ul>
       </div>
       <!-- Tree Managment Rules -->
@@ -63,7 +78,7 @@
   </div>
 </div>
 
-<!-- 
+<!--
   * Empty category tree template.
   * Asks to enter first in the category node name.
   * Category name field support TBD
@@ -118,8 +133,8 @@
     <mat-icon>add</mat-icon>
   </button>
 
-  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-    <!-- 
+  <mat-tree #matTree [dataSource]="dataSource" [treeControl]="treeControl">
+    <!--
       * Existing node with title and with/without children
      -->
     <mat-tree-node
@@ -138,19 +153,19 @@
         [disabled]="!hasChild(null, node)"
       >
         <mat-icon class="mat-icon-rtl-mirror" [hidden]="!hasChild(null, node)">
-          {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+          {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
         </mat-icon>
       </button>
 
       <!-- Container
-        * Draws 'nodeTemp' which contains node title and actions buttons 
+        * Draws 'nodeTemp' which contains node title and actions buttons
       -->
       <ng-container
         *ngTemplateOutlet="nodeTemp; context: { node: node }"
       ></ng-container>
     </mat-tree-node>
 
-    <!-- 
+    <!--
       * New node without title and without children
      -->
     <mat-tree-node
@@ -170,10 +185,10 @@
         />
         <button
           mat-button
-          [disabled]="newNodeTitle.value === ''"
           matSuffix
           mat-icon-button
           aria-label="Clear"
+          [disabled]="newNodeTitle.length === 0"
           (click)="newNodeTitle.value = ''"
         >
           <mat-icon>close</mat-icon>
@@ -205,32 +220,14 @@
   <ng-container [ngSwitch]="node.isEditEnabled">
     <!-- Edit node mode layout-->
     <ng-container *ngSwitchCase="true">
-      <ng-container
-        *ngTemplateOutlet="editNodeTemp; context: { node: node }"
-      ></ng-container>
+      <ng-container *ngTemplateOutlet="editNodeTemp; context: { node: node }">
+      </ng-container>
     </ng-container>
 
     <!-- Reguular node layout -->
     <ng-container *ngSwitchCase="false">
-      <!-- Node Title -->
-      <div class="pr-3">{{ node.title }}</div>
-      <!-- Add new sub-node -->
-      <button
-        mat-button
-        class="node-icon-button mx-0-1 vsc-button"
-        (click)="addNewNode(node)"
-      >
-        <mat-icon>add</mat-icon>
-      </button>
-      <!-- Remove current node -->
-      <button
-        mat-button
-        class="node-icon-button mx-0-1 vsc-button"
-        (click)="removeNode(node)"
-        [disabled]="treeHasOneMainNode() && node.level === 0"
-      >
-        <mat-icon>remove</mat-icon>
-      </button>
+      <ng-container *ngTemplateOutlet="defNodeTemp; context: { node: node }">
+      </ng-container>
     </ng-container>
   </ng-container>
 
@@ -281,5 +278,27 @@
     (click)="saveNode(node, newTitle.value)"
   >
     Save
+  </button>
+</ng-template>
+
+<ng-template #defNodeTemp let-node="node">
+  <!-- Node Title -->
+  <div class="pr-3">{{ node.title }}</div>
+  <!-- Add new sub-node -->
+  <button
+    mat-button
+    class="node-icon-button mx-0-1 vsc-button"
+    (click)="addNewNode(node)"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+  <!-- Remove current node -->
+  <button
+    mat-button
+    class="node-icon-button mx-0-1 vsc-button"
+    (click)="removeNode(node)"
+    [disabled]="treeHasOneMainNode() && node.level === 0"
+  >
+    <mat-icon>remove</mat-icon>
   </button>
 </ng-template>

@@ -11,63 +11,63 @@ import {
   Type,
   ViewChild,
   ViewChildren,
-  ViewContainerRef,
-} from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
-import { CategoryEntityApiService } from 'app/core/services/api/category-entity-api.service';
-import { CategoryService } from 'app/core/services/category/category.service';
-import { CategoryAssignDialogComponent } from 'app/shared/components/categories-tree/category-assign-dialog/category-assign-dialog.component';
-import { environment } from 'environments/environment';
-import { Observable, Subscription } from 'rxjs';
+  ViewContainerRef
+} from "@angular/core";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { ActivatedRoute, NavigationEnd, Params, Router } from "@angular/router";
+import { CategoryEntityApiService } from "app/core/services/api/category-entity-api.service";
+import { CategoryStorageService } from "app/core/services/category/category-storage.service";
+import { CategoryAssignDialogComponent } from "app/shared/components/categories-tree/category-assign-dialog/category-assign-dialog.component";
+import { environment } from "environments/environment";
+import { Observable, Subscription } from "rxjs";
 
-import { BlobsApiService } from '../../core/services/api/blobs-api.service';
-import { CategoryTreeApiService } from '../../core/services/api/category-tree-api.service';
-import { EntitiesApiService } from '../../core/services/api/entities-api.service';
-import { FoldersApiService } from '../../core/services/api/folders-api.service';
-import { ImagesApiService } from '../../core/services/api/images-api.service';
-import { BrowserDataBaseService } from '../../core/services/browser-services/browser-data-base.service';
-import { IBrowserEvent } from '../../core/services/browser-services/browser-data.service';
-import { PaginatorManagerService } from '../../core/services/browser-services/paginator-manager.service';
-import { PageTitleService } from '../../core/services/page-title/page-title.service';
-import { SignalrService } from '../../core/services/signalr/signalr.service';
+import { BlobsApiService } from "../../core/services/api/blobs-api.service";
+import { CategoryTreeApiService } from "../../core/services/api/category-tree-api.service";
+import { EntitiesApiService } from "../../core/services/api/entities-api.service";
+import { FoldersApiService } from "../../core/services/api/folders-api.service";
+import { ImagesApiService } from "../../core/services/api/images-api.service";
+import { BrowserDataBaseService } from "../../core/services/browser-services/browser-data-base.service";
+import { IBrowserEvent } from "../../core/services/browser-services/browser-data.service";
+import { PaginatorManagerService } from "../../core/services/browser-services/paginator-manager.service";
+import { PageTitleService } from "../../core/services/page-title/page-title.service";
+import { SignalrService } from "../../core/services/signalr/signalr.service";
 import {
   CategoryFlatNode,
   CategoryNode,
-  CategoryTree,
-} from '../../shared/components/categories-tree/models/category-node';
-import { ExportDialogComponent } from '../../shared/components/export-dialog/export-dialog.component';
-import { CifPreviewComponent } from '../../shared/components/file-views/cif-preview/cif-preview.component';
-import { CSVPreviewComponent } from '../../shared/components/file-views/csv-preview/csv-preview.component';
-import { IFilePreviewComponent } from '../../shared/components/file-views/file-view.model';
-import { ImageFileViewComponent } from '../../shared/components/file-views/image-file-view/image-file-view.component';
-import { MicroscopyViewComponent } from '../../shared/components/file-views/microscopy-view/microscopy-view.component';
-import { OfficePreviewComponent } from '../../shared/components/file-views/office-preview/office-preview.component';
-import { PdfFileViewComponent } from '../../shared/components/file-views/pdf-file-view/pdf-file-view.component';
-import { SavFileViewComponent } from '../../shared/components/file-views/sav-file-view/sav-file-view.component';
-import { SpectraJsmolPreviewComponent } from '../../shared/components/file-views/spectra-jsmol-preview/spectra-jsmol-preview.component';
-import { FilterField } from '../../shared/components/filter-bar/filter-bar.model';
-import { GenericMetadataPreviewComponent } from '../../shared/components/generic-metadata-preview/generic-metadata-preview.component';
-import { InfoBoxFactoryService } from '../../shared/components/info-box/info-box-factory.service';
+  CategoryTree
+} from "../../shared/components/categories-tree/models/category-node";
+import { ExportDialogComponent } from "../../shared/components/export-dialog/export-dialog.component";
+import { CifPreviewComponent } from "../../shared/components/file-views/cif-preview/cif-preview.component";
+import { CSVPreviewComponent } from "../../shared/components/file-views/csv-preview/csv-preview.component";
+import { IFilePreviewComponent } from "../../shared/components/file-views/file-view.model";
+import { ImageFileViewComponent } from "../../shared/components/file-views/image-file-view/image-file-view.component";
+import { MicroscopyViewComponent } from "../../shared/components/file-views/microscopy-view/microscopy-view.component";
+import { OfficePreviewComponent } from "../../shared/components/file-views/office-preview/office-preview.component";
+import { PdfFileViewComponent } from "../../shared/components/file-views/pdf-file-view/pdf-file-view.component";
+import { SavFileViewComponent } from "../../shared/components/file-views/sav-file-view/sav-file-view.component";
+import { SpectraJsmolPreviewComponent } from "../../shared/components/file-views/spectra-jsmol-preview/spectra-jsmol-preview.component";
+import { FilterField } from "../../shared/components/filter-bar/filter-bar.model";
+import { GenericMetadataPreviewComponent } from "../../shared/components/generic-metadata-preview/generic-metadata-preview.component";
+import { InfoBoxFactoryService } from "../../shared/components/info-box/info-box-factory.service";
 import {
   BrowserDataItem,
   BrowserOptions,
   FileType,
   NodeType,
-  SubType,
-} from '../../shared/components/organize-browser/browser-types';
-import { OrganizeBrowserComponent } from '../../shared/components/organize-browser/organize-browser.component';
-import { ToolbarButtonType } from '../../shared/components/organize-toolbar/organize-toolbar.model';
-import { PropertiesInfoBoxComponent } from '../../shared/components/properties-info-box/properties-info-box.component';
-import { SharedLinksComponent } from '../../shared/components/shared-links/shared-links.component';
-import { SidebarContentService } from '../../shared/components/sidebar-content/sidebar-content.service';
-import { FileViewType } from '../../shared/models/file-view-type';
-import { delay } from 'rxjs/operators';
+  SubType
+} from "../../shared/components/organize-browser/browser-types";
+import { OrganizeBrowserComponent } from "../../shared/components/organize-browser/organize-browser.component";
+import { ToolbarButtonType } from "../../shared/components/organize-toolbar/organize-toolbar.model";
+import { PropertiesInfoBoxComponent } from "../../shared/components/properties-info-box/properties-info-box.component";
+import { SharedLinksComponent } from "../../shared/components/shared-links/shared-links.component";
+import { SidebarContentService } from "../../shared/components/sidebar-content/sidebar-content.service";
+import { FileViewType } from "../../shared/models/file-view-type";
+import { delay } from "rxjs/operators";
 
 @Component({
-  selector: 'dr-file-view',
-  templateUrl: './file-view.component.html',
-  styleUrls: ['./file-view.component.scss'],
+  selector: "dr-file-view",
+  templateUrl: "./file-view.component.html",
+  styleUrls: ["./file-view.component.scss"],
   entryComponents: [
     OrganizeBrowserComponent,
     PdfFileViewComponent,
@@ -78,8 +78,8 @@ import { delay } from 'rxjs/operators';
     SpectraJsmolPreviewComponent,
     SavFileViewComponent,
     MicroscopyViewComponent,
-    GenericMetadataPreviewComponent,
-  ],
+    GenericMetadataPreviewComponent
+  ]
 })
 export class FileViewComponent extends BrowserOptions
   implements OnInit, AfterContentInit, OnDestroy {
@@ -122,16 +122,16 @@ export class FileViewComponent extends BrowserOptions
   initied = false;
   private browserEventSubscription: Subscription = null;
 
-  @ViewChild('fileNameInput', { static: false }) fileNameInput: ElementRef;
-  @ViewChild('copyFilenameTooltip', { static: false })
+  @ViewChild("fileNameInput", { static: false }) fileNameInput: ElementRef;
+  @ViewChild("copyFilenameTooltip", { static: false })
   copyFilenameTooltip: ElementRef;
-  @ViewChild('fileViewContainer', { read: ViewContainerRef, static: true })
+  @ViewChild("fileViewContainer", { read: ViewContainerRef, static: true })
   fileViewContainer: ViewContainerRef;
 
-  @ViewChildren('propertiesInfoBox') propertiesInfoBoxComponents: QueryList<
+  @ViewChildren("propertiesInfoBox") propertiesInfoBoxComponents: QueryList<
     PropertiesInfoBoxComponent
   >;
-  @ViewChild('infoBoxContainer', { static: false }) infoBoxContainer: any;
+  @ViewChild("infoBoxContainer", { static: false }) infoBoxContainer: any;
 
   private signalRSubscription: Subscription = null;
   private routeEventsSubscription: Subscription;
@@ -141,20 +141,20 @@ export class FileViewComponent extends BrowserOptions
 
   get fileType(): string {
     return this.fileInfo.name
-      .split('.')
+      .split(".")
       .pop()
       .toLowerCase();
   }
 
   get currentView() {
-    return localStorage.getItem('currentBrowserViewFor:records-view') || 'tile';
+    return localStorage.getItem("currentBrowserViewFor:records-view") || "tile";
   }
 
   get fileExtension() {
     return (
       this.fileInfo &&
       this.fileInfo.name
-        .split('.')
+        .split(".")
         .pop()
         .toLowerCase()
     );
@@ -190,10 +190,10 @@ export class FileViewComponent extends BrowserOptions
     private pageTitle: PageTitleService,
     private categoryTreeApi: CategoryTreeApiService,
     private categoryEntityApi: CategoryEntityApiService,
-    private categoryService: CategoryService,
+    private categoryStorageService: CategoryStorageService
   ) {
     super(foldersApi, entitiesApi);
-    this.breadcrumbs = [{ text: 'DRAFTS' }];
+    this.breadcrumbs = [{ text: "DRAFTS" }];
 
     // const properties =
     //   [
@@ -221,19 +221,19 @@ export class FileViewComponent extends BrowserOptions
       (data: { share: boolean; shareParent: boolean }) => {
         this.isPublic = data.share;
         this.isPublicParent = data.shareParent;
-      },
+      }
     );
 
-    const file_id = this.activatedRoute.snapshot.params['id'];
+    const file_id = this.activatedRoute.snapshot.params["id"];
 
     this.activatedRoute.queryParams.subscribe((queryParam: Params) => {
-      if ('pageNumber' in queryParam) {
-        this.paginator.paging.current = queryParam['pageNumber'];
+      if ("pageNumber" in queryParam) {
+        this.paginator.paging.current = queryParam["pageNumber"];
       }
 
       this.paginator.initPaginator(
-        'pageNumber' in queryParam ? queryParam['pageNumber'] : null,
-        'pageSize' in queryParam ? queryParam['pageSize'] : null,
+        "pageNumber" in queryParam ? queryParam["pageNumber"] : null,
+        "pageSize" in queryParam ? queryParam["pageSize"] : null
       );
 
       this.dataService.setViewParams(queryParam);
@@ -259,31 +259,31 @@ export class FileViewComponent extends BrowserOptions
         this.initView();
         this.changeFileView(
           this.getFileViewComponent(this.fileInfo),
-          this.fileInfo,
+          this.fileInfo
         );
 
         if (this.isShared) {
-          this.sharedToolTip = 'Change Sharing Settings';
+          this.sharedToolTip = "Change Sharing Settings";
         } else {
-          this.sharedToolTip = 'Create Public Link';
+          this.sharedToolTip = "Create Public Link";
         }
 
         this.fileActions = [
           {
             title: `records ${this.fileInfo.totalRecords}`,
             active: !!this.fileInfo.totalRecords,
-            viewType: FileViewType.Records,
+            viewType: FileViewType.Records
           },
           {
-            title: 'Biological Information',
+            title: "Biological Information",
             active: this.isMicroscopy,
-            viewType: FileViewType.Bio_Metadata,
+            viewType: FileViewType.Bio_Metadata
           },
           {
-            title: 'File Information',
+            title: "File Information",
             active: true,
-            viewType: FileViewType.Generic_Metadata,
-          },
+            viewType: FileViewType.Generic_Metadata
+          }
         ];
       });
     });
@@ -291,18 +291,19 @@ export class FileViewComponent extends BrowserOptions
     if (!this.browserEventSubscription) {
       this.browserEventSubscription = this.dataService.browserEvents.subscribe(
         (eventData: IBrowserEvent) => {
-          if (eventData.event.type === 'dblclick') {
+          if (eventData.event.type === "dblclick") {
             this.itemDbClick(eventData.event, eventData.item);
-          } else if (eventData.event.type === 'click') {
+          } else if (eventData.event.type === "click") {
             this.itemClick(eventData.event, eventData.item);
           }
-        },
+        }
       );
     }
 
     this.getTreeList().subscribe(treeList => {
       this.getTree(treeList[0].id).subscribe(tree => {
-        this.categoryService.activeTree = this.categories = tree.nodes;
+        this.categoryStorageService.dataSource.data = this.categories =
+          tree.nodes;
         this.getEntityCategories(file_id);
       });
     });
@@ -322,13 +323,13 @@ export class FileViewComponent extends BrowserOptions
       // if (x.EventName === 'ImageAdded') {
       //   this.fileProcessed = true;
       // }
-      if (x.EventName === 'PermissionsChanged') {
+      if (x.EventName === "PermissionsChanged") {
         this.dataService.currentItem.accessPermissions = x.EventData;
         this.isShared = x.EventData.permissionPublic;
         if (this.isShared) {
-          this.sharedToolTip = 'Change Sharing Settings';
+          this.sharedToolTip = "Change Sharing Settings";
         } else {
-          this.sharedToolTip = 'Create Public Link';
+          this.sharedToolTip = "Create Public Link";
         }
       }
     });
@@ -414,9 +415,9 @@ export class FileViewComponent extends BrowserOptions
   copyFilename() {
     this.fileNameInput.nativeElement.select();
     try {
-      const successful = document.execCommand('copy');
+      const successful = document.execCommand("copy");
       if (successful) {
-        this.copyFilenameText = 'Copied!';
+        this.copyFilenameText = "Copied!";
         (this.copyFilenameTooltip as any).show();
         console.log((this.copyFilenameTooltip as any).show);
       }
@@ -426,31 +427,31 @@ export class FileViewComponent extends BrowserOptions
   getImageURL(item: BrowserDataItem): string {
     if (item && (!item.images || !item.images.length)) {
       const fileType = item.name
-        .split('.')
+        .split(".")
         .pop()
         .toLowerCase();
 
       const knownTypes =
-        ' .pdf .xls .xlsx .doc .docx .ppt .pptx' +
-        ' .zip .rar .7z .arj .wav .l.p3 .ogg .aac .wma .ape .flac' +
-        ' .tif .tiff .gif .jpeg .jpg .jif .jfif .jp2 .jpx .j2k .fpx .pcd .png .bmp' +
-        ' .mpg .mpeg .mp4 .txt .rtf .csv .tsv .xml .html .htm' +
-        ' .mol .sdf .cdx .rxn .rdf .jdx .dx .cif .nd2 .lsm .ims .lif .czi';
+        " .pdf .xls .xlsx .doc .docx .ppt .pptx" +
+        " .zip .rar .7z .arj .wav .l.p3 .ogg .aac .wma .ape .flac" +
+        " .tif .tiff .gif .jpeg .jpg .jif .jfif .jp2 .jpx .j2k .fpx .pcd .png .bmp" +
+        " .mpg .mpeg .mp4 .txt .rtf .csv .tsv .xml .html .htm" +
+        " .mol .sdf .cdx .rxn .rdf .jdx .dx .cif .nd2 .lsm .ims .lif .czi";
       if (knownTypes.indexOf(` .${fileType}`) < 0) {
-        return item.type === 'Record'
-          ? '/img/svg/file-types/record.svg'
-          : '/img/svg/tile/file.svg';
+        return item.type === "Record"
+          ? "/img/svg/file-types/record.svg"
+          : "/img/svg/tile/file.svg";
       } else if (fileType) {
         return `/img/svg/file-types/${fileType}.svg`;
       } else {
-        return 'img/svg/tile/file.svg';
+        return "img/svg/tile/file.svg";
       }
     } else if (!item) {
       return null;
     }
 
     const image = item.images.filter(
-      (x: { scale: string }) => x.scale === 'Vector' || x.scale === 'Medium',
+      (x: { scale: string }) => x.scale === "Vector" || x.scale === "Medium"
     )[0];
     return this.imagesApi.getImageUrlNew(image, item);
   }
@@ -460,10 +461,10 @@ export class FileViewComponent extends BrowserOptions
   }
 
   itemDbClick(event: MouseEvent, item: BrowserDataItem) {
-    if (!item.isFolder() && item.type === 'Record') {
+    if (!item.isFolder() && item.type === "Record") {
       this.router.navigateByUrl(`/record/${item.id}`);
     } else {
-      this.router.navigate(['/file', item.id]);
+      this.router.navigate(["/file", item.id]);
     }
   }
 
@@ -489,9 +490,9 @@ export class FileViewComponent extends BrowserOptions
         queryParams[i.name] = i.value;
       }
 
-      this.router.navigate(['data-transform'], {
+      this.router.navigate(["data-transform"], {
         relativeTo: this.activatedRoute,
-        queryParams: queryParams,
+        queryParams: queryParams
       });
     }
   }
@@ -504,20 +505,20 @@ export class FileViewComponent extends BrowserOptions
 
   openExportDialog(fileType: string): void {
     const dialogRef = this.dialog.open(ExportDialogComponent, {
-      width: '800px',
+      width: "800px",
       data: {
         fileType,
-        selectedItems: [this.fileInfo],
-      },
+        selectedItems: [this.fileInfo]
+      }
     });
   }
 
   openSharedLinksDialog(): void {
     const dialogRef = this.dialog.open(SharedLinksComponent, {
-      width: '650px',
+      width: "650px",
       data: {
-        fileInfo: this.dataService.currentItem,
-      },
+        fileInfo: this.dataService.currentItem
+      }
     });
   }
 
@@ -553,13 +554,13 @@ export class FileViewComponent extends BrowserOptions
           dataItem.getSubType() === SubType.Records
         ) {
           if (
-            (this.fileInfo.getFileExtension() === 'jdx' ||
-              this.fileInfo.getFileExtension() === 'dx') &&
+            (this.fileInfo.getFileExtension() === "jdx" ||
+              this.fileInfo.getFileExtension() === "dx") &&
             environment.capabilities.spectrum
           ) {
             return SpectraJsmolPreviewComponent;
           } else if (
-            this.fileInfo.getFileExtension() === 'cif' &&
+            this.fileInfo.getFileExtension() === "cif" &&
             environment.capabilities.crystal
           ) {
             return CifPreviewComponent;
@@ -615,24 +616,22 @@ export class FileViewComponent extends BrowserOptions
 
   changeFileView(
     viewComponent: Type<any>,
-    fileForVisualisation: BrowserDataItem,
+    fileForVisualisation: BrowserDataItem
   ) {
     if (viewComponent === null) {
       return;
     }
 
     const cmpFactory = this.componentResolver.resolveComponentFactory(
-      viewComponent,
+      viewComponent
     );
-    const component: ComponentRef<
-      IFilePreviewComponent
-    > = this.fileViewContainer.createComponent(cmpFactory) as ComponentRef<
-      IFilePreviewComponent
-    >;
+    const component: ComponentRef<IFilePreviewComponent> = this.fileViewContainer.createComponent(
+      cmpFactory
+    ) as ComponentRef<IFilePreviewComponent>;
 
     this.currentFileViewContainerInstance = component.instance;
     this.currentFileViewContainerInstance.fileItem = fileForVisualisation;
-    this.currentFileViewContainerInstance.usingFor = 'records-view';
+    this.currentFileViewContainerInstance.usingFor = "records-view";
 
     if (this.currentFileViewComponent) {
       this.currentFileViewComponent.destroy();
@@ -645,7 +644,7 @@ export class FileViewComponent extends BrowserOptions
       this.currentTab = tab;
       this.changeFileView(
         this.getFileViewComponent(this.fileInfo),
-        this.fileInfo,
+        this.fileInfo
       );
     }
   }
@@ -665,14 +664,14 @@ export class FileViewComponent extends BrowserOptions
    * Assign category tag to the entity
    */
   addCategoryTag(): void {
-    this.categoryEntityApi.addTags(this.fileInfo.id, ['']);
+    this.categoryEntityApi.addTags(this.fileInfo.id, [""]);
   }
 
   /**
    * Remove all category tags assigned to the entity
    */
   removeCategoryTags(): void {
-    this.categoryEntityApi.deleteTags(this.fileInfo.id, ['']);
+    this.categoryEntityApi.deleteTags(this.fileInfo.id, [""]);
   }
 
   /**
@@ -692,13 +691,13 @@ export class FileViewComponent extends BrowserOptions
 
   openAssignTagDialog(): void {
     this.dialog.open(CategoryAssignDialogComponent, {
-      width: '500px',
-      height: '528px',
+      width: "500px",
+      height: "528px",
       data: {
         fileInfo: this.fileInfo,
         assignedCategories: this.categories,
-        selectedCategories: this.categoryTags,
-      },
+        selectedCategories: this.categoryTags
+      }
     });
     console.log(this.dialog.openDialogs);
   }
@@ -716,15 +715,13 @@ export class FileViewComponent extends BrowserOptions
    * @file_id GUID of the current entity
    */
   private getEntityCategories(file_id: any): void {
-    this.categoryEntityApi
-      .getTags(file_id)
-      .subscribe(
-        (tags: string[]) =>
-          (this.categoryTags = this.categoryService.flatTree.filter(
-            (node: CategoryFlatNode) =>
-              tags ? tags.some(tag => node.id === tag) : null,
-          )),
-        error => console.error(error),
-      );
+    this.categoryEntityApi.getTags(file_id).subscribe(
+      (tags: string[]) =>
+        (this.categoryTags = this.categoryStorageService.flatTreeNodes.filter(
+          (node: CategoryFlatNode) =>
+            tags ? tags.some(tag => node.id === tag) : null
+        )),
+      error => console.error(error)
+    );
   }
 }

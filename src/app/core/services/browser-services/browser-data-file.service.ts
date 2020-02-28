@@ -10,7 +10,7 @@ import { NodesApiService } from '../api/nodes-api.service';
 import { SearchResultsApiService } from '../api/search-results-api.service';
 import { UsersApiService } from '../api/users-api.service';
 import { AuthService } from '../auth/auth.service';
-import { CategoryService } from '../category/category.service';
+import { CategoryStorageService } from '../category/category-storage.service';
 import { SignalrService } from '../signalr/signalr.service';
 
 import { BrowserDataService } from './browser-data.service';
@@ -31,7 +31,7 @@ export class BrowserDataFileService extends BrowserDataService {
     protected usersApi: UsersApiService,
     protected searchResultsApi: SearchResultsApiService,
     protected categoryEntityApi: CategoryEntityApiService,
-    protected categorySerivce: CategoryService,
+    protected categorySerivce: CategoryStorageService,
   ) {
     super(
       nodesApi,

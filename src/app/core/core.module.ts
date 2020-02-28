@@ -1,20 +1,18 @@
-import { CommonModule } from '@angular/common';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-// rm
-import { RouterModule } from '@angular/router';
+import { CommonModule } from "@angular/common";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import { NgModule } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
   BsDropdownModule,
   ModalModule,
   PopoverModule,
-  TooltipModule,
-} from 'ngx-bootstrap';
-import { ContextMenuModule } from 'ngx-contextmenu';
+  TooltipModule
+} from "ngx-bootstrap";
+import { ContextMenuModule } from "ngx-contextmenu";
 
-import { ServicesList } from './services-list';
-import { AuthInterceptor } from './services/auth/auth-interceptor';
-import { HttpInterceptorService } from './services/Interceptor/http-interceptor.service';
+import { ServicesList } from "./services-list";
+import { AuthInterceptor } from "./services/auth/auth-interceptor";
+import { HttpInterceptorService } from "./services/Interceptor/http-interceptor.service";
 
 @NgModule({
   imports: [
@@ -27,9 +25,8 @@ import { HttpInterceptorService } from './services/Interceptor/http-interceptor.
     PopoverModule.forRoot(),
     TooltipModule.forRoot(),
     ContextMenuModule.forRoot({
-      autoFocus: true,
-      // useBootstrap4: true,
-    }),
+      autoFocus: true
+    })
   ],
   exports: [],
   declarations: [],
@@ -39,8 +36,8 @@ import { HttpInterceptorService } from './services/Interceptor/http-interceptor.
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
-      multi: true,
-    },
-  ],
+      multi: true
+    }
+  ]
 })
 export class CoreModule {}

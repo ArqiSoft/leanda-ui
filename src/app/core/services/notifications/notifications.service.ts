@@ -1,18 +1,23 @@
-import { Injectable } from '@angular/core';
-import { NodeEvent, SignalREvent } from 'app/shared/components/notifications/events.model';
+import { Injectable } from "@angular/core";
 import {
-  NotificationCommonItemComponent,
-} from 'app/shared/components/notifications/notifications-side-bar/notification-common-item/notification-common-item.component';
+  NodeEvent,
+  SignalREvent
+} from "app/shared/components/notifications/events.model";
+import { NotificationCommonItemComponent } from "app/shared/components/notifications/notifications-side-bar/notification-common-item/notification-common-item.component";
+import { NotificationExportItemComponent } from "app/shared/components/notifications/notifications-side-bar/notification-export-item/notification-export-item.component";
 import {
-  NotificationExportItemComponent,
-} from 'app/shared/components/notifications/notifications-side-bar/notification-export-item/notification-export-item.component';
-import { NotificationAction, NotificationItem, NotificationMessage } from 'app/shared/components/notifications/notifications.model';
-import { Subject } from 'rxjs';
+  NotificationAction,
+  NotificationItem,
+  NotificationMessage
+} from "app/shared/components/notifications/notifications.model";
+import { Subject } from "rxjs";
 
 @Injectable()
 export class NotificationsService {
-
-  notificationEvent: Subject<{ action: NotificationAction, item: NotificationItem }> = new Subject();
+  notificationEvent: Subject<{
+    action: NotificationAction;
+    item: NotificationItem;
+  }> = new Subject();
   notificationsList: NotificationItem[] = [];
   private _isNotificationBarActive = false;
 
@@ -27,21 +32,27 @@ export class NotificationsService {
   organizeUpdateEvent(event: SignalREvent) {
     const message = NotificationMessage.CreateOrganizeUpdateEventMessage(event);
     if (message) {
-      this.showToastNotification(new NotificationItem(NotificationCommonItemComponent, message));
+      this.showToastNotification(
+        new NotificationItem(NotificationCommonItemComponent, message)
+      );
     }
   }
 
   exportEvents(event: SignalREvent) {
     const message = NotificationMessage.CreateExportMessage(event);
     if (message) {
-      this.showToastNotification(new NotificationItem(NotificationExportItemComponent, message));
+      this.showToastNotification(
+        new NotificationItem(NotificationExportItemComponent, message)
+      );
     }
   }
 
   permissionsChanged(event: SignalREvent) {
     const message = NotificationMessage.CreatePermissionChanged(event);
     if (message) {
-      this.showToastNotification(new NotificationItem(NotificationCommonItemComponent, message));
+      this.showToastNotification(
+        new NotificationItem(NotificationCommonItemComponent, message)
+      );
     }
   }
 
@@ -66,32 +77,50 @@ export class NotificationsService {
     return this.notificationsList;
   }
 
-  getPersistentNotificationList(persistentNotificationList): NotificationItem[] {
+  getPersistentNotificationList(
+    persistentNotificationList
+  ): NotificationItem[] {
     const persistentList = [];
     for (const notificationId in persistentNotificationList) {
       if (persistentNotificationList.hasOwnProperty(notificationId)) {
-        const persistentNotification = persistentNotificationList[notificationId];
+        const persistentNotification =
+          persistentNotificationList[notificationId];
         persistentNotification.eventName = persistentNotification.eventTypeName;
         const signalREvent = new SignalREvent(persistentNotification);
         switch (signalREvent.EventName) {
-          case 'ExportFinished':
-            const exportMessage = NotificationMessage.CreateExportMessage(signalREvent);
-            const exportNotification = new NotificationItem(NotificationExportItemComponent, exportMessage);
+          case "ExportFinished":
+            const exportMessage = NotificationMessage.CreateExportMessage(
+              signalREvent
+            );
+            const exportNotification = new NotificationItem(
+              NotificationExportItemComponent,
+              exportMessage
+            );
             exportMessage.id = persistentNotification.id;
             persistentList.push(exportNotification);
             break;
-          case 'PermissionsChanged':
-            const permissionChangedMessage = NotificationMessage.CreatePermissionChanged(signalREvent);
+          case "PermissionsChanged":
+            const permissionChangedMessage = NotificationMessage.CreatePermissionChanged(
+              signalREvent
+            );
             if (permissionChangedMessage) {
-              const permissionNotification = new NotificationItem(NotificationCommonItemComponent, permissionChangedMessage);
+              const permissionNotification = new NotificationItem(
+                NotificationCommonItemComponent,
+                permissionChangedMessage
+              );
               permissionChangedMessage.id = persistentNotification.id;
               persistentList.push(permissionNotification);
             }
             break;
           default:
-            const organizeUpdateMessage = NotificationMessage.CreateOrganizeUpdateEventMessage(signalREvent);
+            const organizeUpdateMessage = NotificationMessage.CreateOrganizeUpdateEventMessage(
+              signalREvent
+            );
             if (organizeUpdateMessage) {
-              const notification = new NotificationItem(NotificationCommonItemComponent, organizeUpdateMessage);
+              const notification = new NotificationItem(
+                NotificationCommonItemComponent,
+                organizeUpdateMessage
+              );
               organizeUpdateMessage.id = persistentNotification.id;
               persistentList.push(notification);
             }
@@ -148,7 +177,10 @@ export class NotificationsService {
     }
   }
 
-  private sendNotificationEvent(action: NotificationAction, item: NotificationItem) {
+  private sendNotificationEvent(
+    action: NotificationAction,
+    item: NotificationItem
+  ) {
     this.notificationEvent.next({ action, item });
   }
 

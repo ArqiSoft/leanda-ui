@@ -1,14 +1,14 @@
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { OnInit } from '@angular/core';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
+import { FlatTreeControl } from "@angular/cdk/tree";
+import { OnInit } from "@angular/core";
+import { MatTreeFlatDataSource, MatTreeFlattener } from "@angular/material";
 
-import { CategoryTreeInfo } from '../../../views/category-tree-management/CategoryTreeInfo';
+import { CategoryTreeInfo } from "../../../views/category-tree-management/CategoryTreeInfo";
 
 import {
   CategoryFlatNode,
   CategoryNode,
-  CategoryTree,
-} from './models/category-node';
+  CategoryTree
+} from "./models/category-node";
 
 export class CategoryTreeBase implements OnInit {
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
@@ -23,7 +23,7 @@ export class CategoryTreeBase implements OnInit {
 
   dataSource: MatTreeFlatDataSource<CategoryNode, CategoryFlatNode>;
 
-  categories: CategoryTree[];
+  treeList: CategoryTree[];
 
   treeInfo: CategoryTreeInfo;
 
@@ -42,9 +42,9 @@ export class CategoryTreeBase implements OnInit {
   hasChild = (_: number, _nodeData: CategoryFlatNode) => _nodeData.expandable;
 
   hasNoContent = (_: number, _nodeData: CategoryFlatNode) =>
-    _nodeData.title === ''
+    _nodeData.title === "";
 
-  hasCategories = () => this.categories.length !== null;
+  hasCategories = () => this.treeList.length !== null;
 
   treeHasOneMainNode = () => this.dataSource.data.length === 1;
 
@@ -69,7 +69,7 @@ export class CategoryTreeBase implements OnInit {
     this.nestedNodeMap.set(node, flatNode);
 
     return flatNode;
-  }
+  };
 
   /* Return the parent node of a node if it has one */
   getParentNode(node: CategoryFlatNode): CategoryFlatNode | null {

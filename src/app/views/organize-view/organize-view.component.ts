@@ -14,7 +14,7 @@ import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { SidebarContentService } from 'app/shared/components/sidebar-content/sidebar-content.service';
 import { environment } from 'environments/environment';
 import { ContextMenuComponent, ContextMenuService } from 'ngx-contextmenu';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 
 import { BlobsApiService } from '../../core/services/api/blobs-api.service';
 import { EntitiesApiService } from '../../core/services/api/entities-api.service';
@@ -36,7 +36,7 @@ import {
   IQuickFilter,
   QuickFilterService,
 } from '../../core/services/browser-services/quick-filter.service';
-import { CategoryService } from '../../core/services/category/category.service';
+import { CategoryStorageService } from '../../core/services/category/category-storage.service';
 import { NotificationsService } from '../../core/services/notifications/notifications.service';
 import { PageTitleService } from '../../core/services/page-title/page-title.service';
 import { SignalrService } from '../../core/services/signalr/signalr.service';
@@ -138,7 +138,7 @@ export class OrganizeViewComponent extends BrowserOptions
   private routeEventsSubscription: Subscription;
 
   get categoriesTree(): Observable<CategoryNode[]> {
-    return this.categoryService.activeTree$;
+    return of(this.categoryStorageService.dataSource.data);
   }
 
   get currentView() {
@@ -173,7 +173,7 @@ export class OrganizeViewComponent extends BrowserOptions
     private pageTitle: PageTitleService,
     private notificationsApi: NotificationsApiService,
     private contextMenuService: ContextMenuService,
-    private categoryService: CategoryService,
+    private categoryStorageService: CategoryStorageService,
     private sidebarService: SidebarContentService,
   ) {
     super(foldersApi, entitiesApi);
@@ -497,7 +497,7 @@ export class OrganizeViewComponent extends BrowserOptions
           this.dataService.breadcrumbs = [
             { text: 'DRAFTS', width: null, link: '/organize/drafts' },
             {
-              text: `CATEGORY: ${this.categoryService.selectedNode.title}`,
+              text: `CATEGORY: ${this.categoryStorageService.selectedNode.title}`,
               width: null,
               link: '/organize/drafts',
             },

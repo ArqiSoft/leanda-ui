@@ -9,14 +9,14 @@ import {
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-import { CategoryService } from '../../../core/services/category/category.service';
+import { CategoryStorageService } from '../../../core/services/category/category-storage.service';
 import { CategoryFlatNode } from '../categories-tree/models/category-node';
 
 @Component({
   selector: 'dr-category-tagging',
   templateUrl: './category-tagging.component.html',
   styleUrls: ['./category-tagging.component.scss'],
-})
+})  
 export class CategoryTaggingComponent implements OnInit {
   visible = true;
   selectable = true;
@@ -34,8 +34,8 @@ export class CategoryTaggingComponent implements OnInit {
   >;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
-  constructor(private categoriesService: CategoryService) {
-    this.allCategories = this.categoriesService.flatTree;
+  constructor(private categoriesService: CategoryStorageService) {
+    this.allCategories = this.categoriesService.flatTreeNodes;
     this.filteredCategories = this.categoryControl.valueChanges.pipe(
       startWith(''),
       map((categoryTitle: string | null) =>
@@ -87,7 +87,7 @@ export class CategoryTaggingComponent implements OnInit {
   }
 
   private _filter(title: string): CategoryFlatNode[] {
-    return this.categoriesService.flatTree.filter(
+    return this.categoriesService.flatTreeNodes.filter(
       category => category.title.indexOf(title) === 0,
     );
   }

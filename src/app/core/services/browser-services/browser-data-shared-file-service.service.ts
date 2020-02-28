@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Params, Router } from '@angular/router';
-import { CategoryService } from 'app/core/services/category/category.service';
+import { CategoryStorageService } from 'app/core/services/category/category-storage.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -31,7 +31,7 @@ export class BrowserDataSharedFileServiceService extends BrowserDataService {
     protected usersApi: UsersApiService,
     protected searchResultsApi: SearchResultsApiService,
     protected categoryEntityApi: CategoryEntityApiService,
-    protected categorySerivce: CategoryService,
+    protected categorySerivce: CategoryStorageService,
   ) {
     super(
       nodesApi,

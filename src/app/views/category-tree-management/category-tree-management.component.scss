@@ -1,4 +1,4 @@
-@import 'vars';
+@import "vars";
 
 :host {
   .node-icon-button {
@@ -22,9 +22,9 @@
     background: #fff;
     padding: 3rem;
 
-    > .row {
-      height: 100%;
-    }
+    // > .row {
+    //   height: 100%;
+    // }
   }
 
   .card {
@@ -38,8 +38,8 @@
     }
   }
 
-  [class*='col-'] {
-    padding: 1rem;
+  [class*="col-"] {
+    padding: 0;
   }
 
   .icon-large {

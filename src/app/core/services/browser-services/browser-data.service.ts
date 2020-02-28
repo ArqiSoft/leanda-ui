@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Params, Router, convertToParamMap } from '@angular/router';
-import { CategoryService } from 'app/core/services/category/category.service';
+import { CategoryStorageService } from 'app/core/services/category/category-storage.service';
 import {
   NodeEvent,
   SignalREvent,
@@ -53,7 +53,7 @@ export class BrowserDataService extends BrowserDataBaseService {
     protected usersApi: UsersApiService,
     protected searchResultsApi: SearchResultsApiService,
     protected categoryEntityApi: CategoryEntityApiService,
-    protected categoriesService: CategoryService,
+    protected categoriesService: CategoryStorageService,
   ) {
     super();
   }
