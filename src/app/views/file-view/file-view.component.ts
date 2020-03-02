@@ -122,8 +122,8 @@ export class FileViewComponent extends BrowserOptions
   initied = false;
   private browserEventSubscription: Subscription = null;
 
-  @ViewChild('fileNameInput', { static: false }) fileNameInput: ElementRef;
-  @ViewChild('copyFilenameTooltip', { static: false })
+  @ViewChild('fileNameInput') fileNameInput: ElementRef;
+  @ViewChild('copyFilenameTooltip')
   copyFilenameTooltip: ElementRef;
   @ViewChild('fileViewContainer', { read: ViewContainerRef, static: true })
   fileViewContainer: ViewContainerRef;
@@ -131,7 +131,7 @@ export class FileViewComponent extends BrowserOptions
   @ViewChildren('propertiesInfoBox') propertiesInfoBoxComponents: QueryList<
     PropertiesInfoBoxComponent
   >;
-  @ViewChild('infoBoxContainer', { static: false }) infoBoxContainer: any;
+  @ViewChild('infoBoxContainer') infoBoxContainer: any;
 
   private signalRSubscription: Subscription = null;
   private routeEventsSubscription: Subscription;

@@ -13,7 +13,7 @@ import { IFilePreviewComponent } from '../file-view.model';
 })
 export class ImageFileViewComponent implements OnInit, AfterViewInit, IFilePreviewComponent {
 
-  @ViewChild('imagePreview', { static: false }) imagePreview;
+  @ViewChild('imagePreview') imagePreview;
   @Input() fileItem;
 
   constructor(private imagesApi: ImagesApiService,

@@ -29,10 +29,10 @@ export class CategoryTaggingComponent implements OnInit {
   allCategories: CategoryFlatNode[] = [];
   filteredCategories: Observable<CategoryFlatNode[]>;
 
-  @ViewChild('categoryInput', { static: false }) categoryInput: ElementRef<
+  @ViewChild('categoryInput') categoryInput: ElementRef<
     HTMLInputElement
   >;
-  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   constructor(private categoriesService: CategoryService) {
     this.allCategories = this.categoriesService.flatTree;

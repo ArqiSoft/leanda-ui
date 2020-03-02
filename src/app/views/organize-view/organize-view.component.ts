@@ -92,10 +92,10 @@ import { CategoryNode } from 'app/shared/components/categories-tree/models/categ
 })
 export class OrganizeViewComponent extends BrowserOptions
   implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(OrganizeBrowserComponent, { static: false })
+  @ViewChild(OrganizeBrowserComponent)
   browser: OrganizeBrowserComponent;
 
-  @ViewChild(ImportWebPageComponent, { static: false })
+  @ViewChild(ImportWebPageComponent)
   uploadWebPage: ImportWebPageComponent;
   @ViewChild('fileUpload', { static: true }) fileInput: ElementRef;
 

@@ -16,7 +16,7 @@ import { FeaturesService } from '../features.service';
 })
 export class FeaturesComputationComponent implements OnInit {
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
-  @ViewChild('fileInput', { static: false }) fileInput: HTMLInputElement;
+  @ViewChild('fileInput') fileInput: HTMLInputElement;
   @ViewChild(FingerprintsComponent, { static: true }) fingerprints: FingerprintsComponent;
 
   pollingFinished$: Subject<ComputationStatus> = new Subject();
