@@ -4,10 +4,10 @@ import * as Papa from 'papaparse';
 import { Subject, interval } from 'rxjs';
 import { flatMap, takeUntil } from 'rxjs/operators';
 
-import { MatStepper } from '../../../../../node_modules/@angular/material';
 import { FingerprintsComponent, Origin } from '../../../shared/components/fingerprints/fingerprints.component';
 import { ComputationStatus } from '../features.model';
 import { FeaturesService } from '../features.service';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'dr-features-computation',

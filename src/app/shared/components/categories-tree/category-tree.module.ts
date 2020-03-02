@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
-import {
-  MatIconModule,
-  MatRippleModule,
-  MatTooltipModule,
-  MatTreeModule,
-} from '@angular/material';
+import { MatRippleModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTreeModule } from '@angular/material/tree';
 import { SharedModule } from 'app/shared/shared.module';
 
 import { CategoryTreeComponent } from './category-tree.component';

@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox/typings/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStep, MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, ParamMap } from '@angular/router';
@@ -17,6 +16,7 @@ import {
   PredictionTask,
 } from '../prediction.model';
 import { SinglePredictionService } from '../single-prediction.service';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'dr-single-structure-prediction',

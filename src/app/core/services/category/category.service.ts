@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatTreeFlattener } from '@angular/material';
+import { MatTreeFlattener } from '@angular/material/tree';
 import { CategoryTreeBase } from 'app/shared/components/categories-tree/category-base';
 import { BehaviorSubject, Observable } from 'rxjs';
 

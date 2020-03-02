@@ -1,5 +1,5 @@
 import { NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
-import { MatRippleModule } from '@angular/material';
+import { MatRippleModule } from '@angular/material/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FileViewsModule } from 'app/shared/components/file-views/file-views.module';
 import { InfoBoxModule } from 'app/shared/components/info-box/info-box.module';
