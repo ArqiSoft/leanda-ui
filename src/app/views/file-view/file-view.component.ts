@@ -1,26 +1,12 @@
-import {
-  AfterContentInit,
-  Component,
-  ComponentFactoryResolver,
-  ComponentRef,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  Type,
-  ViewChild,
-  ViewChildren,
-  ViewContainerRef,
-} from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { AfterContentInit, Component, ComponentFactoryResolver, ComponentRef, ElementRef, Input, OnDestroy, OnInit, QueryList, Type, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { CategoryEntityApiService } from 'app/core/services/api/category-entity-api.service';
 import { CategoryService } from 'app/core/services/category/category.service';
 import { CategoryAssignDialogComponent } from 'app/shared/components/categories-tree/category-assign-dialog/category-assign-dialog.component';
 import { environment } from 'environments/environment';
 import { Observable, Subscription } from 'rxjs';
-
+import { delay } from 'rxjs/operators';
 import { BlobsApiService } from '../../core/services/api/blobs-api.service';
 import { CategoryTreeApiService } from '../../core/services/api/category-tree-api.service';
 import { EntitiesApiService } from '../../core/services/api/entities-api.service';
@@ -31,11 +17,7 @@ import { IBrowserEvent } from '../../core/services/browser-services/browser-data
 import { PaginatorManagerService } from '../../core/services/browser-services/paginator-manager.service';
 import { PageTitleService } from '../../core/services/page-title/page-title.service';
 import { SignalrService } from '../../core/services/signalr/signalr.service';
-import {
-  CategoryFlatNode,
-  CategoryNode,
-  CategoryTree,
-} from '../../shared/components/categories-tree/models/category-node';
+import { CategoryFlatNode, CategoryNode, CategoryTree } from '../../shared/components/categories-tree/models/category-node';
 import { ExportDialogComponent } from '../../shared/components/export-dialog/export-dialog.component';
 import { CifPreviewComponent } from '../../shared/components/file-views/cif-preview/cif-preview.component';
 import { CSVPreviewComponent } from '../../shared/components/file-views/csv-preview/csv-preview.component';
@@ -49,37 +31,19 @@ import { SpectraJsmolPreviewComponent } from '../../shared/components/file-views
 import { FilterField } from '../../shared/components/filter-bar/filter-bar.model';
 import { GenericMetadataPreviewComponent } from '../../shared/components/generic-metadata-preview/generic-metadata-preview.component';
 import { InfoBoxFactoryService } from '../../shared/components/info-box/info-box-factory.service';
-import {
-  BrowserDataItem,
-  BrowserOptions,
-  FileType,
-  NodeType,
-  SubType,
-} from '../../shared/components/organize-browser/browser-types';
+import { BrowserDataItem, BrowserOptions, FileType, NodeType, SubType } from '../../shared/components/organize-browser/browser-types';
 import { OrganizeBrowserComponent } from '../../shared/components/organize-browser/organize-browser.component';
 import { ToolbarButtonType } from '../../shared/components/organize-toolbar/organize-toolbar.model';
 import { PropertiesInfoBoxComponent } from '../../shared/components/properties-info-box/properties-info-box.component';
 import { SharedLinksComponent } from '../../shared/components/shared-links/shared-links.component';
 import { SidebarContentService } from '../../shared/components/sidebar-content/sidebar-content.service';
 import { FileViewType } from '../../shared/models/file-view-type';
-import { delay } from 'rxjs/operators';
+
 
 @Component({
   selector: 'dr-file-view',
   templateUrl: './file-view.component.html',
   styleUrls: ['./file-view.component.scss'],
-  entryComponents: [
-    OrganizeBrowserComponent,
-    PdfFileViewComponent,
-    ImageFileViewComponent,
-    CSVPreviewComponent,
-    OfficePreviewComponent,
-    CifPreviewComponent,
-    SpectraJsmolPreviewComponent,
-    SavFileViewComponent,
-    MicroscopyViewComponent,
-    GenericMetadataPreviewComponent,
-  ],
 })
 export class FileViewComponent extends BrowserOptions
   implements OnInit, AfterContentInit, OnDestroy {

@@ -2,7 +2,6 @@ import { PortalModule } from '@angular/cdk/portal';
 import { NgModule } from '@angular/core';
 import { NotificationsModule } from 'app/shared/components/notifications/notifications.module';
 import { SharedModule } from 'app/shared/shared.module';
-
 import { FvcHomeComponent } from './distributions/fvc/fvc.component';
 import { LabwizHomeComponent } from './distributions/labwiz/labwiz.component';
 import { LeandaHomeComponent } from './distributions/leanda/leanda.component';
@@ -19,6 +18,5 @@ const cdk = [PortalModule];
   exports: [],
   declarations: [HomePageComponent, ...components],
   providers: [HomePageService],
-  entryComponents: [...components],
 })
 export class HomePageModule {}

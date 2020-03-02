@@ -9,7 +9,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
-
 import { CategoryAssignDialogComponent } from './category-assign-dialog.component';
 
 @NgModule({
@@ -27,6 +26,5 @@ import { CategoryAssignDialogComponent } from './category-assign-dialog.componen
     MatTreeModule,
     MatCheckboxModule,
   ],
-  entryComponents: [CategoryAssignDialogComponent],
 })
-export class CategoryAssignDialogModule {}
+export class CategoryAssignDialogModule { }
