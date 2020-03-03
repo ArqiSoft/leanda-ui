@@ -1,5 +1,6 @@
 import { NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
-import { MatIconModule, MatTooltipModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CategoriesTreeModule } from 'app/shared/components/categories-tree/category-tree.module';
 import { EntityCountsModule } from 'app/shared/components/entity-counts/entity-counts.module';
 import { ExportDialogModule } from 'app/shared/components/export-dialog/export-dialog.module';

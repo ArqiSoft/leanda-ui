@@ -1,7 +1,6 @@
 import { PortalModule } from '@angular/cdk/portal';
 import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-
 import { AboutPageRoutingModule } from './about-page-routing.module';
 import { AboutPageComponent } from './about-page.component';
 import { AboutPageService } from './about-page.service';
@@ -18,6 +17,5 @@ const cdk = [PortalModule];
   exports: [],
   declarations: [AboutPageComponent, ...components],
   providers: [AboutPageService],
-  entryComponents: [...components],
 })
 export class AboutPageModule {}

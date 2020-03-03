@@ -103,7 +103,7 @@ export class MachineLearningPredictComponent implements OnInit, OnDestroy {
     });
     this.viewInit = this.actionViewService.isActionViewActive;
     this.subscriptions.push(
-      this.selection.onChange.subscribe(
+      this.selection.changed.subscribe(
         item => {
           if (!item.added[0]) { this.modelTrainForm.setErrors({ noFileSelected: true }); } else { this.modelTrainForm.setErrors(null); }
           const model = item.added[0];

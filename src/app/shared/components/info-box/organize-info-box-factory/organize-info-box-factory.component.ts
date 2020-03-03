@@ -1,13 +1,9 @@
 import { Component, ComponentFactoryResolver, EventEmitter, Injector, Input, Output, ViewChild, ViewContainerRef } from '@angular/core';
 
-import { CommonOrganizeInfoBoxComponent } from '../common-organize-info-box/common-organize-info-box.component';
-import { CvspOrganizeInfoBoxComponent } from '../cvsp-organize-info-box/cvsp-organize-info-box.component';
-
 @Component({
   selector: 'dr-organize-info-box-factory',
   templateUrl: './organize-info-box-factory.component.html',
   styleUrls: ['./organize-info-box-factory.component.scss'],
-  entryComponents: [CommonOrganizeInfoBoxComponent, CvspOrganizeInfoBoxComponent],
 })
 export class OrganizeInfoBoxFactoryComponent {
   currentComponent = null;

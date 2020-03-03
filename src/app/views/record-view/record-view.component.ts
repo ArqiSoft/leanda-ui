@@ -28,15 +28,15 @@ export class RecordViewComponent implements OnInit {
   listProperties = [];
 
   @ViewChildren('propertiesInfoBox') propertiesInfoBoxComponents: QueryList<PropertiesInfoBoxComponent>;
-  @ViewChild('infoBoxContainer', { static: false }) infoBoxContainer;
-  @ViewChild('fileViewContainer', { read: ViewContainerRef, static: false }) fileViewContainer: ViewContainerRef;
+  @ViewChild('infoBoxContainer') infoBoxContainer;
+  @ViewChild('fileViewContainer', { read: ViewContainerRef }) fileViewContainer: ViewContainerRef;
   record: BrowserDataItem;
   fileType: string;
   toolBarButtons = [];
   infoBoxes: Object[] = [];
 
-  @ViewChild('fileNameInput', { static: false }) fileNameInput: ElementRef;
-  @ViewChild('copyFilenameTooltip', { static: false }) copyFilenameTooltip: ElementRef;
+  @ViewChild('fileNameInput') fileNameInput: ElementRef;
+  @ViewChild('copyFilenameTooltip') copyFilenameTooltip: ElementRef;
   copyFilenameText: string;
 
   JSMolPreview = false;
