@@ -11,6 +11,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -21,7 +22,8 @@
                 "src/assets/sass"
               ]
             },
-            "assets": [{
+            "assets": [
+              {
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "/"
@@ -58,12 +60,26 @@
           },
           "configurations": {
             "local": {
-              "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.local.ts"
-              }]
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
+                }
+              ]
             },
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -73,33 +89,65 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": false,
-              "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.prod.ts"
-              }]
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
             },
             "dev": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "outputHashing": "all",
-              "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.dev.ts"
-              }]
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
             },
             "uat": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "outputHashing": "all",
-              "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.uat.ts"
-              }]
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.uat.ts"
+                }
+              ]
             },
             "test": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "outputHashing": "all",
-              "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.test.ts"
-              }]
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.test.ts"
+                }
+              ]
             },
             "deploy": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -109,12 +157,20 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": false,
-              "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.deploy.ts"
-              }]
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.deploy.ts"
+                }
+              ]
             },
             "deploy-fvc": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -124,12 +180,20 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": false,
-              "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.deploy-fvc.ts"
-              }]
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.deploy-fvc.ts"
+                }
+              ]
             },
             "deploy-labwiz": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -139,10 +203,12 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": false,
-              "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.deploy-labwiz.ts"
-              }]
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.deploy-labwiz.ts"
+                }
+              ]
             }
           }
         },
@@ -194,7 +260,8 @@
             "styles": [
               "src/styles.scss"
             ],
-            "assets": [{
+            "assets": [
+              {
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "/"
@@ -259,10 +326,13 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "dr",
-      "styleext": "scss"
+      "style": "scss"
     },
     "@schematics/angular:directive": {
       "prefix": "dr"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

@@ -5,9 +5,8 @@
     "types": [
       "jest",
       "node"
-    ],
-    "module": "commonjs"
-  },
+    ]
+},
   "files": [
     "test.ts",
     "polyfills.ts"

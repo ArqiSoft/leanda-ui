@@ -1,7 +1,7 @@
-import { FlatTreeControl } from "@angular/cdk/tree";
-import { Location } from "@angular/common";
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
-import { MatTreeFlatDataSource, MatTree } from "@angular/material";
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { Location } from '@angular/common';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatTreeFlatDataSource } from '@angular/material/tree';
 
 import {
   CategoryFlatNode,

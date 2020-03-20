@@ -1,11 +1,8 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {
-  MatAutocomplete,
-  MatAutocompleteSelectedEvent,
-  MatChipInputEvent,
-} from '@angular/material';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -29,10 +26,10 @@ export class CategoryTaggingComponent implements OnInit {
   allCategories: CategoryFlatNode[] = [];
   filteredCategories: Observable<CategoryFlatNode[]>;
 
-  @ViewChild('categoryInput', { static: false }) categoryInput: ElementRef<
+  @ViewChild('categoryInput') categoryInput: ElementRef<
     HTMLInputElement
   >;
-  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   constructor(private categoriesService: CategoryStorageService) {
     this.allCategories = this.categoriesService.flatTreeNodes;

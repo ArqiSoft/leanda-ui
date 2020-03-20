@@ -1,15 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import {
-  MatCheckboxModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatInputModule,
-  MatProgressSpinnerModule,
-  MatRippleModule,
-  MatTooltipModule,
-  MatTreeModule,
-} from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRippleModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTreeModule } from '@angular/material/tree';
 import { RouterModule, Routes } from '@angular/router';
 
 import { NotificationsModule } from '../../shared/components/notifications/notifications.module';

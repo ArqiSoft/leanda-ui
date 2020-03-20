@@ -1,6 +1,7 @@
 import { AbstractControl } from '@angular/forms';
 
 import XRegExp from '../../../../../node_modules/xregexp';
+import { Injectable } from "@angular/core";
 
 export function ValidateFolderName(control: AbstractControl) {
   // const regexSpaces = /^[\s]+|[.\s]+$/g;
@@ -24,6 +25,7 @@ export function ValidateWebPageUrl(control: AbstractControl) {
   return regex_wo_http.test(control.value) ? null : { notValidUrl: true };
 }
 
+@Injectable()
 export class ValidationMessages {
 
   web_page_validation_messages = [

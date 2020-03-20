@@ -1,15 +1,13 @@
-import { SelectionModel } from "@angular/cdk/collections";
-import { FlatTreeControl } from "@angular/cdk/tree";
-import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
-import {
-  MAT_DIALOG_DATA,
-  MatDialogRef,
-  MatTreeFlatDataSource} from "@angular/material";
-import { CategoryEntityApiService } from "app/core/services/api/category-entity-api.service";
-import { NotificationsService } from "app/core/services/notifications/notifications.service";
-import { Subject } from "rxjs";
+import { SelectionModel } from '@angular/cdk/collections';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatTreeFlatDataSource } from '@angular/material/tree';
+import { CategoryEntityApiService } from 'app/core/services/api/category-entity-api.service';
+import { NotificationsService } from 'app/core/services/notifications/notifications.service';
+import { Subject } from 'rxjs';
 
-import { NotificationType } from "../../notifications/events.model";
+import { NotificationType } from '../../notifications/events.model';
 import {
   NotificationItem,
   NotificationMessage

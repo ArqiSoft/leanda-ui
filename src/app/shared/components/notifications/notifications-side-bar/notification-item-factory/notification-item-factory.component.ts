@@ -1,21 +1,11 @@
-import {
-  Component, ComponentFactoryResolver, ComponentRef, Input, OnDestroy, OnInit, ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { Component, ComponentFactoryResolver, ComponentRef, Input, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
-
 import { INotificationComponent, NotificationItem, NotificationMessage } from '../../notifications.model';
-import { NotificationCommonItemComponent } from '../notification-common-item/notification-common-item.component';
-import { NotificationExportItemComponent } from '../notification-export-item/notification-export-item.component';
-import { NotificationProcessItemComponent } from '../notification-process-item/notification-process-item.component';
-import { NotificationUploadItemComponent } from '../notification-upload-item/notification-upload-item.component';
 
 @Component({
   selector: 'dr-notification-items-factory',
   templateUrl: './notification-item-factory.component.html',
   styleUrls: ['./notification-item-factory.component.scss'],
-  entryComponents: [NotificationCommonItemComponent, NotificationUploadItemComponent, NotificationProcessItemComponent,
-                    NotificationExportItemComponent],
 })
 export class NotificationItemFactoryComponent implements OnInit, OnDestroy {
 

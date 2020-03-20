@@ -4,10 +4,10 @@ import * as Papa from 'papaparse';
 import { Subject, interval } from 'rxjs';
 import { flatMap, takeUntil } from 'rxjs/operators';
 
-import { MatStepper } from '../../../../../node_modules/@angular/material';
 import { FingerprintsComponent, Origin } from '../../../shared/components/fingerprints/fingerprints.component';
 import { ComputationStatus } from '../features.model';
 import { FeaturesService } from '../features.service';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'dr-features-computation',
@@ -16,7 +16,7 @@ import { FeaturesService } from '../features.service';
 })
 export class FeaturesComputationComponent implements OnInit {
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
-  @ViewChild('fileInput', { static: false }) fileInput: HTMLInputElement;
+  @ViewChild('fileInput') fileInput: HTMLInputElement;
   @ViewChild(FingerprintsComponent, { static: true }) fingerprints: FingerprintsComponent;
 
   pollingFinished$: Subject<ComputationStatus> = new Subject();

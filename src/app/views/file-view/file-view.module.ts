@@ -1,9 +1,7 @@
 import { NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
-import {
-  MatChipsModule,
-  MatIconModule,
-  MatRippleModule,
-} from '@angular/material';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatRippleModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterModule, Routes } from '@angular/router';
 import { CategoryTaggingModule } from 'app/shared/components/category-tagging/category-tagging.module';

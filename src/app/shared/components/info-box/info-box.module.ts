@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatRippleModule } from '@angular/material';
+import { MatRippleModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
 
