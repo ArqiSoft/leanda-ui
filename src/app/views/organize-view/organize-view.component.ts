@@ -849,8 +849,8 @@ export class OrganizeViewComponent extends BrowserOptions
   }
 
   @HostListener('document:keyup', ['$event'])
-  handleKeyboardEvent(event: { key: string }) {
-    if (event.key === 'Delete') {
+  handleKeyboardEvent(event) {
+    if (event.key === 'Delete' || event.key == 'Backspace' && navigator.platform.indexOf('Mac') > -1) {
       if (this.dataService.getSelectedItems().length > 0) {
         this.openDeleteItemDialog();
       }
