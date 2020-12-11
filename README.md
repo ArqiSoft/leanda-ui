@@ -1,6 +1,6 @@
 # Leanda Front-End
 
-[![Build Status](https://travis-ci.org/ArqiSoft/leanda-ui.svg?branch=master)](https://travis-ci.org/ArqiSoft/leanda-ui)
+[![Build Status](https://travis-ci.com/ArqiSoft/leanda-ui.svg?branch=master)](https://travis-ci.com/ArqiSoft/leanda-ui)
 
 ## Requirements
 
