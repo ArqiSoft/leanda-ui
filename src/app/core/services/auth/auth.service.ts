@@ -61,7 +61,8 @@ export class AuthService {
         });
 
       this.manager.events.addUserLoaded(user => this.loadUserSettings(user));
-      this.manager.events.addUserSignedOut(() => this.startSignout());
+      // TODO: needs for investigation
+      // this.manager.events.addUserSignedOut(() => this.startSignout());
       this.manager.events.addSilentRenewError(() => this.silentSignIn());
       this.manager.events.addAccessTokenExpired(() => this.silentSignIn());
     });
