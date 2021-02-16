@@ -25,8 +25,8 @@ export class AboutPageComponent implements OnInit {
   }
 
   private setComponent() {
-    const mockDistribution = environment.distribution;
-    switch (mockDistribution.code) {
+    const distribution = environment.distribution;
+    switch (distribution.code) {
       case 'labwiz':
         this.service.componentPortal = this.selectedPortal = new ComponentPortal<LabwizAboutComponent>(LabwizAboutComponent);
         break;

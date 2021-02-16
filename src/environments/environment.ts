@@ -31,10 +31,10 @@ export const environment = {
     login: true,
     fvc: false,
     ssp: false,
-    labwiz: false
+    labwiz: false,
   },
   distribution: {
     code: 'leanda',
-    title: 'Leanda'
-  }
+    title: 'Leanda',
+  },
 };

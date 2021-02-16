@@ -31,12 +31,12 @@ export const environment = {
     login: false,
     fvc: true,
     ssp: false,
-    labwiz: false
+    labwiz: false,
   },
   distribution: [
     {
       code: 'fvc',
-      title: 'Feature Vector Calculation'
-    }
-  ]
+      title: 'Feature Vector Calculation',
+    },
+  ],
 };

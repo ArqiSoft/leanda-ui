@@ -8,7 +8,7 @@
 
 ## Commands
 
-*Current directory must be the `leanda.ui` repository*
+*Current directory must be the `leanda-ui` repository*
 
 ```terminal
 npm install -g @angular/cli

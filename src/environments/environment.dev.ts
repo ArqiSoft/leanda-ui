@@ -30,6 +30,6 @@ export const environment = {
   },
   distribution: {
     code: 'leanda',
-    title: 'Leanda'
+    title: 'Leanda',
   }
 };
