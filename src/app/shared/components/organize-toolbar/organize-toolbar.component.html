@@ -1,5 +1,5 @@
 <context-menu #fileContextMenu>
-  <div *ngFor="let action of contextMenuActionsManager.getItems(0)">
+  <ng-container *ngFor="let action of contextMenuActionsManager.getItems(0)">
     <ng-template contextMenuItem let-item [subMenu]="action.subItems.length === 0 ? null : contextSubMenu" [visible]="action.visible"
       [enabled]="action.isEnabled(item)" [divider]="action.divider" (execute)="action.click($event.item)">
       <img *ngIf="!action.divider && action.img" src="{{ action.img(item) }}"> {{ action.html(item) }}
@@ -10,7 +10,7 @@
         {{ subItem.html(item) }}
       </ng-template>
     </context-menu>
-  </div>
+  </ng-container>
 </context-menu>
 
 <div class="tools-header e2e-toolbar-header" [ngClass]="{'search-state': showSearchInput}">
