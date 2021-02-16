@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
   template: `
 <h1>About Leanda.io</h1>
 
-<section>
+<section class="mt-4">
     <h2>What is it?</h2>
     <p>
         The data is essential for science. Data repositories have existed for decades and have been well-supported by
@@ -32,8 +32,10 @@ import { Component, OnInit } from '@angular/core';
 
 <section>
     <h2>Data Domains and Formats</h2>
+    <p>
     Leanda.io supports various formats and is able to convert between them seamlessly at time of import or export.
     At the moment the following data domain services are in place:
+    </p>
     <ul>
         <li>Generic image files such as PNG, GIF, etc</li>
         <li>PDF files</li>
@@ -48,6 +50,7 @@ import { Component, OnInit } from '@angular/core';
 </section>
 <section>
     <h2>Machine Learning</h2>
+    <p>
     A machine learning (ML) framework is embedded into Leanda.io and can be used as an API, standalone tool or can be
     integrated in a new
     software as an autonomous module. Leanda.io provides a number of pipelines simplifying data science workflows used
@@ -55,15 +58,18 @@ import { Component, OnInit } from '@angular/core';
     discovery starting from data import and curation and finishing with the predictive models training, evaluation and
     application.
     Trained models can be shared with other users or made public.
+    </p>
 </section>
 <section>
     <h2>Data curation and annotation</h2>
+    <p>
     Leanda.io was designed to support multiple ways of data acquisition, conversion,
     real-time automated and manual data curation, annotation and analysis. The system can extract the metadata from the
     raw files automatically.
     In addition to automatic metadata extraction Leanda.io provides ways to add hierarchical categories to the data,
     tag, and to assign
     additional metadata types.
+    </p>
 </section>
   `,
 })
