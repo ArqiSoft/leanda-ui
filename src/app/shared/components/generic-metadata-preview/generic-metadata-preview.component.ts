@@ -41,7 +41,7 @@ export class GenericMetadataPreviewComponent implements OnInit {
     },
     { name: EGenericMetadata.Original_Folder_path, value: `Drafts` },
     { name: EGenericMetadata.Instrument_Device_Name, value: `Laboratory Microscope` },
-    { name: EGenericMetadata.Notes, value: `Experimenter had to consume a lot of coffee` },
+    { name: EGenericMetadata.Notes, value: `Experimenter notes sample` },
   ];
 
   data: { img: string; name: string; properties: IGenericMetadata[] } = { img: 'intrinsic.ico', name: 'File Information', properties: [] };
