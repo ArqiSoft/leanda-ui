@@ -18,23 +18,23 @@ export const environment = {
   maxBlobUploadingFileSize: 10240 * 1024,
   capabilities: {
     chemical: true,
-    crystal: true,
+    crystal: false,
     image: true,
-    machineLearning: true,
-    microscopy: true,
+    machineLearning: false,
+    microscopy: false,
     office: true,
     pdf: true,
-    reaction: true,
-    spectrum: true,
-    datasets: true,
-    webPage: true,
+    reaction: false,
+    spectrum: false,
+    datasets: false,
+    webPage: false,
     login: true,
     fvc: false,
     ssp: false,
-    labwiz: false
+    labwiz: false,
   },
   distribution: {
     code: 'leanda',
-    title: 'Leanda'
+    title: 'Leanda',
   }
 };
