@@ -6,7 +6,7 @@
 export const environment = {
   name: 'TEST',
   production: false,
-  identityServerUrl: 'https://id.leanda.io/auth/realms/OSDR',
+  identityServerUrl: 'https://id.leanda.io/auth/realms/Leanda',
   apiUrl: 'http://api.leanda.io/core-api/v1/api',
   blobStorageApiUrl: 'http://api.leanda.io/blob/v1/api',
   imagingUrl: 'http://api.leanda.io/imaging/v1/api',
