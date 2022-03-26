@@ -1,5 +1,5 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { OnInit } from '@angular/core';
+import { OnInit, Directive } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 
 import { CategoryTreeInfo } from '../../../views/category-tree-management/CategoryTreeInfo';
@@ -10,6 +10,7 @@ import {
   CategoryTree,
 } from './models/category-node';
 
+@Directive()
 export class CategoryTreeBase implements OnInit {
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap = new Map<CategoryFlatNode, CategoryNode>();
