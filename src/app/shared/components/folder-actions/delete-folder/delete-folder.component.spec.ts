@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DeleteFolderComponent } from './delete-folder.component';
 
@@ -6,7 +6,7 @@ describe('DeleteFolderComponent', () => {
   let component: DeleteFolderComponent;
   let fixture: ComponentFixture<DeleteFolderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DeleteFolderComponent ],
     })

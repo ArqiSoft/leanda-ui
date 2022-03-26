@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NotificationProcessItemComponent } from './notification-process-item.component';
 
@@ -6,7 +6,7 @@ describe('NotificationProcessItemComponent', () => {
   let component: NotificationProcessItemComponent;
   let fixture: ComponentFixture<NotificationProcessItemComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ NotificationProcessItemComponent ],
     })

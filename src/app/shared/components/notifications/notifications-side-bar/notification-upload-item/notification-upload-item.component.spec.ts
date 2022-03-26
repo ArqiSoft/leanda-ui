@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NotificationUploadItemComponent } from './notification-upload-item.component';
 
@@ -6,7 +6,7 @@ describe('NotificationUploadItemComponent', () => {
   let component: NotificationUploadItemComponent;
   let fixture: ComponentFixture<NotificationUploadItemComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ NotificationUploadItemComponent ],
     })

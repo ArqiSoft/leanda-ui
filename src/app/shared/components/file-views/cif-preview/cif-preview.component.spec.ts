@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CifPreviewComponent } from './cif-preview.component';
 
@@ -6,7 +6,7 @@ describe('CifPreviewComponent', () => {
   let component: CifPreviewComponent;
   let fixture: ComponentFixture<CifPreviewComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CifPreviewComponent ],
     })

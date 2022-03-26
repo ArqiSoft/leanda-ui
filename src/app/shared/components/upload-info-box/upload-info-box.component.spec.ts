@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { UploadInfoBoxComponent } from './upload-info-box.component';
 
@@ -6,7 +6,7 @@ describe('UploadInfoBoxComponent', () => {
   let component: UploadInfoBoxComponent;
   let fixture: ComponentFixture<UploadInfoBoxComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ UploadInfoBoxComponent ],
     })

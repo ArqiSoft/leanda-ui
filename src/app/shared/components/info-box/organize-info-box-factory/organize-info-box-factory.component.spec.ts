@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {OrganizeInfoBoxFactoryComponent} from './organize-info-box-factory.component';
 
@@ -6,7 +6,7 @@ describe('FieldsFactoryComponent', () => {
   let component: OrganizeInfoBoxFactoryComponent;
   let fixture: ComponentFixture<OrganizeInfoBoxFactoryComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ OrganizeInfoBoxFactoryComponent ],
     })

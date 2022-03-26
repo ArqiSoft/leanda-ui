@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SplashNotificationsComponent } from './splash-notifications.component';
 
@@ -6,7 +6,7 @@ describe('SplashNotificationsComponent', () => {
   let component: SplashNotificationsComponent;
   let fixture: ComponentFixture<SplashNotificationsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SplashNotificationsComponent ],
     })

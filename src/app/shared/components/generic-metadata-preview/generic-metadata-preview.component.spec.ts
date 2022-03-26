@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GenericMetadataPreviewComponent } from './generic-metadata-preview.component';
 
@@ -6,7 +6,7 @@ describe('GenericMetadataPreviewComponent', () => {
   let component: GenericMetadataPreviewComponent;
   let fixture: ComponentFixture<GenericMetadataPreviewComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ GenericMetadataPreviewComponent ],
     })

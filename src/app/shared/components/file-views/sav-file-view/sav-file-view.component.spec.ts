@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SavFileViewComponent } from './sav-file-view.component';
 
@@ -6,7 +6,7 @@ describe('SavFileViewComponent', () => {
   let component: SavFileViewComponent;
   let fixture: ComponentFixture<SavFileViewComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SavFileViewComponent ],
     })

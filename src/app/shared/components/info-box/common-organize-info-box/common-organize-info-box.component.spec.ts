@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {CommonOrganizeInfoBoxComponent} from './common-organize-info-box.component';
 
@@ -6,7 +6,7 @@ describe('CommonInputComponent', () => {
   let component: CommonOrganizeInfoBoxComponent;
   let fixture: ComponentFixture<CommonOrganizeInfoBoxComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CommonOrganizeInfoBoxComponent ],
     })

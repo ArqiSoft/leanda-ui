@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MachineLearningFactoryComponent } from './machine-learning-factory.component';
 
@@ -6,7 +6,7 @@ describe('MachineLearningFactoryComponent', () => {
   let component: MachineLearningFactoryComponent;
   let fixture: ComponentFixture<MachineLearningFactoryComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MachineLearningFactoryComponent ],
     })

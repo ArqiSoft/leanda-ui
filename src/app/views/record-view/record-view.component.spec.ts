@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RecordViewComponent } from './record-view.component';
 
@@ -6,7 +6,7 @@ describe('RecordViewComponent', () => {
   let component: RecordViewComponent;
   let fixture: ComponentFixture<RecordViewComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ RecordViewComponent ],
     })

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CvspOrganizeInfoBoxComponent } from './cvsp-organize-info-box.component';
 
@@ -6,7 +6,7 @@ describe('CvspOrganizeInfoBoxComponent', () => {
   let component: CvspOrganizeInfoBoxComponent;
   let fixture: ComponentFixture<CvspOrganizeInfoBoxComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CvspOrganizeInfoBoxComponent ],
     })

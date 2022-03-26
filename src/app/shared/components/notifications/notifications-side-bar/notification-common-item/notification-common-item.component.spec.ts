@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NotificationCommonItemComponent } from './notification-common-item.component';
 
@@ -6,7 +6,7 @@ describe('NotificationCommonItemComponent', () => {
   let component: NotificationCommonItemComponent;
   let fixture: ComponentFixture<NotificationCommonItemComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ NotificationCommonItemComponent ],
     })

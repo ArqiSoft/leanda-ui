@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SpectraJsmolPreviewComponent } from './spectra-jsmol-preview.component';
 
@@ -6,7 +6,7 @@ describe('SpectraJsmolPreviewComponent', () => {
   let component: SpectraJsmolPreviewComponent;
   let fixture: ComponentFixture<SpectraJsmolPreviewComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SpectraJsmolPreviewComponent ],
     })
