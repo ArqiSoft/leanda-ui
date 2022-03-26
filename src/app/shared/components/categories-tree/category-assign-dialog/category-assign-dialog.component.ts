@@ -27,7 +27,7 @@ import {
 })
 export class CategoryAssignDialogComponent extends CategoryTreeBase
   implements OnInit, OnDestroy {
-  private destroy$ = new Subject<any>();
+  private destroy$ = new Subject<void>();
 
   categories = Array<CategoryTree>();
 

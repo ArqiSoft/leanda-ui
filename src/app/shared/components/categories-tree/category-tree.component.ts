@@ -26,7 +26,7 @@ import { CategoryNode, CategoryTree } from './models/category-node';
   ],
 })
 export class CategoryTreeComponent implements OnInit, OnDestroy {
-  private destroy$ = new Subject();
+  private destroy$ = new Subject<void>();
   treeControl = new NestedTreeControl<CategoryNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<CategoryNode>();
   entitiyFilter: ICounter;
