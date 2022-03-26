@@ -16,7 +16,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field *ngIf="fingerprintList.controls[i].controls.size">
+      <mat-form-field *ngIf="fingerprintList.controls[i]['controls'].size">
         <mat-select formControlName="size" placeholder="Fingerprint Size" class="e2e-fingerprint-size-{{i}}" required>
           <mat-option *ngFor="let fpSize of fingerprintSizeList" [value]="fpSize"> {{fpSize}}
           </mat-option>
@@ -28,7 +28,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field *ngIf="fingerprintList.controls[i].controls.radius">
+      <mat-form-field *ngIf="fingerprintList.controls[i]['controls'].radius">
         <mat-select formControlName="radius" placeholder="Fingerprint Radius" class="e2e-fingerprint-radius-{{i}}"
           required>
           <mat-option *ngFor="let radius of fingerprintRadiusList" [value]="radius"> {{radius}}

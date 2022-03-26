@@ -18,7 +18,7 @@ export class RenameFolderComponent implements OnInit {
 
   public subscriptions: Subscription = null;
   visible: boolean;
-  validationMessages: {}[] = null;
+  validationMessages: {type: string, message: string}[] = null;
 
   // FormGroups
   folderRenameFG: FormGroup = null;

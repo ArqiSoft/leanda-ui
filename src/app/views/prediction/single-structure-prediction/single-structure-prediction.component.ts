@@ -246,7 +246,7 @@ export class SingleStructurePredictionComponent implements OnInit, OnDestroy, Af
     this.modelsData.modelClick(group, property, model);
   }
 
-  getKeys(mapParam) {
+  getKeys(mapParam): any[] {
     const array = Array.from(mapParam.keys());
     if (array.length > 0) {
       if (array[0] instanceof ModelProperty) {

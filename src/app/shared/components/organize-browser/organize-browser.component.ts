@@ -58,7 +58,7 @@ export class OrganizeBrowserComponent extends BasePreview implements OnInit, OnD
               private imagesApi: ImagesApiService,
               public dataService: BrowserDataBaseService,
               public paginator: PaginatorManagerService,
-              private auth: AuthService,
+              public auth: AuthService,
               private signalr: SignalrService) {
     super();
   }

@@ -14,7 +14,7 @@ export class CreateFolderComponent implements OnInit {
 
   createFolderEvent = new EventEmitter<string>();
   createFolderDialog: FormGroup = null;
-  validationMessages: {}[] = null;
+  validationMessages: {type: string, message: string}[] = null;
 
   constructor(public dialogRef: MatDialogRef<CreateFolderComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,

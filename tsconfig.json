@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "downlevelIteration": true,
     "module": "esnext",
     "paths": { "stream": ["../node_modules/readable-stream"] },
@@ -16,7 +17,7 @@
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
-    "strictTemplates": true,
+    "strictTemplates": false,
     "fullTemplateTypeCheck": true
   }
 }

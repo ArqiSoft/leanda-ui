@@ -1,12 +1,12 @@
 <context-menu #fileContextMenu>
   <ng-container *ngFor="let action of contextMenuActionsManager.getItems(0)">
     <ng-template contextMenuItem let-item [subMenu]="action.subItems.length === 0 ? null : contextSubMenu" [visible]="action.visible"
-      [enabled]="action.isEnabled(item)" [divider]="action.divider" (execute)="action.click($event.item)">
-      <img *ngIf="!action.divider && action.img" src="{{ action.img(item) }}"> {{ action.html(item) }}
+      [enabled]="action.isEnabled(item)" [divider]="action['divider']" (execute)="action.click($event.item)">
+      <img *ngIf="!action['divider'] && action.img" src="{{ action.img(item) }}"> {{ action.html(item) }}
     </ng-template>
     <context-menu #contextSubMenu>
       <ng-template *ngFor="let subItem of action.subItems" contextMenuItem let-item [visible]="subItem.visible" [enabled]="subItem.isEnabled(item)"
-        [divider]="action.divider" (execute)="subItem.click($event.item)">
+        [divider]="action['divider']" (execute)="subItem.click($event.item)">
         {{ subItem.html(item) }}
       </ng-template>
     </context-menu>

@@ -1,12 +1,12 @@
 <context-menu [disabled]="isFileView" #myContextMenu>
   <ng-container *ngFor="let action of contextMenuActionsManager.getItems(1)">
     <ng-template contextMenuItem let-item [subMenu]="action.subItems.length === 0 ? null : contextSubMenu" [visible]="action.visible"
-      [enabled]="action.isEnabled(item)" [divider]="action.divider" (execute)="action.click($event.item)">
-      <img *ngIf="!action.divider && action.img" src="{{ action.img(item) }}"> {{ action.html(item) }}
+      [enabled]="action.isEnabled(item)" [divider]="action['divider']" (execute)="action.click($event.item)">
+      <img *ngIf="!action['divider'] && action.img" src="{{ action.img(item) }}"> {{ action.html(item) }}
     </ng-template>
     <context-menu #contextSubMenu>
       <ng-template *ngFor="let subItem of action.subItems" contextMenuItem let-item [visible]="subItem.visible" [enabled]="subItem.isEnabled(item)"
-        [divider]="action.divider" (execute)="subItem.click($event.item)">
+        [divider]="action['divider']" (execute)="subItem.click($event.item)">
         {{ subItem.html(item) }}
       </ng-template>
     </context-menu>
@@ -55,7 +55,7 @@
             <dd *ngIf="item.recordName | async as recordName">{{recordName}}</dd>
           </dl>
         </div>
-        <div class="status-icon error" matTooltip="{{item.errorMessage ? item.errorMessage : 'Error'}}">
+        <div class="status-icon error" matTooltip="{{item['errorMessage'] ? item['errorMessage'] : 'Error'}}">
           <span *ngIf="item.status=='Failed'">
             <img src="/img/svg/material/ic_error_black_18px.svg" markup-inline/>
           </span>
@@ -102,7 +102,7 @@
   </ul>
   <div class="list-group">
     <a *ngFor="let item of dataService.data.items" (dblclick)="onItemDblClick($event,item)" (click)="onItemClick($event,item)"
-      class="table-item" drFileDragDrop hoverClass="folder-drag-hover" [ngClass]="{'loading':item.loading, 'checked':dataService.isItemSelected(item)}"
+      class="table-item" [drFileDragDrop]="true" hoverClass="folder-drag-hover" [ngClass]="{'loading':item.loading, 'checked':dataService.isItemSelected(item)}"
       (click)="false" [href]="item.link" (contextmenu)="onContextMenu($event, item)">
       <div style="width: 12%">
         <img class="item-img" [src]="getPreviewImg(item)" no-inline/>

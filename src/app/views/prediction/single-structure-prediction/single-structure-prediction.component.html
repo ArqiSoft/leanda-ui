@@ -113,7 +113,7 @@
                         </div>
                       </ng-template>
                       <div class="prop-name-align">
-                        <span class="mr-2" *ngIf="(element.referTask.task.stream$ | async).status != predictionStatus.error && (element.referTask.task.stream$ | async).status != predictionStatus.finishOk && (element.referTask.task.stream$ | async).status != predictionStatus.timeout">
+                        <span class="mr-2" *ngIf="(element.referTask.task.stream$ | async)['status'] != predictionStatus.error && (element.referTask.task.stream$ | async)['status'] != predictionStatus.finishOk && (element.referTask.task.stream$ | async)['status'] != predictionStatus.timeout">
                           <img class="i-14" src="/img/svg/loaders/loader-flask.svg" no-inline>
                         </span>
                         <span class="mat-column-property highlight pointer details-preview" (click)="onDetailsPreview(resultPropertyHoverTemplate)">{{element.property.propertyName}}</span>
@@ -145,17 +145,17 @@
                     <mat-header-cell *matHeaderCellDef> Consensus</mat-header-cell>
                     <mat-cell *matCellDef="let element">
 
-                      <div *ngIf="(element.referTask.task.stream$ | async).status == predictionStatus.finishOk" class="predict-list highlight">
+                      <div *ngIf="(element.referTask.task.stream$ | async)['status'] == predictionStatus.finishOk" class="predict-list highlight">
                         <span *ngIf="(element.referTask.task.stream$ | async) as reqResult">
-                          <span *ngIf="reqResult && reqResult.data.response.consensus && convertToExp(reqResult.data.response.consensus.value).exp">
-                            {{convertToExp(reqResult.data.response.consensus.value).value}}*10
-                            <sup>{{convertToExp(reqResult.data.response.consensus.value).exp}}</sup>
+                          <span *ngIf="reqResult && reqResult['data'].response.consensus && convertToExp(reqResult['data'].response.consensus.value).exp">
+                            {{convertToExp(reqResult['data'].response.consensus.value).value}}*10
+                            <sup>{{convertToExp(reqResult['data'].response.consensus.value).exp}}</sup>
                           </span>
-                          <span *ngIf="reqResult && reqResult.data.response.consensus && !convertToExp(reqResult.data.response.consensus.value).exp">
-                            {{reqResult.data.response.consensus.value | number : '1.2-2'}}
+                          <span *ngIf="reqResult && reqResult['data'].response.consensus && !convertToExp(reqResult['data'].response.consensus.value).exp">
+                            {{reqResult['data'].response.consensus.value | number : '1.2-2'}}
                           </span>
-                          <span *ngIf="reqResult && reqResult.data.response.consensus">
-                            {{reqResult.data.response.consensus.units}}
+                          <span *ngIf="reqResult && reqResult['data'].response.consensus">
+                            {{reqResult['data'].response.consensus.units}}
                           </span>
                         </span>
                       </div>
@@ -167,8 +167,8 @@
                     <mat-header-cell *matHeaderCellDef> {{report.getColumnByCode(propColumn)}}</mat-header-cell>
                     <mat-cell *matCellDef="let element">
 
-                      <ul *ngIf="(element.referTask.task.stream$ | async).status == predictionStatus.finishOk" class="predict-list">
-                        <div *ngFor="let model of (element.referTask.task.stream$ | async).data.response.models">
+                      <ul *ngIf="(element.referTask.task.stream$ | async)['status'] == predictionStatus.finishOk" class="predict-list">
+                        <div *ngFor="let model of (element.referTask.task.stream$ | async)['data'].response.models">
                           <li *ngIf="modelInclude(model, element, propColumn)">
                             <ng-template #resultDsTemplate>
                               <h4>{{targetModel(model, element, propColumn).name}}</h4>

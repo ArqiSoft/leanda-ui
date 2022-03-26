@@ -54,6 +54,8 @@ export class RecordViewComponent implements OnInit {
 
   currentFileViewComponent = null;
   currentFileViewContainerInstance;
+  showInfoPopover: boolean
+  showPreviewPopover: boolean
 
   constructor(
     private nodesApi: NodesApiService,

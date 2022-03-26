@@ -76,7 +76,7 @@ export class MoveFolderComponent implements OnInit {
   startFolder: BrowserDataItem = null;
   movedItems: BrowserDataItem[] = null;
 
-  validationMessages: {}[] = null;
+  validationMessages: {type: string, message: string}[] = null;
 
   selectedFolder: BrowserDataItem = null;
   data: BrowserData = new BrowserData();

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
 import { FingerprntsModule } from 'app/shared/components/fingerprints/fingerprints.module';
-import { PopoverModule } from 'ngx-bootstrap';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 
 import { SharedModule } from '../../shared/shared.module';
 

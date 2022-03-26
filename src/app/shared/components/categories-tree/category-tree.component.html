@@ -52,7 +52,6 @@
     class="chips-popover"
     (mouseenter)="showPopover('showCategoriesPovover')"
     (mouseleave)="hidePopover('showCategoriesPovover')"
-    [ngClass]="{ show: showCategoriesPovover }"
   >
     <ng-container *ngTemplateOutlet="tree"></ng-container>
   </div>

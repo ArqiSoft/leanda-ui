@@ -706,7 +706,7 @@ export class OrganizeViewComponent extends BrowserOptions
     this.openExportDialog(fileType);
   }
 
-  onFileChange(event: { target: { files: any } }) {
+  onFileChange(event: any) {
     this.uploadFileWithNotificationBar(event.target.files);
   }
 

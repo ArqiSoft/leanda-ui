@@ -5,7 +5,7 @@
   </button>
   <div *dropdownMenu class="dropdown-menu" role="menu">
 
-    <div *ngFor="let searchItem of searchData" (click)="onItemClick(event, searchItem)" class="dropdown-item search-drop-drown-item"
+    <div *ngFor="let searchItem of searchData" (click)="onItemClick($event, searchItem)" class="dropdown-item search-drop-drown-item"
       role="menuitem">
       <div *ngIf="searchItem.link" class="row">
         <div class="col-sm-1 image-search-column">

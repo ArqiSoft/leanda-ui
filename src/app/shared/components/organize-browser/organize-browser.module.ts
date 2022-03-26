@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModulesList } from 'app/common-modules-list';
 import { SharedModule } from 'app/shared/shared.module';
-import { BsDropdownModule } from 'ngx-bootstrap';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { OrganizeBrowserComponent } from './organize-browser.component';
 

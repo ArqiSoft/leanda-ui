@@ -5,10 +5,10 @@
     let-item
     [visible]="action.visible"
     [enabled]="action.isEnabled(item)"
-    [divider]="action.divider"
+    [divider]="action['divider']"
     (execute)="action.click($event.item)"
   >
-    <img *ngIf="!action.divider && action.img" src="{{ action.img(item) }}" />
+    <img *ngIf="!action['divider'] && action.img" src="{{ action.img(item) }}" />
     {{ action.html(item) }}
   </ng-template>
 </context-menu>

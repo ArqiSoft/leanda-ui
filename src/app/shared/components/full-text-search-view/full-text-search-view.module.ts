@@ -1,9 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModulesList } from 'app/common-modules-list';
-import { SharedModule } from 'app/shared/shared.module';
-import { BsDropdownModule } from 'ngx-bootstrap';
-
-import { FullTextSearchViewComponent } from './full-text-search-view.component';
+import { NgModule } from "@angular/core";
+import { SharedModule } from "app/shared/shared.module";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { FullTextSearchViewComponent } from "./full-text-search-view.component";
 
 @NgModule({
   imports: [SharedModule, BsDropdownModule],
@@ -11,4 +9,4 @@ import { FullTextSearchViewComponent } from './full-text-search-view.component';
   declarations: [FullTextSearchViewComponent],
   providers: [],
 })
-export class FullTextSearchModule { }
+export class FullTextSearchModule {}

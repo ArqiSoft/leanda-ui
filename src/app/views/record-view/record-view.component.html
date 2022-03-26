@@ -118,7 +118,7 @@
     <div *ngIf="!sidebarContent.sidebarCollapsed" class="file-img">
       <div matRipple>
         <img
-          *ngIf="record && record.images; else thumbnail"
+          *ngIf="record && record.images"
           class="e2e-middle-preview preview-img"
           [class.active]="currentTab === 'preview'"
           (click)="currentTab = 'preview'"
@@ -127,8 +127,7 @@
         />
         <div class="default-thumbnail">
           <img
-            #thumbnail
-            *ngIf="record && !record.images"
+            *ngIf="!record || !record.images"
             class="e2e-middle-preview preview-img"
             [class.active]="currentTab === 'preview'"
             (click)="currentTab = 'preview'"

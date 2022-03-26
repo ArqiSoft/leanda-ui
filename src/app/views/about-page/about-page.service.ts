@@ -1,7 +1,6 @@
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
-import { Component } from '@angular/compiler/src/core';
 import { BehaviorSubject } from 'rxjs';
-import { Injectable } from "@angular/core";
+import { Component, Injectable } from "@angular/core";
 
 @Injectable()
 export class AboutPageService {

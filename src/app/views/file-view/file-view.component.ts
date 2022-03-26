@@ -102,6 +102,12 @@ export class FileViewComponent extends BrowserOptions
   lastShownPopoverName: string;
   lastShownPopoverTimeoutId: any;
   lastSelectedInfoBoxName: string;
+  showCategoriesPovover: boolean
+  showRecordsPopover: boolean
+  showPreviewPopover: boolean
+  showInfoPopover: boolean
+  showSocialsPopover: boolean
+  showDownloadPopover: boolean
 
   get fileType(): string {
     return this.fileInfo.name
@@ -433,7 +439,7 @@ export class FileViewComponent extends BrowserOptions
 
   itemClick(event: MouseEvent, item: BrowserDataItem) {}
 
-  onApplyFilter(appliedFilterList: FilterField[]) {
+  onApplyFilter(appliedFilterList: any) {
     this.appliedFilterList = appliedFilterList;
   }
 

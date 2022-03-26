@@ -47,7 +47,7 @@ export class CategoryTreeComponent implements OnInit, OnDestroy {
     private nodesApi: NodesApiService,
   ) {}
 
-  private get categories(): CategoryTree[] {
+  public get categories(): CategoryTree[] {
     return this.service.treeList;
   }
 

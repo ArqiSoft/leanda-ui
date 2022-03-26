@@ -72,7 +72,7 @@ export class CategoryTreeManagmentComponent extends CategoryTreeBase
   }
 
   /** Insert new main node. */
-  addNewMainNode(node: CategoryFlatNode): void {
+  addNewMainNode(node?: CategoryFlatNode): void {
     this.service.insertMainItem();
     this.treeControl.expand(node);
   }
