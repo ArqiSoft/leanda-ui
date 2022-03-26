@@ -96,3 +96,4 @@ local_db/
 gulpfile.js
 gulpfile.js.map
 .angular
+build
