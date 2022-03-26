@@ -1,11 +1,10 @@
 {
-	// See http://go.microsoft.com/fwlink/?LinkId=827846
-	// for the documentation about the extensions.json format
-	"recommendations": [
+  // See http://go.microsoft.com/fwlink/?LinkId=827846
+  // for the documentation about the extensions.json format
+  "recommendations": [
     // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
     "eg2.tslint",
     "esbenp.prettier-vscode",
-    "CoenraadS.bracket-pair-colorizer",
     "infinity1207.angular2-switcher",
     "wmaurer.change-case",
     "DavidAnson.vscode-markdownlint",
@@ -13,5 +12,5 @@
     "jock.svg",
     "pflannery.vscode-versionlens",
     "eamodio.gitlens"
-	]
+  ]
 }
