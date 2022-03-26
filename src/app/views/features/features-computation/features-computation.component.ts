@@ -58,7 +58,7 @@ export class FeaturesComputationComponent implements OnInit {
     }
   }
 
-  onFileChange(e: { target: { files: File[] } }): void {
+  onFileChange(e: { target: { files: File[] } | any }): void {
     if (['cif', 'sdf'].indexOf(this.getFileExtension((e.target.files[0] as File).name)) >= 0) {
       this.fileItem = e.target.files[0] as File;
       this.fileExtension = this.getFileExtension(this.fileItem.name);

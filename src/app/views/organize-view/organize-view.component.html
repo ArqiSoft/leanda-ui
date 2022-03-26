@@ -42,10 +42,10 @@
       [activeButtons]="activeToolbarButtons"
       [currentView]="currentView"
     ></dr-organize-toolbar>
-    <!-- todo: check $event.item -->
+    <!-- todo: check $event['item'] -->
     <dr-organize-browser
       #browser
-      (contextmenu)="onContextMenu($event, $event.item)"
+      (contextmenu)="onContextMenu($event, $event['item'])"
       [contextMenuActionsManager]="folderContextMenuManager"
       [options]="getOptions()"
       usingFor="nodes-view"

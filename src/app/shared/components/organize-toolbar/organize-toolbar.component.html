@@ -54,8 +54,8 @@
           <img src="/img/svg/draft-menu/square-points.svg" />
         </button>
 
-        <!-- todo: check onFileFolderContextMenu($event, $event.item) -->
-        <button *ngIf="isButtonActive(buttonType.subMenu)" matTooltip="More" (click)="onFileFolderContextMenu($event, $event.item)" class="waves waves-circle more-actions e2e-submenu-button">
+        <!-- todo: check onFileFolderContextMenu($event, $event['item']) -->
+        <button *ngIf="isButtonActive(buttonType.subMenu)" matTooltip="More" (click)="onFileFolderContextMenu($event, $event['item'])" class="waves waves-circle more-actions e2e-submenu-button">
           <img src="/img/svg/three-dots-v.svg" />
         </button>
 
