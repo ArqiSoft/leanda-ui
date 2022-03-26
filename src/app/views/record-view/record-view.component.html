@@ -98,7 +98,7 @@
           (mouseleave)="hidePopover('showInfoPopover')"
           [ngClass]="{ active: currentTab == 'properties' }"
         >
-          <button (click)="changeView('properties')" mat-icon-button>
+          <button (click)="this['changeView']('properties')" mat-icon-button>
             <img src="/img/svg/material/ic_info_outline_black_24px.svg" />
           </button>
         </div>
@@ -108,7 +108,7 @@
           (mouseleave)="hidePopover('showPreviewPopover')"
           [ngClass]="{ active: currentTab == 'preview' }"
         >
-          <button (click)="changeView('properties')" mat-icon-button>
+          <button (click)="this['changeView']('properties')" mat-icon-button>
             <img src="/img/svg/material/ic_image_black_24px.svg" />
           </button>
         </div>

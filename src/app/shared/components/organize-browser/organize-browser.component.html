@@ -1,11 +1,13 @@
 <context-menu [disabled]="isFileView" #myContextMenu>
   <ng-container *ngFor="let action of contextMenuActionsManager.getItems(1)">
+    <!-- todo: check action.isEnabled(action) -->
     <ng-template contextMenuItem let-item [subMenu]="action.subItems.length === 0 ? null : contextSubMenu" [visible]="action.visible"
-      [enabled]="action.isEnabled(item)" [divider]="action['divider']" (execute)="action.click($event.item)">
+      [enabled]="action.isEnabled(action)" [divider]="action['divider']" (execute)="action.click($event.item)">
       <img *ngIf="!action['divider'] && action.img" src="{{ action.img(item) }}"> {{ action.html(item) }}
     </ng-template>
     <context-menu #contextSubMenu>
-      <ng-template *ngFor="let subItem of action.subItems" contextMenuItem let-item [visible]="subItem.visible" [enabled]="subItem.isEnabled(item)"
+      <!-- todo: check subItem.isEnabled(subItem) -->
+      <ng-template *ngFor="let subItem of action.subItems" contextMenuItem let-item [visible]="subItem.visible" [enabled]="subItem.isEnabled(subItem)"
         [divider]="action['divider']" (execute)="subItem.click($event.item)">
         {{ subItem.html(item) }}
       </ng-template>

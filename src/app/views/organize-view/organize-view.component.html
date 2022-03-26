@@ -1,10 +1,11 @@
 <context-menu #defaultContextMenu [disabled]="disabledMenu">
+  <!-- todo: check action.isEnabled(action) -->
   <ng-template
     *ngFor="let action of folderContextMenuManager.getItems(2)"
     contextMenuItem
     let-item
     [visible]="action.visible"
-    [enabled]="action.isEnabled(item)"
+    [enabled]="action.isEnabled(action)"
     [divider]="action['divider']"
     (execute)="action.click($event.item)"
   >
@@ -41,9 +42,10 @@
       [activeButtons]="activeToolbarButtons"
       [currentView]="currentView"
     ></dr-organize-toolbar>
+    <!-- todo: check $event.item -->
     <dr-organize-browser
       #browser
-      (contextmenu)="onContextMenu($event, item)"
+      (contextmenu)="onContextMenu($event, $event.item)"
       [contextMenuActionsManager]="folderContextMenuManager"
       [options]="getOptions()"
       usingFor="nodes-view"
