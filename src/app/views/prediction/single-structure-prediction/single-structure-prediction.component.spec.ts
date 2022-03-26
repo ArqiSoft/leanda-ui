@@ -8,8 +8,9 @@ describe('SingleStructurePredictionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SingleStructurePredictionComponent ],
-    })
+    declarations: [SingleStructurePredictionComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

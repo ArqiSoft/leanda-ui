@@ -8,8 +8,9 @@ describe('RenameFolderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ RenameFolderComponent ],
-    })
+    declarations: [RenameFolderComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

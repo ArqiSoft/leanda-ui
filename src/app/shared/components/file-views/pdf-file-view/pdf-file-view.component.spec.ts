@@ -8,8 +8,9 @@ describe('PdfFileViewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PdfFileViewComponent ],
-    })
+    declarations: [PdfFileViewComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

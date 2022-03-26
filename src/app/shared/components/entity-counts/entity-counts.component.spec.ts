@@ -8,8 +8,9 @@ describe('EntityCountsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntityCountsComponent ],
-    })
+    declarations: [EntityCountsComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

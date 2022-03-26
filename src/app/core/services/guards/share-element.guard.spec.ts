@@ -5,8 +5,9 @@ import { ShareElementGuard } from './share-element.guard';
 describe('ShareElementGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ShareElementGuard],
-    });
+    providers: [ShareElementGuard],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should ...', inject([ShareElementGuard], (guard: ShareElementGuard) => {

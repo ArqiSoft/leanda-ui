@@ -8,8 +8,9 @@ describe('NotificationExportItemComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotificationExportItemComponent ],
-    })
+    declarations: [NotificationExportItemComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

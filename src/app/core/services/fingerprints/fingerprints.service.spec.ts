@@ -5,8 +5,9 @@ import { FingerprintsService } from './fingerprints.service';
 describe('FingerprintsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [FingerprintsService],
-    });
+    providers: [FingerprintsService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should be created', inject([FingerprintsService], (service: FingerprintsService) => {

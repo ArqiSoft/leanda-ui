@@ -5,8 +5,9 @@ import {InfoBoxFactoryService} from './info-box-factory.service';
 describe('FieldFactoryService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [InfoBoxFactoryService],
-    });
+    providers: [InfoBoxFactoryService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should be created', inject([InfoBoxFactoryService], (service: InfoBoxFactoryService) => {

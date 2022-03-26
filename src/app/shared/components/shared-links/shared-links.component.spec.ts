@@ -8,8 +8,9 @@ describe('SharedLinksComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SharedLinksComponent ],
-    })
+    declarations: [SharedLinksComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

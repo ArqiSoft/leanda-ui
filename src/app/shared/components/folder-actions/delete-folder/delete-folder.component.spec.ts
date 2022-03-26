@@ -8,8 +8,9 @@ describe('DeleteFolderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeleteFolderComponent ],
-    })
+    declarations: [DeleteFolderComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

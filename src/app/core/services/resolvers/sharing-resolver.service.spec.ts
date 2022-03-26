@@ -5,8 +5,9 @@ import {SharingResolver} from './sharing-resolver.service';
 describe('ShareResolverService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SharingResolver],
-    });
+    providers: [SharingResolver],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should be created', inject([SharingResolver], (service: SharingResolver) => {

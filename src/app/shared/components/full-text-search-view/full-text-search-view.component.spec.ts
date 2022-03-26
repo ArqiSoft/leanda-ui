@@ -8,8 +8,9 @@ describe('FullTextSearchViewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FullTextSearchViewComponent ],
-    })
+    declarations: [FullTextSearchViewComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

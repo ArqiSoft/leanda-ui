@@ -5,8 +5,9 @@ import { PageTitleService } from './page-title.service';
 describe('PageTitleService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PageTitleService],
-    });
+    providers: [PageTitleService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should be created', inject([PageTitleService], (service: PageTitleService) => {

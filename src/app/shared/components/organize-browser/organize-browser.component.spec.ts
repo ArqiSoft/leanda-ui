@@ -8,8 +8,9 @@ describe('OrganizeBrowserComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrganizeBrowserComponent ],
-    })
+    declarations: [OrganizeBrowserComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

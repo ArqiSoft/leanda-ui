@@ -8,8 +8,9 @@ describe('PropertiesEditorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PropertiesEditorComponent ],
-    })
+    declarations: [PropertiesEditorComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

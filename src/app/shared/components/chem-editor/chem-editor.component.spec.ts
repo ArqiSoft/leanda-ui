@@ -8,8 +8,9 @@ describe('ChemEditorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ChemEditorComponent ],
-    })
+    declarations: [ChemEditorComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

@@ -8,8 +8,9 @@ describe('PropertiesInfoBoxComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PropertiesInfoBoxComponent ],
-    })
+    declarations: [PropertiesInfoBoxComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

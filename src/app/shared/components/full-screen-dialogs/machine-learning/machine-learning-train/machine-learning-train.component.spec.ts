@@ -8,8 +8,9 @@ describe('MachineLearningTrainComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MachineLearningTrainComponent ],
-    })
+    declarations: [MachineLearningTrainComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

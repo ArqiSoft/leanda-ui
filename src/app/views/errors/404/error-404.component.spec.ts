@@ -8,8 +8,9 @@ describe('NotFoundComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ Error404Component ],
-    })
+    declarations: [Error404Component],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

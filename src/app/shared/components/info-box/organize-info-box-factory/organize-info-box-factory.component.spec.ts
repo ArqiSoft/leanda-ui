@@ -8,8 +8,9 @@ describe('FieldsFactoryComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrganizeInfoBoxFactoryComponent ],
-    })
+    declarations: [OrganizeInfoBoxFactoryComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

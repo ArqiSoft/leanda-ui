@@ -8,8 +8,9 @@ describe('TextResponseComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TextResponseComponent ],
-    })
+    declarations: [TextResponseComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

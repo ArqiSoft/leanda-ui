@@ -8,8 +8,9 @@ describe('NotificationsSideBarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotificationsSideBarComponent ],
-    })
+    declarations: [NotificationsSideBarComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

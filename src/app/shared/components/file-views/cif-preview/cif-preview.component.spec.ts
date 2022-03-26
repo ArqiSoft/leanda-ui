@@ -8,8 +8,9 @@ describe('CifPreviewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CifPreviewComponent ],
-    })
+    declarations: [CifPreviewComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

@@ -5,8 +5,9 @@ import { AuthProfileGuard } from './auth-profile-guard.guard';
 describe('AuthProfileGuardGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AuthProfileGuard],
-    });
+    providers: [AuthProfileGuard],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should ...', inject([AuthProfileGuard], (guard: AuthProfileGuard) => {

@@ -5,8 +5,9 @@ import { SharingParentResolverService } from './sharing-parent-resolver.service'
 describe('SharingParentResolverService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SharingParentResolverService],
-    });
+    providers: [SharingParentResolverService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should be created', inject([SharingParentResolverService], (service: SharingParentResolverService) => {

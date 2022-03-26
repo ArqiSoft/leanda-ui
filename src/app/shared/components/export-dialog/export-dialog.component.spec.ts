@@ -8,8 +8,9 @@ describe('ExportDialogComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ExportDialogComponent ],
-    })
+    declarations: [ExportDialogComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

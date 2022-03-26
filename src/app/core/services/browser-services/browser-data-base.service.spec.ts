@@ -5,8 +5,9 @@ import {BrowserDataBaseService} from './browser-data-base.service';
 describe('BrowserDataBaseService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BrowserDataBaseService],
-    });
+    providers: [BrowserDataBaseService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should be created', inject([BrowserDataBaseService], (service: BrowserDataBaseService) => {

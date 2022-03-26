@@ -5,8 +5,9 @@ import { AuthGuardService } from './auth-guard.service';
 describe('AuthGuardService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AuthGuardService],
-    });
+    providers: [AuthGuardService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should ...', inject([AuthGuardService], (service: AuthGuardService) => {

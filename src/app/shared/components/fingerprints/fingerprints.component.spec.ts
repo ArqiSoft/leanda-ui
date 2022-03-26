@@ -8,8 +8,9 @@ describe('FingerprintsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FingerprintsComponent ],
-    })
+    declarations: [FingerprintsComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

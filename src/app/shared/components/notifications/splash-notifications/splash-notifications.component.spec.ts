@@ -8,8 +8,9 @@ describe('SplashNotificationsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SplashNotificationsComponent ],
-    })
+    declarations: [SplashNotificationsComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

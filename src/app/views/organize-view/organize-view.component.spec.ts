@@ -8,8 +8,9 @@ describe('OrganizeViewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrganizeViewComponent ],
-    })
+    declarations: [OrganizeViewComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

@@ -5,8 +5,9 @@ import { SinglePredictionService } from './single-prediction.service';
 describe('SinglePredictionService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SinglePredictionService],
-    });
+    providers: [SinglePredictionService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should be created', inject([SinglePredictionService], (service: SinglePredictionService) => {

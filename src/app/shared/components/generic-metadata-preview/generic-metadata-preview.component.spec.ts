@@ -8,8 +8,9 @@ describe('GenericMetadataPreviewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GenericMetadataPreviewComponent ],
-    })
+    declarations: [GenericMetadataPreviewComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

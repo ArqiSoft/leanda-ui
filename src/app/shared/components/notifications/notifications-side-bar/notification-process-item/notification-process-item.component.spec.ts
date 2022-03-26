@@ -8,8 +8,9 @@ describe('NotificationProcessItemComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotificationProcessItemComponent ],
-    })
+    declarations: [NotificationProcessItemComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

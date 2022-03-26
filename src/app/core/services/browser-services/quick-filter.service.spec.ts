@@ -5,8 +5,9 @@ import { QuickFilterService } from './quick-filter.service';
 describe('QuickFilterService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [QuickFilterService],
-    });
+    providers: [QuickFilterService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should be created', inject([QuickFilterService], (service: QuickFilterService) => {

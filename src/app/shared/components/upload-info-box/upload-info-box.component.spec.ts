@@ -8,8 +8,9 @@ describe('UploadInfoBoxComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ UploadInfoBoxComponent ],
-    })
+    declarations: [UploadInfoBoxComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

@@ -8,8 +8,9 @@ describe('CreateFolderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateFolderComponent ],
-    })
+    declarations: [CreateFolderComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

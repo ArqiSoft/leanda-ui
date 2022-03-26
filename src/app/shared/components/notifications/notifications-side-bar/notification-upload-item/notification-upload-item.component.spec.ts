@@ -8,8 +8,9 @@ describe('NotificationUploadItemComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotificationUploadItemComponent ],
-    })
+    declarations: [NotificationUploadItemComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

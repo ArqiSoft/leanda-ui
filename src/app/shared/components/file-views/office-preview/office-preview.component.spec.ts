@@ -8,8 +8,9 @@ describe('OfficePreviewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ OfficePreviewComponent ],
-    })
+    declarations: [OfficePreviewComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

@@ -8,8 +8,9 @@ describe('SpectraJsmolPreviewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SpectraJsmolPreviewComponent ],
-    })
+    declarations: [SpectraJsmolPreviewComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

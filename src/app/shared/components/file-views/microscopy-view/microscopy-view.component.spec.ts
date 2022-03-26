@@ -8,8 +8,9 @@ describe('MicroscopyViewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MicroscopyViewComponent ],
-    })
+    declarations: [MicroscopyViewComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

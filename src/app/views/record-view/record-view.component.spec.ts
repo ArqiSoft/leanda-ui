@@ -8,8 +8,9 @@ describe('RecordViewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ RecordViewComponent ],
-    })
+    declarations: [RecordViewComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

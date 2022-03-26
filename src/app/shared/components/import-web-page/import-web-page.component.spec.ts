@@ -8,8 +8,9 @@ describe('ImportWebPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ImportWebPageComponent ],
-    })
+    declarations: [ImportWebPageComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

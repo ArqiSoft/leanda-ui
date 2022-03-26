@@ -8,8 +8,9 @@ describe('SavFileViewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SavFileViewComponent ],
-    })
+    declarations: [SavFileViewComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

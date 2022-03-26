@@ -8,8 +8,9 @@ describe('CSVPreviewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CSVPreviewComponent ],
-    })
+    declarations: [CSVPreviewComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

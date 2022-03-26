@@ -8,8 +8,9 @@ describe('BasicInputComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ BasicOrganizeInfoBoxComponent ],
-    })
+    declarations: [BasicOrganizeInfoBoxComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

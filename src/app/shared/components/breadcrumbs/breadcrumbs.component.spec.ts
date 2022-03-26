@@ -8,8 +8,9 @@ describe('BreadcrumbsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ BreadcrumbsComponent ],
-    })
+    declarations: [BreadcrumbsComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

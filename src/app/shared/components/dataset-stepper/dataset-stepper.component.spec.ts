@@ -8,8 +8,9 @@ describe('DatasetStepperComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DatasetStepperComponent ],
-    })
+    declarations: [DatasetStepperComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

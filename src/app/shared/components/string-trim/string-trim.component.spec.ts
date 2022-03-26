@@ -8,8 +8,9 @@ describe('StringTrimComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ StringTrimComponent ],
-    })
+    declarations: [StringTrimComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

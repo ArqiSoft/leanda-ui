@@ -8,8 +8,9 @@ describe('CvspOrganizeInfoBoxComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CvspOrganizeInfoBoxComponent ],
-    })
+    declarations: [CvspOrganizeInfoBoxComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

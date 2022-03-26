@@ -8,8 +8,9 @@ describe('FileViewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FileViewComponent ],
-    })
+    declarations: [FileViewComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

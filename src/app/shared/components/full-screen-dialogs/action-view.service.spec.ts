@@ -5,8 +5,9 @@ import { ActionViewService } from './action-view.service';
 describe('ActionViewService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ActionViewService],
-    });
+    providers: [ActionViewService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should be created', inject([ActionViewService], (service: ActionViewService) => {

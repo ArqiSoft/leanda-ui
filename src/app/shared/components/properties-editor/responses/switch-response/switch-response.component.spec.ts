@@ -8,8 +8,9 @@ describe('SwitchResponseComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SwitchResponseComponent ],
-    })
+    declarations: [SwitchResponseComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

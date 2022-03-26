@@ -8,8 +8,9 @@ describe('FilterBarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FilterBarComponent ],
-    })
+    declarations: [FilterBarComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 
