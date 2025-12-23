@@ -1,0 +1,26 @@
+# Example Terraform variables file
+# Copy this to terraform.tfvars and update with your values
+
+domain_name = "example.com"
+s3_bucket_name = "example.com"
+aws_region = "us-east-1"
+
+# Optional: ACM certificate ARN for custom domain HTTPS
+# Leave empty to use CloudFront default certificate
+# acm_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012"
+
+# Route 53 hosted zone ID for your domain
+# Find it in Route 53 console or with: aws route53 list-hosted-zones
+route53_hosted_zone_id = "YOUR_HOSTED_ZONE_ID"
+enable_custom_domain = true
+
+default_root_object = "index.html"
+price_class = "PriceClass_100"  # Options: PriceClass_All, PriceClass_200, PriceClass_100
+
+tags = {
+  Environment = "production"
+  ManagedBy   = "terraform"
+  Project     = "leanda"
+  Application = "leanda-ui"
+}
+

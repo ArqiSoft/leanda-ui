@@ -1,0 +1,48 @@
+{
+  "ResponseHeadersPolicyConfig": {
+    "Name": "leanda-security-headers",
+    "Comment": "Security headers for Angular SPA",
+    "SecurityHeadersConfig": {
+      "StrictTransportSecurity": {
+        "Override": true,
+        "AccessControlMaxAgeSec": 31536000,
+        "IncludeSubdomains": true,
+        "Preload": true
+      },
+      "ContentTypeOptions": {
+        "Override": true
+      },
+      "FrameOptions": {
+        "Override": true,
+        "FrameOption": "DENY"
+      },
+      "XSSProtection": {
+        "Override": true,
+        "ModeBlock": true,
+        "Protection": true,
+        "ReportUri": ""
+      },
+      "ReferrerPolicy": {
+        "Override": true,
+        "ReferrerPolicy": "strict-origin-when-cross-origin"
+      }
+    },
+    "CorsConfig": {
+      "AccessControlAllowOrigins": {
+        "Quantity": 0
+      },
+      "AccessControlAllowHeaders": {
+        "Quantity": 0
+      },
+      "AccessControlAllowMethods": {
+        "Quantity": 0
+      },
+      "AccessControlAllowCredentials": false,
+      "AccessControlExposeHeaders": {
+        "Quantity": 0
+      },
+      "AccessControlMaxAgeSec": 0
+    }
+  }
+}
+
